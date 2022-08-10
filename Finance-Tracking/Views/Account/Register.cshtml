@@ -1,0 +1,36 @@
+﻿@model Finance_Tracking.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Create a new account.</h4>
+    <hr />
+    <table>
+        <tr>
+            <td>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Register as Student", "Register", "Student")
+                </div>
+            </td>
+            <td>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Register as Funder", "Register", "Funder")
+                </div>
+            </td>
+            <td>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Register as Institution", "Register", "Institution")
+                </div>
+            </td>
+        </tr>
+    </table>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
