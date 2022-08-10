@@ -1,11 +1,11 @@
 ﻿@model Finance_Tracking.Models.FunderModel
 
 @{
-    ViewBag.Title = "EditProfile";
+    ViewBag.Title = "Maintain Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>EditProfile</h2>
+<h2>@ViewBag.Title</h2>
 
 
 @using (Html.BeginForm())
@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>FunderModel</h4>
+
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">

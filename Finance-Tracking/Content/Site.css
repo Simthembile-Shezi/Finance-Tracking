@@ -34,3 +34,15 @@ textarea {
 #col-forgot-password, #col-login, #col-cancel-btn {
     text-align: end;
 }
+
+#btn-container {
+    display: flex;
+}
+
+#btn-left {
+    flex: 50%;
+}
+
+#btn-right {
+    flex: 50%;
+}

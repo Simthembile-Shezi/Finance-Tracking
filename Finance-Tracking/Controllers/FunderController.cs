@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.SqlClient;
 
 namespace Finance_Tracking.Controllers
 {
@@ -28,8 +29,14 @@ namespace Finance_Tracking.Controllers
 
         // POST: Funder/Create
         [HttpPost]
-        public ActionResult Register(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(Funder funder ,FormCollection collection)
         {
+            if (ModelState.IsValid)
+            {
+                
+            }
+
             try
             {
                 // TODO: Add insert logic here

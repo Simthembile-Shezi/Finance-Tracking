@@ -209,18 +209,17 @@
         </td>
     </tr>
     <tr>
-        <td class="col-cancel-btn">
-            <a href='@Url.Action("Register", "Account")'>
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="button" name="selection" value="Cancel" class="btn btn-default" />
-                </div>
-            </a>
-        </td>
-
         <td class="col-next-btn">
             <a href='@Url.Action("AddEmployee", "Employee")'>
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" name="selection" value="Next" class="btn btn-default" />
+                </div>
+            </a>
+        </td>
+        <td id="col-cancel-btn">
+            <a href='@Url.Action("Register", "Account")'>
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                 </div>
             </a>
         </td>

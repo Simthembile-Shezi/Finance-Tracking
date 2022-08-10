@@ -43,14 +43,14 @@ namespace Finance_Tracking.Controllers
         }
 
         // GET: Student/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult StudentProfile(int id)
         {
             return View();
         }
 
         // POST: Student/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult StudentProfile(int id, FormCollection collection)
         {
             try
             {
