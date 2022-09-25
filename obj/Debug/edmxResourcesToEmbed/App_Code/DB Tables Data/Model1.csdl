@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Academic_Record">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+      <PropertyRef Name="Academic_Year" />
+    </Key>
+    <Property Name="Student_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Academic_Year" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Qualification" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Avarage_Marks" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Upload_Transcript" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Enrolled_At" Relationship="Self.FK_Student_Number_Academic_Records_" FromRole="Academic_Records" ToRole="Enrolled_At" />
+  </EntityType>
+  <EntityType Name="Application">
+    <Key>
+      <PropertyRef Name="Application_ID" />
+    </Key>
+    <Property Name="Application_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Identity_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Bursary_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funding_Year" Type="DateTime" Precision="0" />
+    <Property Name="Application_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Upload_Agreement" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Upload_Signed_Agreement" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Bursar_Funds" Relationship="Self.FK_Application_ID" FromRole="Application" ToRole="Bursar_Funds" />
+    <NavigationProperty Name="Bursary" Relationship="Self.FK_Bursary_Code_Application_" FromRole="Application" ToRole="Bursary" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Student_Identity_Number_Application_" FromRole="Application" ToRole="Student" />
+  </EntityType>
+  <EntityType Name="Bursar_Fund">
+    <Key>
+      <PropertyRef Name="Application_ID" />
+    </Key>
+    <Property Name="Application_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Update_Fund_Request" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Funding_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Approved_Funds" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Application" Relationship="Self.FK_Application_ID" FromRole="Bursar_Funds" ToRole="Application" />
+  </EntityType>
+  <EntityType Name="Bursary">
+    <Key>
+      <PropertyRef Name="Bursary_Code" />
+    </Key>
+    <Property Name="Bursary_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Bursary_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Start_Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Funder_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="End_Date" Type="DateTime" Precision="3" />
+    <Property Name="Bursary_Amount" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Number_Available" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Applications" Relationship="Self.FK_Bursary_Code_Application_" FromRole="Bursary" ToRole="Application" />
+    <NavigationProperty Name="Funder" Relationship="Self.FK_Funder_Name" FromRole="Bursary" ToRole="Funder" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Emp_Email" />
+    </Key>
+    <Property Name="Emp_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Emp_FName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Emp_LName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Emp_Telephone_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Emp_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Organization_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Admin_Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Funder" Relationship="Self.FK_Organization_Name_Funder_" FromRole="Employee" ToRole="Funder" />
+    <NavigationProperty Name="Institution" Relationship="Self.FK_Organization_Name_Institution_" FromRole="Employee" ToRole="Institution" />
+  </EntityType>
+  <EntityType Name="Enrolled_At">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+    </Key>
+    <Property Name="Student_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Identity_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Institution_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Qualification" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Study_Residential_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Academic_Records" Relationship="Self.FK_Student_Number_Academic_Records_" FromRole="Enrolled_At" ToRole="Academic_Records" />
+    <NavigationProperty Name="Institution" Relationship="Self.FK_Institution_Name" FromRole="Enrolled_At" ToRole="Institution" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Student_Identity_Number" FromRole="Enrolled_At" ToRole="Student" />
+    <NavigationProperty Name="Finacial_Records" Relationship="Self.FK_Student_Number_Finacial_Records_" FromRole="Enrolled_At" ToRole="Finacial_Records" />
+  </EntityType>
+  <EntityType Name="Finacial_Record">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+      <PropertyRef Name="Academic_Year" />
+    </Key>
+    <Property Name="Student_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Academic_Year" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Balance_Amount" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Upload_Statement" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Funding_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Request_Funds" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Enrolled_At" Relationship="Self.FK_Student_Number_Finacial_Records_" FromRole="Finacial_Records" ToRole="Enrolled_At" />
+  </EntityType>
+  <EntityType Name="Funder">
+    <Key>
+      <PropertyRef Name="Funder_Name" />
+    </Key>
+    <Property Name="Funder_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funder_Tax_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funder_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funder_Telephone_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funder_Physical_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Funder_Postal_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Bursaries" Relationship="Self.FK_Funder_Name" FromRole="Funder" ToRole="Bursary" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK_Organization_Name_Funder_" FromRole="Funder" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Institution">
+    <Key>
+      <PropertyRef Name="Institution_Name" />
+    </Key>
+    <Property Name="Institution_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Institution_Physical_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Institution_Postal_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Institution_Telephone_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Institution_Email_Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK_Organization_Name_Institution_" FromRole="Institution" ToRole="Employee" />
+    <NavigationProperty Name="Enrolled_At" Relationship="Self.FK_Institution_Name" FromRole="Institution" ToRole="Enrolled_At" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Student_Identity_Number" />
+    </Key>
+    <Property Name="Student_Identity_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_FName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_LName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Nationality" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Race" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Date_Of_Birth" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Marital_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Cellphone_Number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Student_Residential_Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Upload_Identity_Document" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Upload_Residential_Document" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Applications" Relationship="Self.FK_Student_Identity_Number_Application_" FromRole="Student" ToRole="Application" />
+    <NavigationProperty Name="Enrolled_At" Relationship="Self.FK_Student_Identity_Number" FromRole="Student" ToRole="Enrolled_At" />
+  </EntityType>
+  <Association Name="FK_Student_Number_Academic_Records_">
+    <End Role="Enrolled_At" Type="Self.Enrolled_At" Multiplicity="1" />
+    <End Role="Academic_Records" Type="Self.Academic_Record" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Enrolled_At">
+        <PropertyRef Name="Student_Number" />
+      </Principal>
+      <Dependent Role="Academic_Records">
+        <PropertyRef Name="Student_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Application_ID">
+    <End Role="Application" Type="Self.Application" Multiplicity="1" />
+    <End Role="Bursar_Funds" Type="Self.Bursar_Fund" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Application">
+        <PropertyRef Name="Application_ID" />
+      </Principal>
+      <Dependent Role="Bursar_Funds">
+        <PropertyRef Name="Application_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Bursary_Code_Application_">
+    <End Role="Bursary" Type="Self.Bursary" Multiplicity="1" />
+    <End Role="Application" Type="Self.Application" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Bursary">
+        <PropertyRef Name="Bursary_Code" />
+      </Principal>
+      <Dependent Role="Application">
+        <PropertyRef Name="Bursary_Code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Identity_Number_Application_">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="Application" Type="Self.Application" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Principal>
+      <Dependent Role="Application">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Funder_Name">
+    <End Role="Funder" Type="Self.Funder" Multiplicity="1" />
+    <End Role="Bursary" Type="Self.Bursary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funder">
+        <PropertyRef Name="Funder_Name" />
+      </Principal>
+      <Dependent Role="Bursary">
+        <PropertyRef Name="Funder_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Organization_Name_Funder_">
+    <End Role="Funder" Type="Self.Funder" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funder">
+        <PropertyRef Name="Funder_Name" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="Organization_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Organization_Name_Institution_">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="Institution_Name" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="Organization_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Institution_Name">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="Enrolled_At" Type="Self.Enrolled_At" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="Institution_Name" />
+      </Principal>
+      <Dependent Role="Enrolled_At">
+        <PropertyRef Name="Institution_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Identity_Number">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="Enrolled_At" Type="Self.Enrolled_At" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Principal>
+      <Dependent Role="Enrolled_At">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Number_Finacial_Records_">
+    <End Role="Enrolled_At" Type="Self.Enrolled_At" Multiplicity="1" />
+    <End Role="Finacial_Records" Type="Self.Finacial_Record" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Enrolled_At">
+        <PropertyRef Name="Student_Number" />
+      </Principal>
+      <Dependent Role="Finacial_Records">
+        <PropertyRef Name="Student_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Finance_Tracking_DatabaseEntities10" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Academic_Records" EntityType="Self.Academic_Record" />
+    <EntitySet Name="Applications" EntityType="Self.Application" />
+    <EntitySet Name="Bursar_Funds" EntityType="Self.Bursar_Fund" />
+    <EntitySet Name="Bursaries" EntityType="Self.Bursary" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Enrolled_Ats" EntityType="Self.Enrolled_At" />
+    <EntitySet Name="Finacial_Records" EntityType="Self.Finacial_Record" />
+    <EntitySet Name="Funders" EntityType="Self.Funder" />
+    <EntitySet Name="Institutions" EntityType="Self.Institution" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <AssociationSet Name="FK_Student_Number_Academic_Records_" Association="Self.FK_Student_Number_Academic_Records_">
+      <End Role="Enrolled_At" EntitySet="Enrolled_Ats" />
+      <End Role="Academic_Records" EntitySet="Academic_Records" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Application_ID" Association="Self.FK_Application_ID">
+      <End Role="Application" EntitySet="Applications" />
+      <End Role="Bursar_Funds" EntitySet="Bursar_Funds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Bursary_Code_Application_" Association="Self.FK_Bursary_Code_Application_">
+      <End Role="Bursary" EntitySet="Bursaries" />
+      <End Role="Application" EntitySet="Applications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Identity_Number_Application_" Association="Self.FK_Student_Identity_Number_Application_">
+      <End Role="Student" EntitySet="Students" />
+      <End Role="Application" EntitySet="Applications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Funder_Name" Association="Self.FK_Funder_Name">
+      <End Role="Funder" EntitySet="Funders" />
+      <End Role="Bursary" EntitySet="Bursaries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Organization_Name_Funder_" Association="Self.FK_Organization_Name_Funder_">
+      <End Role="Funder" EntitySet="Funders" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Organization_Name_Institution_" Association="Self.FK_Organization_Name_Institution_">
+      <End Role="Institution" EntitySet="Institutions" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Institution_Name" Association="Self.FK_Institution_Name">
+      <End Role="Institution" EntitySet="Institutions" />
+      <End Role="Enrolled_At" EntitySet="Enrolled_Ats" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Identity_Number" Association="Self.FK_Student_Identity_Number">
+      <End Role="Student" EntitySet="Students" />
+      <End Role="Enrolled_At" EntitySet="Enrolled_Ats" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Number_Finacial_Records_" Association="Self.FK_Student_Number_Finacial_Records_">
+      <End Role="Enrolled_At" EntitySet="Enrolled_Ats" />
+      <End Role="Finacial_Records" EntitySet="Finacial_Records" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
