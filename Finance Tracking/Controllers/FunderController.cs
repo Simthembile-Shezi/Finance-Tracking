@@ -51,6 +51,7 @@ namespace Finance_Tracking.Controllers
             login.Province_Post = address[3];
             login.Postal_Code = address[4];
 
+            Session["Funder"] = login;
             return View(login);
         }
 
@@ -121,8 +122,8 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/MaintainFunder
         public ActionResult MaintainFunder()
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
-            return View(employee.Funder);
+            Funder funder = (Funder)Session["Funder"];
+            return View(funder);
         }
 
         // POST: Funder/MaintainFunder
@@ -148,23 +149,23 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/DeleteFunder
         public ActionResult DeleteFunder()
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
-            return View(employee.Funder);
+            Funder funder = (Funder)Session["Funder"];
+            return View(funder);
         }
 
         // POST: Funder/DeleteFunder
         [HttpPost]
         public ActionResult DeleteFunder(Funder funder)
         {
-            //try
+            try
             {
                 deleteFunder(funder.Funder_Name);
                 return RedirectToAction("Login", "Home");
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                return View(funder);
+            }
         }
         #endregion
 
@@ -356,6 +357,7 @@ namespace Finance_Tracking.Controllers
 
         #region View all the bursaries by a specific funder and make update if needed
         // GET: Funder/ViewBursaries
+        [HttpGet]
         public ActionResult ViewBursaries()
         {
 
@@ -364,7 +366,7 @@ namespace Finance_Tracking.Controllers
             fund.Funder_Name = funderEmp.Organization_Name;
             var list = GetBursaries(fund.Funder_Name);
 
-            //Binding
+            //Binding the list of bursaries with the new funder, prevents repeation of the add method
             foreach (var bursary in list)
             {
                 Bursary model = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
@@ -374,7 +376,24 @@ namespace Finance_Tracking.Controllers
             return View(fund);
         }
 
-        // GET: Funder/ViewBursary/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ViewBursaries(Funder model)
+        {
+            Funder funder = (Funder)Session["Funder"];
+            Funder fund = new Funder();
+            fund.Funder_Name = funder.Funder_Name;
+
+            foreach (var bursary in funder.Bursaries)
+            {
+                if(bursary.Funding_Year != null && bursary.Funding_Year.Equals(model.Bursary.Funding_Year))
+                    fund.Bursaries.Add(bursary);
+            }
+            return View(fund);
+        }
+
+        // GET: Funder/ViewBursary/Bursary_Code
+        [HttpGet]
         public ActionResult ViewBursary(string id)
         {
             Funder fund = (Funder)Session["Funder"];
@@ -382,13 +401,13 @@ namespace Finance_Tracking.Controllers
             {
                 if ((bursary.Bursary_Code).Equals(id.ToString()))
                 {
-                    //Bursary model = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, fund);
                     return View(bursary);
                 }
             }
             return View();
         }
-        // GET: Funder/ViewBursary/5
+
+        // GET: Funder/AddBursary
         public ActionResult AddBursary()
         {
             Funder fund = (Funder)Session["Funder"];
@@ -398,24 +417,25 @@ namespace Finance_Tracking.Controllers
             return View(bursary);
         }
 
-        // POST: Funder/ViewBursary/5
+        // POST: Funder/AddBursary
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddBursary(Bursary bursary)
         {
-            //try
+            try
             {
                 int result = CreateBursary(bursary.Bursary_Name + bursary.Funding_Year, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,
                                 bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
 
                 return RedirectToAction("ViewBursaries");
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                return View(bursary);
+            }
         }
-        // GET: Funder/ViewBursary/5
+        [HttpGet]
+        // GET: Funder/ViewBursary/Bursary_Code
         public ActionResult MaintainBursary(string id)
         {
             Funder fund = (Funder)Session["Funder"];
@@ -427,21 +447,21 @@ namespace Finance_Tracking.Controllers
             return View();
         }
 
-        // POST: Funder/ViewBursary/5
+        // POST: Funder/ViewBursary/Bursary_Code
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult MaintainBursary(Bursary bursary)
         {
-            //try
+            try
             {
                 int result = UpdateBursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,
                                 bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
                 return RedirectToAction("ViewBursaries");
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                return View(bursary);
+            }
         }
         // GET: Funder/ViewBursary/5
         public ActionResult DeleteBursary(string id)
@@ -461,16 +481,16 @@ namespace Finance_Tracking.Controllers
         [HttpPost]
         public ActionResult DeleteBursary(Bursary bursary)
         {
-            //try
+            try
             {
                 int result = deleteBursary(bursary.Bursary_Code);
 
                 return RedirectToAction("ViewBursaries");
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                return View(bursary);
+            }
         }
         #endregion
 
@@ -612,7 +632,6 @@ namespace Finance_Tracking.Controllers
         {
             Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             Funder_Employee model = new Funder_Employee();
-            model.Funder = employee.Funder;
             model.Organization_Name = employee.Organization_Name;
             return View(model);
         }
@@ -622,8 +641,7 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Funder_Employee employee)
         {
-            AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email,
-                    employee.Organization_Name, employee.Password, employee.Admin_Code);
+            AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password, employee.Admin_Code);
 
             return RedirectToAction("FunderDetails");
         }

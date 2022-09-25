@@ -59,3 +59,12 @@ C:\Users\Simth\Desktop\Third year\New\WRRV Project, Creating A Web Application (
 C:\Users\Simth\Desktop\Third year\New\WRRV Project, Creating A Web Application (asp.NET MVC)\Data Library\obj\Debug\Data Library.csproj.CopyComplete
 C:\Users\Simth\Desktop\Third year\New\WRRV Project, Creating A Web Application (asp.NET MVC)\Data Library\obj\Debug\Data Library.dll
 C:\Users\Simth\Desktop\Third year\New\WRRV Project, Creating A Web Application (asp.NET MVC)\Data Library\obj\Debug\Data Library.pdb
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\bin\Debug\Data Library.dll
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\bin\Debug\Data Library.pdb
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\bin\Debug\Dapper.dll
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\bin\Debug\Dapper.xml
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\obj\Debug\Data Library.csproj.AssemblyReference.cache
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\obj\Debug\Data Library.csproj.CoreCompileInputs.cache
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\obj\Debug\Data Library.csproj.CopyComplete
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\obj\Debug\Data Library.dll
+C:\Users\Simth\Desktop\Git Projects\Finance-Tracking\Data Library\obj\Debug\Data Library.pdb

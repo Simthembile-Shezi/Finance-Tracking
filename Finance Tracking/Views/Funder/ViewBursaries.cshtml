@@ -6,68 +6,63 @@
 }
 
 <h2>View Bursaries</h2>
-<div class="btn-block">
-    <a href='@Url.Action("AddBursary", "Funder")'>
-        <input type="button" name="selection" value="Add New Bursary" class="btn btn-default btn-block" />
-    </a>
-</div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.Bursary_Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.Start_Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.End_Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.Funding_Year)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.Bursary_Amount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bursary.Number_Available)
-        </th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model.Bursaries)
-    {
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-inline">
+        <div class="col-md-6">
+            <a href='@Url.Action("AddBursary", "Funder")'>
+                <input type="button" name="selection" value="Add New Bursary" class="btn btn-default btn-block" />
+            </a>
+        </div>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.Bursary.Funding_Year, new { htmlAttributes = new { @class = "form-control", @placeholder = "Funding Year"} })
+        </div>
+        <div class="col-md-3">
+            <input type="submit" name="selection" value="Search" class="btn btn-default btn-block" />
+        </div>
+    </div>
+}
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bursary_Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Start_Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.End_Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Funding_Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bursary_Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number_Available)
-            </td>
-            <td>
-                @Html.ActionLink("View Bursary", "ViewBursary", new { id = item.Bursary_Code })
-            </td>
-            <td>
-                @Html.ActionLink("View Applications", "ViewApplications", new { id = item.Bursary_Code })
-            </td>
-            <td>
-                @Html.ActionLink("View Bursars", "ViewBursars", new { id = item.Bursary_Code })
-            </td>
-
+            <th>
+                @Html.DisplayNameFor(model => model.Bursary.Bursary_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bursary.Funding_Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bursary.Number_Available)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
-    }
-</table>
-@Html.Partial("_BackToFunder")
+
+        @foreach (var item in Model.Bursaries)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bursary_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Funding_Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Number_Available)
+                </td>
+                <td>
+                    @Html.ActionLink("View Bursary", "ViewBursary", new { id = item.Bursary_Code })
+                </td>
+                <td>
+                    @Html.ActionLink("View Applications", "ViewApplications", new { id = item.Bursary_Code })
+                </td>
+                <td>
+                    @Html.ActionLink("View Bursars", "ViewBursars", new { id = item.Bursary_Code })
+                </td>
+
+            </tr>
+        }
+    </table>
+    @Html.Partial("_BackToFunder")
