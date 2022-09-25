@@ -1,0 +1,110 @@
+﻿using Data_Library.Data_Access;
+using Data_Library.ModelsDB;
+using System.Collections.Generic;
+
+namespace Data_Library.Business_Logic
+{
+    public static class BursaryProcessor
+    {
+        public static int CreateBursary(string burCode, string burName, System.DateTime startDate, string funderName,
+            System.DateTime? endDate, decimal? burAmount, decimal numAvail, string desc, string FY)
+        {
+            BursaryDB data = new BursaryDB
+            {
+                Bursary_Code = burCode,
+                Bursary_Name = burName,
+                Start_Date = startDate,
+                Funder_Name = funderName,
+                End_Date = endDate,
+                Bursary_Amount = burAmount,
+                Number_Available = numAvail,
+                Description = desc,
+                Funding_Year = FY,
+            };
+
+            string sql = @" insert into dbo.[Bursary] (Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year)
+                            values (@Bursary_Code, @Bursary_Name, @Start_Date, @Funder_Name, @End_Date, @Bursary_Amount, @Number_Available, @Description, @Funding_Year);";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static int UpdateBursary(string burCode, string burName, System.DateTime startDate, string funderName,
+            System.DateTime? endDate, decimal? burAmount, decimal numAvail, string desc, string FY)
+        {
+            BursaryDB data = new BursaryDB();
+            data.Bursary_Code = burCode;
+
+            if (burName != null)
+                data.Bursary_Name = burName;
+            if (startDate != null)
+                data.Start_Date = startDate;
+            if (funderName != null)
+                data.Funder_Name = funderName;
+            if (endDate != null)
+                data.End_Date = endDate;
+            if (burAmount != null)
+                data.Bursary_Amount = burAmount;
+            if (numAvail != 0)
+                data.Number_Available = numAvail;
+            if (desc != null)
+                data.Description = desc;
+            if (FY != null)
+                data.Funding_Year = FY;
+
+            string sql = @"update dbo.[Bursary] 
+                               set Bursary_Name = @Bursary_Name,
+                                   Start_Date = @Start_Date,
+                                   Funder_Name = @Funder_Name,
+                                   End_Date = @End_Date,
+                                   Bursary_Amount = @Bursary_Amount,
+                                   Number_Available = @Number_Available,
+                                   Description = @Description, Funding_Year = @Funding_Year
+                               where Bursary_Code = @Bursary_Code;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static int deleteBursary(string code)
+        {
+            BursaryDB data = new BursaryDB();
+            data.Bursary_Code = code;
+            string sql = @"delete from dbo.[Bursary]
+                           where Bursary_Code = @Bursary_Code;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static BursaryDB GetBursary(string code)
+        {
+            var list = LoadBursaries();
+            foreach (var item in list)
+            {
+                if (item.Bursary_Code.Equals(code))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public static List<BursaryDB> GetBursaries(string name)
+        {
+            var list = new List<BursaryDB>();
+            foreach (var item in LoadBursaries())
+            {
+                if (item.Funder_Name.Equals(name))
+                    list.Add(item);
+            }
+
+            return list;
+        }
+
+        public static List<BursaryDB> LoadBursaries()
+        {
+            string sql = @"select Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year
+                           from dbo.[Bursary];";
+
+            return SqlDataAccess.LoadData<BursaryDB>(sql);
+        }
+    }
+}

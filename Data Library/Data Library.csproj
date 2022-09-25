@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Data_Library</RootNamespace>
+    <AssemblyName>Data Library</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Business Logic\Academic_RecordProcessor.cs" />
+    <Compile Include="Business Logic\ApplicationProcessor.cs" />
+    <Compile Include="Business Logic\BursaryProcessor.cs" />
+    <Compile Include="Business Logic\Bursar_FundProcessor.cs" />
+    <Compile Include="Business Logic\Enrolled_AtProcessor.cs" />
+    <Compile Include="Business Logic\Finacial_RecordProcessor.cs" />
+    <Compile Include="Business Logic\FunderEmpProcessor.cs" />
+    <Compile Include="Business Logic\FunderProcessor.cs" />
+    <Compile Include="Business Logic\InstitutionEmpProcessor.cs" />
+    <Compile Include="Business Logic\InstitutionProcessor.cs" />
+    <Compile Include="Business Logic\StudentProcessor.cs" />
+    <Compile Include="Data Access\SqlDataAccess.cs" />
+    <Compile Include="ModelsDB\Academic_RecordDB.cs" />
+    <Compile Include="ModelsDB\ApplicationDB.cs" />
+    <Compile Include="ModelsDB\BursaryDB.cs" />
+    <Compile Include="ModelsDB\Bursar_FundDB.cs" />
+    <Compile Include="ModelsDB\Enrolled_AtDB.cs" />
+    <Compile Include="ModelsDB\Finacial_RecordDB.cs" />
+    <Compile Include="ModelsDB\FundedStudentsDB.cs" />
+    <Compile Include="ModelsDB\FunderEmployeeDB.cs" />
+    <Compile Include="ModelsDB\InstitutionEmployeeDB.cs" />
+    <Compile Include="ModelsDB\FunderDB.cs" />
+    <Compile Include="ModelsDB\InstitutionDB.cs" />
+    <Compile Include="ModelsDB\StudentDB.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
