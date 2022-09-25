@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Academic Records">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+      <PropertyRef Name="Academic_Year" />
+    </Key>
+    <Property Name="Student_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Academic_Year" Type="date" Nullable="false" />
+    <Property Name="Qualification" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Avarage_Marks" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Upload_Transcript" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Application">
+    <Key>
+      <PropertyRef Name="Application_ID" />
+    </Key>
+    <Property Name="Application_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Identity_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Bursary_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Funding_Year" Type="date" />
+    <Property Name="Application_Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="Upload_Agreement" Type="varbinary(max)" />
+    <Property Name="Upload_Signed_Agreement" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Bursar Funds">
+    <Key>
+      <PropertyRef Name="Application_ID" />
+    </Key>
+    <Property Name="Application_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Update_Fund_Request" Type="nvarchar" MaxLength="50" />
+    <Property Name="Funding_Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="Approved_Funds" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Bursary">
+    <Key>
+      <PropertyRef Name="Bursary_Code" />
+    </Key>
+    <Property Name="Bursary_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Bursary_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Start_Date" Type="datetime" Nullable="false" />
+    <Property Name="Funder_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="End_Date" Type="datetime" />
+    <Property Name="Bursary_Amount" Type="money" />
+    <Property Name="Number_Available" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Emp_Email" />
+    </Key>
+    <Property Name="Emp_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Emp_FName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Emp_LName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Emp_Telephone_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Emp_Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Organization_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Admin_Code" Type="nchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="Enrolled At">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+    </Key>
+    <Property Name="Student_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Identity_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Institution_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Qualification" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Study_Residential_Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Finacial Records">
+    <Key>
+      <PropertyRef Name="Student_Number" />
+      <PropertyRef Name="Academic_Year" />
+    </Key>
+    <Property Name="Student_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Academic_Year" Type="date" Nullable="false" />
+    <Property Name="Balance_Amount" Type="money" />
+    <Property Name="Upload_Statement" Type="varbinary(max)" />
+    <Property Name="Funding_Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="Request_Funds" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Funder">
+    <Key>
+      <PropertyRef Name="Funder_Name" />
+    </Key>
+    <Property Name="Funder_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Funder_Tax_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Funder_Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Funder_Telephone_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Funder_Physical_Address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Funder_Postal_Address" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Institution">
+    <Key>
+      <PropertyRef Name="Institution_Name" />
+    </Key>
+    <Property Name="Institution_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Institution_Physical_Address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Institution_Postal_Address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Institution_Telephone_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Institution_Email_Address" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Student_Identity_Number" />
+    </Key>
+    <Property Name="Student_Identity_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_FName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_LName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Nationality" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Race" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Title" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Gender" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Date_Of_Birth" Type="date" Nullable="false" />
+    <Property Name="Marital_Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Student_Cellphone_Number" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Student_Residential_Address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Upload_Identity_Document" Type="varbinary(max)" />
+    <Property Name="Upload_Residential_Document" Type="varbinary(max)" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Application_ID">
+    <End Role="Application" Type="Self.Application" Multiplicity="1" />
+    <End Role="Bursar Funds" Type="Self.Bursar Funds" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Application">
+        <PropertyRef Name="Application_ID" />
+      </Principal>
+      <Dependent Role="Bursar Funds">
+        <PropertyRef Name="Application_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Bursary_Code(Application)">
+    <End Role="Bursary" Type="Self.Bursary" Multiplicity="1" />
+    <End Role="Application" Type="Self.Application" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Bursary">
+        <PropertyRef Name="Bursary_Code" />
+      </Principal>
+      <Dependent Role="Application">
+        <PropertyRef Name="Bursary_Code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Funder_Name">
+    <End Role="Funder" Type="Self.Funder" Multiplicity="1" />
+    <End Role="Bursary" Type="Self.Bursary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funder">
+        <PropertyRef Name="Funder_Name" />
+      </Principal>
+      <Dependent Role="Bursary">
+        <PropertyRef Name="Funder_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Institution_Name">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="Enrolled At" Type="Self.Enrolled At" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="Institution_Name" />
+      </Principal>
+      <Dependent Role="Enrolled At">
+        <PropertyRef Name="Institution_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Organization_Name(Funder)">
+    <End Role="Funder" Type="Self.Funder" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funder">
+        <PropertyRef Name="Funder_Name" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="Organization_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Organization_Name(Institution)">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="Institution_Name" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="Organization_Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Identity_Number">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="Enrolled At" Type="Self.Enrolled At" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Principal>
+      <Dependent Role="Enrolled At">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Identity_Number(Application)">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="Application" Type="Self.Application" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Principal>
+      <Dependent Role="Application">
+        <PropertyRef Name="Student_Identity_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Number(Academic Records)">
+    <End Role="Enrolled At" Type="Self.Enrolled At" Multiplicity="1" />
+    <End Role="Academic Records" Type="Self.Academic Records" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Enrolled At">
+        <PropertyRef Name="Student_Number" />
+      </Principal>
+      <Dependent Role="Academic Records">
+        <PropertyRef Name="Student_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Number(Finacial Records)">
+    <End Role="Enrolled At" Type="Self.Enrolled At" Multiplicity="1" />
+    <End Role="Finacial Records" Type="Self.Finacial Records" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Enrolled At">
+        <PropertyRef Name="Student_Number" />
+      </Principal>
+      <Dependent Role="Finacial Records">
+        <PropertyRef Name="Student_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="Academic Records" EntityType="Self.Academic Records" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Application" EntityType="Self.Application" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Bursar Funds" EntityType="Self.Bursar Funds" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Bursary" EntityType="Self.Bursary" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Enrolled At" EntityType="Self.Enrolled At" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Finacial Records" EntityType="Self.Finacial Records" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Funder" EntityType="Self.Funder" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Institution" EntityType="Self.Institution" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Application_ID" Association="Self.FK_Application_ID">
+      <End Role="Application" EntitySet="Application" />
+      <End Role="Bursar Funds" EntitySet="Bursar Funds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Bursary_Code(Application)" Association="Self.FK_Bursary_Code(Application)">
+      <End Role="Bursary" EntitySet="Bursary" />
+      <End Role="Application" EntitySet="Application" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Funder_Name" Association="Self.FK_Funder_Name">
+      <End Role="Funder" EntitySet="Funder" />
+      <End Role="Bursary" EntitySet="Bursary" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Institution_Name" Association="Self.FK_Institution_Name">
+      <End Role="Institution" EntitySet="Institution" />
+      <End Role="Enrolled At" EntitySet="Enrolled At" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Organization_Name(Funder)" Association="Self.FK_Organization_Name(Funder)">
+      <End Role="Funder" EntitySet="Funder" />
+      <End Role="Employee" EntitySet="Employee" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Organization_Name(Institution)" Association="Self.FK_Organization_Name(Institution)">
+      <End Role="Institution" EntitySet="Institution" />
+      <End Role="Employee" EntitySet="Employee" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Identity_Number" Association="Self.FK_Student_Identity_Number">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="Enrolled At" EntitySet="Enrolled At" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Identity_Number(Application)" Association="Self.FK_Student_Identity_Number(Application)">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="Application" EntitySet="Application" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Number(Academic Records)" Association="Self.FK_Student_Number(Academic Records)">
+      <End Role="Enrolled At" EntitySet="Enrolled At" />
+      <End Role="Academic Records" EntitySet="Academic Records" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Number(Finacial Records)" Association="Self.FK_Student_Number(Finacial Records)">
+      <End Role="Enrolled At" EntitySet="Enrolled At" />
+      <End Role="Finacial Records" EntitySet="Finacial Records" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

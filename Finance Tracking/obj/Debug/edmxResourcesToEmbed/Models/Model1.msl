@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="Funders">
+      <EntityTypeMapping TypeName="Model.Funder">
+        <MappingFragment StoreEntitySet="Funder">
+          <ScalarProperty Name="Funder_Name" ColumnName="Funder_Name" />
+          <ScalarProperty Name="Funder_Tax_Number" ColumnName="Funder_Tax_Number" />
+          <ScalarProperty Name="Funder_Email" ColumnName="Funder_Email" />
+          <ScalarProperty Name="Funder_Telephone_Number" ColumnName="Funder_Telephone_Number" />
+          <ScalarProperty Name="Funder_Physical_Address" ColumnName="Funder_Physical_Address" />
+          <ScalarProperty Name="Funder_Postal_Address" ColumnName="Funder_Postal_Address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Funder_Employees">
+      <EntityTypeMapping TypeName="Model.Funder_Employee">
+        <MappingFragment StoreEntitySet="Funder Employee">
+          <ScalarProperty Name="Emp_ID" ColumnName="Emp_ID" />
+          <ScalarProperty Name="Emp_FName" ColumnName="Emp_FName" />
+          <ScalarProperty Name="Emp_LName" ColumnName="Emp_LName" />
+          <ScalarProperty Name="Emp_Telephone_Number" ColumnName="Emp_Telephone_Number" />
+          <ScalarProperty Name="Emp_Email" ColumnName="Emp_Email" />
+          <ScalarProperty Name="Organization_Name" ColumnName="Organization_Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Admin_Code" ColumnName="Admin_Code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Institutions">
+      <EntityTypeMapping TypeName="Model.Institution">
+        <MappingFragment StoreEntitySet="Institution">
+          <ScalarProperty Name="Institution_Name" ColumnName="Institution_Name" />
+          <ScalarProperty Name="Institution_Physical_Address" ColumnName="Institution_Physical_Address" />
+          <ScalarProperty Name="Institution_Postal_Address" ColumnName="Institution_Postal_Address" />
+          <ScalarProperty Name="Institution_Telephone_Number" ColumnName="Institution_Telephone_Number" />
+          <ScalarProperty Name="Institution_Email_Address" ColumnName="Institution_Email_Address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Institution_Employees">
+      <EntityTypeMapping TypeName="Model.Institution_Employee">
+        <MappingFragment StoreEntitySet="Institution Employee">
+          <ScalarProperty Name="Emp_ID" ColumnName="Emp_ID" />
+          <ScalarProperty Name="Emp_FName" ColumnName="Emp_FName" />
+          <ScalarProperty Name="Emp_LName" ColumnName="Emp_LName" />
+          <ScalarProperty Name="Emp_Telephone_Number" ColumnName="Emp_Telephone_Number" />
+          <ScalarProperty Name="Emp_Email" ColumnName="Emp_Email" />
+          <ScalarProperty Name="Organization_Name" ColumnName="Organization_Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Admin_Code" ColumnName="Admin_Code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
