@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance Tracking", "Finance Tracking\Finance Tracking.csproj", "{32B17B36-875A-4534-A8F0-DC89103456D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data Library", "Data Library\Data Library.csproj", "{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32B17B36-875A-4534-A8F0-DC89103456D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B17B36-875A-4534-A8F0-DC89103456D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B17B36-875A-4534-A8F0-DC89103456D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B17B36-875A-4534-A8F0-DC89103456D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D53B0F-54F6-41AE-A993-ABA9CCD9C84B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {004F66A3-06D3-42B4-A2CB-AB3112F76023}
+	EndGlobalSection
+EndGlobal
