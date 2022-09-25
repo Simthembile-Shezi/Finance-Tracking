@@ -1,0 +1,69 @@
+﻿@model Finance_Tracking.Models.Funder_Employee
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+<div class="col-md-8">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Emp_FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emp_FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Emp_LName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emp_LName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Emp_Telephone_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emp_Telephone_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Emp_Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emp_Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Organization_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Organization_Name)
+        </dd>
+
+    </dl>
+</div>
+
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("ViewBursaries", "Funder")'>
+            <input type="button" name="selection" value="View Bursaries" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("VerifyAdmin", "Funder")'>
+            <input type="button" name="selection" value="Admin" class="btn btn-default btn-block" />
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,98 @@
+﻿@model Finance_Tracking.Models.Bursary
+
+@{
+    ViewBag.Title = "ApplyForFunds";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Apply</h2>
+@using (Html.BeginForm("ApplyForFunds", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    @Html.AntiForgeryToken()
+    <div>
+        @Html.HiddenFor(model => model.Bursary_Code)
+        @Html.HiddenFor(model => model.Funding_Year)
+        @ViewBag.ApplicationExist
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Bursary_Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Bursary_Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Start_Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Start_Date)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Funder_Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Funder_Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.End_Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.End_Date)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Bursary_Amount)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Bursary_Amount)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Number_Available)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Number_Available)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Funding_Year)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Funding_Year)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="container-btn">
+        <div class="left-btn-flex">
+            <a href='@Url.Action("ViewBursaries", "Student")'>
+                <div>
+                    <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                </div>
+            </a>
+        </div>
+        <div class="right-btn-flex">
+            <div>
+                <input type="submit" name="selection" value="Submit Application" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

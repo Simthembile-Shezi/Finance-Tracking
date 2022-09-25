@@ -1,0 +1,98 @@
+﻿@model Finance_Tracking.Models.Bursary
+
+@{
+    ViewBag.Title = "DeleteBursary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Bursary</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Bursary_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bursary_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Start_Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Start_Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funder_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funder_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.End_Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.End_Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Bursary_Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bursary_Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number_Available)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number_Available)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funding_Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funding_Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="container-btn">
+            <div class="left-btn-flex">
+                <a href='@Url.Action("ViewBursary", "Funder", new { id = Model.Bursary_Code })'>
+                    <div>
+                        <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                    </div>
+                </a>
+            </div>
+            <div class="right-btn-flex">
+                <div>
+                    <input type="submit" name="selection" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

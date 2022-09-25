@@ -1,0 +1,58 @@
+﻿@model Finance_Tracking.Models.Application
+
+<div class="row col-md-8">
+    <h4>Application</h4>
+    @ViewBag.NotApproved
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Identity_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Identity_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Bursary_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bursary_Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funding_Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funding_Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Application_Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Application_Status)
+        </dd>
+    </dl>
+</div>
+
+<div class="row col-md-4">
+
+    <div class="btn-block">
+        <a href='@Url.Action("ViewBursaryAgreement", "Student", new {id = Model.Application_ID})'>
+            <input type="button" name="selection" value="View Bursary Agreement" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("ViewFundRequest", "Student", new {id = Model.Application_ID})'>
+            <input type="button" name="selection" value="View Fund Request" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("TrackFunding", "Student")'>
+            <input type="button" name="selection" value="Cancel" class="btn btn-default btn-block" />
+        </a>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@model Finance_Tracking.Models.Application
+
+@{
+    ViewBag.Title = "ViewBursaryAgreement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Bursary Agreement</h2>
+@Html.Partial("DownloadBursaryAgreement")
+<div class="container-btn row">
+    <div class="left-btn-flex">
+        <a href="@Url.Action("ShowApplication", "Student", new {id = Model.Application_ID})">
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+    
+    <div class="right-btn-flex">
+        <a href='@Url.Action("UploadSignedAgreement", "Student")'>
+            <div>
+                <input type="button" name="selection" value="Upload Signed Agreement" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

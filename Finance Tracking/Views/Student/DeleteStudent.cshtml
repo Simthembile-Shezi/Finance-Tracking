@@ -1,0 +1,31 @@
+﻿@model Finance_Tracking.Models.Student
+
+@{
+    ViewBag.Title = "DeleteStudent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Profile</h2>
+
+<h3>Are you sure you want to delete profile for @Html.DisplayFor(model => model.Student_FName) @Html.DisplayFor(model => model.Student_LName)?</h3>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="container-btn">
+            <div class="left-btn-flex">
+                <a href='@Url.Action("Index", "Student")'>
+                    <div>
+                        <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                    </div>
+                </a>
+            </div>
+            <div class="right-btn-flex">
+                <div>
+                    <input type="submit" name="selection" value="Delete" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

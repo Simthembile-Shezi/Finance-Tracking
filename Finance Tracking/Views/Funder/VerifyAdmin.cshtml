@@ -1,0 +1,39 @@
+﻿@model Finance_Tracking.Models.Funder_Employee
+
+@{
+    ViewBag.Title = "VerifyAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Verify Admin</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @ViewBag.Admin
+        <div class="form-group">
+            @Html.LabelFor(model => model.Admin_Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Admin_Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Admin_Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="container-btn">
+            <div class="left-btn-flex">
+                <a href='@Url.Action("Index", "Funder")'>
+                    <div>
+                        <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                    </div>
+                </a>
+            </div>
+            <div class="right-btn-flex">
+                <div>
+                    <input type="submit" name="selection" value="Verify" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

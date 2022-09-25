@@ -1,0 +1,42 @@
+﻿@model Finance_Tracking.Models.BursarsViewModel
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Update_Fund_Request)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Funding_Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Approved_Funds)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Bursars) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Update_Fund_Request)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Funding_Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Approved_Funds)
+        </td>
+        <td>
+            @Html.ActionLink("View Bursar", "ViewBursar", new { id=item.Application_ID })
+        </td>
+    </tr>
+}
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("ViewBursaries", "Funder")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

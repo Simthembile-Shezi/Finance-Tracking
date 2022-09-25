@@ -1,0 +1,59 @@
+﻿@model Finance_Tracking.Models.Application
+
+@{
+    ViewBag.Title = "UploadSignedAgreement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Upload Signed Agreement</h2>
+
+
+@using (Html.BeginForm("UploadSignedAgreement", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 text-success">
+                @ViewBag.FileStatus
+            </div>
+            <div class="col-md-offset-2 col-md-10 text-danger">
+                @ViewBag.FileStatusFailed
+            </div>
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <fieldset class="documents-fieldset">
+            <legend class="documents-legend"> @Html.LabelFor(model => model.Signed_Bursary_Agreement)</legend>
+            <div class="form-group">
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Signed_Bursary_Agreement, "", new { @type = "file", @multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.Signed_Bursary_Agreement, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-group">
+            <div class="container-btn">
+                <div class="left-btn-flex">
+                    <a href='@Url.Action("ViewBursaryAgreement", "Student")'>
+                        <div>
+                            <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                        </div>
+                    </a>
+                </div>
+                <div class="right-btn-flex">
+                    <div>
+                        <input type="submit" name="selection" value="Upload" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

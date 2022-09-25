@@ -1,0 +1,31 @@
+﻿@model Finance_Tracking.Models.Funder
+
+@{
+    ViewBag.Title = "DeleteFunder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Funder</h2>
+
+<h3>Are you sure you want to delete profile of @Html.DisplayFor(model => model.Funder_Name)?</h3>
+<div>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+    <div class="container-btn">
+        <div class="left-btn-flex">
+            <a href='@Url.Action("FunderDetails", "Funder", new { id = Model.Funder_Name })'>
+                <div>
+                    <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                </div>
+            </a>
+        </div>
+        <div class="right-btn-flex">
+            <div>
+                <input type="submit" name="selection" value="Delete" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+</div>

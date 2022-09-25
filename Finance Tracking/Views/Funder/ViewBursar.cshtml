@@ -1,0 +1,67 @@
+﻿@model Finance_Tracking.Models.Bursar_Fund
+
+@{
+    ViewBag.Title = "ViewBursar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Bursar</h2>
+
+<div class="col-md-8">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Update_Fund_Request)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Update_Fund_Request)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funding_Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funding_Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved_Funds)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approved_Funds)
+        </dd>
+
+    </dl>
+</div>
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("MaintainFunds", "Funder", new { id = Model.Application_ID })'>
+            <div>
+                <input type="button" name="selection" value="Maintain Funds" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("UpdateFundingStatus", "Funder", new { id = Model.Application_ID })'>
+            <div>
+                <input type="button" name="selection" value="Update Funding Status" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("UpdateFundRequest", "Funder", new { id = Model.Application_ID })'>
+            <div>
+                <input type="button" name="selection" value="Update Fund Request" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("ViewBursars", "Funder")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+</div>

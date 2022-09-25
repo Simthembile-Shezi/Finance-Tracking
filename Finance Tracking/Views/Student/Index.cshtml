@@ -1,0 +1,73 @@
+﻿@model Finance_Tracking.Models.Student
+
+@{
+    ViewBag.Title = "StudentDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Student Details</h2>
+
+
+<div class="col-md-8">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Identity_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Identity_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_LName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_LName)
+        </dd>
+
+    </dl>
+</div>
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("ViewBursaries", "Student")'>
+            <input type="button" name="selection" value="View Bursaries" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("TrackFunding", "Student")'>
+            <input type="button" name="selection" value="Track Funding" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("InstitutionInfo", "Student")'>
+            <input type="button" name="selection" value="Institution Info" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("MaintainStudent", "Student")'>
+            <input type="button" name="selection" value="Maintain Profile" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("MaintainStudentDocs", "Student")'>
+            <input type="button" name="selection" value="Upload Documents" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DeleteStudent", "Student")'>
+            <input type="button" name="selection" value="Delete Profile" class="btn btn-default btn-block" />
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

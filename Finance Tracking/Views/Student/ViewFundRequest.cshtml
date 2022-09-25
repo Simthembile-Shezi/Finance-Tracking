@@ -1,0 +1,46 @@
+﻿@model Finance_Tracking.Models.Bursar_Fund
+
+@{
+    ViewBag.Title = "ViewFundRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Fund Request</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Update_Fund_Request)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Update_Fund_Request)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funding_Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funding_Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved_Funds)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approved_Funds)
+        </dd>
+
+    </dl>
+</div>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("ShowApplication", "Student", new {id = Model.Application_ID})'>
+            <div>
+                <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

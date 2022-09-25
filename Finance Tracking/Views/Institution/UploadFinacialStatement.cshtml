@@ -1,0 +1,55 @@
+﻿@model Finance_Tracking.Models.Finacial_Record
+
+@{
+    ViewBag.Title = "UploadFinacialStatement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Upload Finacial Statement</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<<div class="col-md-8">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Balance_Amount, htmlAttributes: new { @class = "control-label col-md-3" })
+        <div class="col-md-9">
+            @Html.EditorFor(model => model.Balance_Amount, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Balance_Amount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <fieldset class="documents-fieldset">
+        <legend class="documents-legend"> @Html.LabelFor(model => model.Upload_Finacial_Statement)</legend>
+        <div class="form-group">
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.Upload_Finacial_Statement, "", new { @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.Upload_Finacial_Statement, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </fieldset>
+</div>
+ <div class="row col-md-4">
+     <div class="btn-block">
+         <div>
+             <input type="submit" name="selection" value="Save" class="btn btn-default" />
+         </div>
+     </div>
+     <div class="btn-block">
+         <a href='@Url.Action("RequestStudentFunds", "Institution", new { id = Model.Student_Number })'>
+             <div>
+                 <input type="button" name="selection" value="Request funds" class="btn btn-default" />
+             </div>
+         </a>
+     </div>
+     <div class="btn-block">
+         <a href='@Url.Action("ViewStudent", "Institution", new { id = Model.Student_Number })'>
+             <div>
+                 <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+             </div>
+         </a>
+     </div>
+ </div>
+}

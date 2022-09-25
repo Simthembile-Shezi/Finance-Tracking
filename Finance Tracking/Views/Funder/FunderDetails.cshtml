@@ -1,0 +1,147 @@
+﻿@model Finance_Tracking.Models.Funder
+
+@{
+    ViewBag.Title = "FunderDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Funder Details</h2>
+
+<div class="col-md-8">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Funder_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funder_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funder_Tax_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funder_Tax_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Funder_Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funder_Email)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Funder_Telephone_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Funder_Telephone_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Street_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Street_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sub_Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sub_Town)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zip_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zip_Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal_box)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal_box)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Town)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City_Post)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City_Post)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province_Post)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province_Post)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal_Code)
+        </dd>
+
+    </dl>
+</div>
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("AddEmployee", "Funder")'>
+            <input type="button" name="selection" value="Add Employee" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("MaintainFunder", "Funder")'>
+            <input type="button" name="selection" value="Maintain Funder" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DeleteFunder", "Funder")'>
+            <input type="button" name="selection" value="Delete Funder" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("Index", "Funder")'>
+            <input type="button" name="selection" value="Dashboard" class="btn btn-default btn-block" />
+        </a>
+    </div>
+</div>

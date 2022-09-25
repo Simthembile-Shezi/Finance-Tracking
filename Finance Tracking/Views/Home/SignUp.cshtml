@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("SignUp", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Create a new account.</h4>
+    <div class="row">
+        <div class="col-md-4 register-choice">
+            @Html.ActionLink("Register as Student", "RegisterStudentInfo", "Student")
+        </div>
+        <div class="col-md-4 register-choice">
+            @Html.ActionLink("Register as Funder", "RegisterFunder", "Funder")
+        </div>
+        <div class="col-md-4 register-choice">
+            @Html.ActionLink("Register as Institution", "RegisterInstitution", "Institution")
+        </div>
+    </div>
+}

@@ -1,0 +1,69 @@
+﻿@model Finance_Tracking.Models.FundedStudents
+
+<div class="col-md-8">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Identity_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Identity_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Institution_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Institution_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Application_Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Application_Status)
+        </dd>
+
+    </dl>
+</div>
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("UploadFinacialStatement", "Institution", new {id = Model.Student_Number})'>
+            <div>
+                <input type="button" name="selection" value="Student Finacial Records" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("ProvideStudentResult", "Institution", new {id = Model.Student_Number})'>
+            <div>
+                <input type="button" name="selection" value="Student Academic Records" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("ViewFundedStudents", "Institution")'>
+            <div>
+                <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model Finance_Tracking.Models.Institution
+
+@{
+    ViewBag.Title = "DeleteInstitution";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Institution</h2>
+
+<h3>Are you sure you want to delete prifile for @Html.DisplayFor(model => model.Institution_Name)?</h3>
+<div>
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+    <div class="container-btn">
+        <div class="left-btn-flex">
+            <a href='@Url.Action("InstitutionDetails", "Institution", new { id = Model.Institution_Name })'>
+                <div>
+                    <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                </div>
+            </a>
+        </div>
+        <div class="right-btn-flex">
+            <div>
+                <input type="submit" name="selection" value="Delete" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+</div>

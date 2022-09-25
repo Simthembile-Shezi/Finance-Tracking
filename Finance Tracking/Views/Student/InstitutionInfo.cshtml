@@ -1,0 +1,57 @@
+﻿@model Finance_Tracking.Models.Student
+
+@{
+    ViewBag.Title = "InstitutionInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>InstitutionInfo</h2>
+@Html.AntiForgeryToken()
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Student_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Institution_Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Qualification)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Enrolled_Ats)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Institution_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qualification)
+            </td>
+            <td>
+                @Html.ActionLink("View", "ViewInstitutionInfo", new { id = item.Student_Number })
+            </td>
+        </tr>
+    }
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("Index", "Student")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+    <div class="right-btn-flex">
+        <a href='@Url.Action("RegisterInstitutionInfo", "Student")'>
+            <div>
+                <input type="button" name="selection" value="New Institution" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

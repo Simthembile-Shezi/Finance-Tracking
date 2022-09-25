@@ -1,0 +1,70 @@
+﻿@using Finance_Tracking.Models
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<div class="row">
+    <div id="loginForm" class="col-md-8">
+            @using (Html.BeginForm("Login", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <section class="login-form">
+                    <article>
+                        @Html.LabelFor(model => model.UserType)
+                    </article>
+                    <article>
+                        @Html.DropDownListFor(model => model.UserType, new List<SelectListItem>
+                    {
+                       new SelectListItem{ Text="Select", Value = "None" , Selected =true},
+                       new SelectListItem{ Text="Student", Value = "STUDENT_USER" },
+                       new SelectListItem{ Text="Institution", Value = "INSTITUTION_USER" },
+                       new SelectListItem{ Text="Funder", Value = "FUNDER_USER" },
+                    }, new { @class = "login-input form-control", @id="active-user", @onchange = "changeUser()" })
+                    </article>
+                    <article>
+                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @id = "change-user" })
+                    </article>
+                    <article>
+                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "login-input form-control", @id = "username", @placeholder = "Please select user type first" } })
+                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                    </article>
+                    <article>
+                        @Html.LabelFor(model => model.Password)
+                    </article>
+                    <article>
+                        @Html.PasswordFor(model => model.Password, new { @class = "login-input form-control" })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </article>
+
+                    <section class="row login-container">
+                        <article id="col-md-6 check-remember">
+                            @Html.CheckBoxFor(model => model.Remember_username, new { @class = "remember-username" })
+                            @Html.LabelFor(model => model.Remember_username, new { @class = "remember-username-label" })
+                        </article>
+                        <article class="col-md-6 forgot-password">
+                            @Html.ActionLink("Forgot password?", "ForgotPassword")
+                        </article>
+                    </section>
+                    <article class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Log in" class="btn btn-default" id="login-btn" />
+                    </article>
+
+                </section>
+                <section id="new-users">
+                    <p>
+                        Don't have an account? @Html.ActionLink("Sign Up", "SignUp")
+                    </p>
+                </section>
+            }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

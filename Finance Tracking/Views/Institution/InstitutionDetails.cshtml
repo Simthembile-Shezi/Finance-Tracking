@@ -1,0 +1,140 @@
+﻿@model Finance_Tracking.Models.Institution
+
+@{
+    ViewBag.Title = "InstitutionDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Institution Details</h2>
+
+<div class="col-md-8">
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Institution_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Institution_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Street_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Street_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sub_Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sub_Town)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zip_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zip_Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal_box)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal_box)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Town)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City_Post)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City_Post)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province_Post)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province_Post)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postal_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postal_Code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Institution_Telephone_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Institution_Telephone_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Institution_Email_Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Institution_Email_Address)
+        </dd>
+
+    </dl>
+</div>
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("AddEmployee", "Institution")'>
+            <input type="button" name="selection" value="Add Employee" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("MaintainInstitution", "Institution")'>
+            <input type="button" name="selection" class="btn btn-default btn-block" value="Maintain Details" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DeleteInstitution", "Institution")'>
+            <input type="button" name="selection" class="btn btn-default btn-block" value="Delete Institution" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("Index", "Institution")'>
+            <input type="button" name="selection" class="btn btn-default btn-block" value="Dashboard" />
+        </a>
+    </div>
+</div>

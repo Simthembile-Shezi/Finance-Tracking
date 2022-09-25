@@ -1,0 +1,56 @@
+﻿@model Finance_Tracking.Models.Bursary
+
+@{
+    ViewBag.Title = "ViewApplications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Applications</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Student_Identity_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Bursary_Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Funding_Year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Application_Status)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Applications)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Identity_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bursary_Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Funding_Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Application_Status)
+            </td>
+            <td>
+                @Html.ActionLink("View", "ViewApplication", new { id = item.Application_ID })
+            </td>
+        </tr>
+    }
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("ViewBursaries", "Funder")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>
