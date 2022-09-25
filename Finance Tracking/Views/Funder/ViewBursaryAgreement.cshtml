@@ -1,0 +1,60 @@
+﻿@model Finance_Tracking.Models.Application
+
+@{
+    ViewBag.Title = "ViewBursaryAgreement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Bursary Agreement</h2>
+
+<div class="col-md-8">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Application_ID)
+
+            <div class="form-group">
+                @Html.Label("Agreement status", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DropDownListFor(model => model.Application_Status, new List<SelectListItem>
+                         {
+                            new SelectListItem{ Text="Select", Value = "Select" , Selected =true},
+                            new SelectListItem{ Text="Approve", Value = "Agreement Approved" },
+                            new SelectListItem{ Text="Reject", Value = "Agreement Rejected" },
+                            new SelectListItem{ Text="In Progress", Value = "In Progress" },
+                            new SelectListItem{ Text="Under Review", Value = "Under Review" },
+                          }, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Application_Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" name="selection" value="Update Bursary Agreement" class="btn btn-default" />
+            </div>
+        </div>
+    }
+
+</div>
+<div class="col-md-4">
+    <div class="btn-block">
+        <a href='@Url.Action("UploadBursaryAgreement", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Upload Bursary Agreement" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DownloadSignedAgreement", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Download Signed Agreement" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("ViewApplication", "Funder", new { id = Model.Application_ID })'>
+            <div>
+                <input type="button" name="selection" value="Cancel" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+</div>

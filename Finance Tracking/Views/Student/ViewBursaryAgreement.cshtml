@@ -6,20 +6,29 @@
 }
 
 <h2>View Bursary Agreement</h2>
-@Html.Partial("DownloadBursaryAgreement")
-<div class="container-btn row">
-    <div class="left-btn-flex">
-        <a href="@Url.Action("ShowApplication", "Student", new {id = Model.Application_ID})">
+<div class="col-md-8">
+    @ViewBag.DownloadFailed
+</div>
+
+<div class="row col-md-4">
+    <div class="btn-block">
+        <a href="@Url.Action("DownloadBursaryAgreement", "Student", new {id = Model.Application_ID})">
             <div>
-                <input type="button" name="selection" value="Back" class="btn btn-default" />
+                <input type="button" name="selection" value="Download Agreement" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>
-    
-    <div class="right-btn-flex">
+    <div class="btn-block">
         <a href='@Url.Action("UploadSignedAgreement", "Student")'>
             <div>
-                <input type="button" name="selection" value="Upload Signed Agreement" class="btn btn-default" />
+                <input type="button" name="selection" value="Upload Signed Agreement" class="btn btn-default btn-block" />
+            </div>
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href="@Url.Action("ShowApplication", "Student", new {id = Model.Application_ID})">
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>

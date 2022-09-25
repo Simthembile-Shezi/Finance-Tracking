@@ -231,7 +231,6 @@
     <Content Include="Views\Funder\ViewApplications.cshtml" />
     <Content Include="Views\Funder\UpdateFundingStatus.cshtml" />
     <Content Include="Views\Funder\UploadBursaryAgreement.cshtml" />
-    <Content Include="Views\Funder\ApproveSignedAgreement.cshtml" />
     <Content Include="Views\Funder\ViewBursary.cshtml" />
     <Content Include="Views\Funder\UpdateFundRequest.cshtml" />
     <Content Include="Views\Funder\MaintainFunds.cshtml" />
@@ -263,6 +262,7 @@
     <Content Include="Views\Student\EditInstitutionInfo.cshtml" />
     <Content Include="Views\Student\ViewInstitutionInfo.cshtml" />
     <Content Include="Views\Student\MaintainStudentDocs.cshtml" />
+    <Content Include="Views\Funder\ViewBursaryAgreement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">

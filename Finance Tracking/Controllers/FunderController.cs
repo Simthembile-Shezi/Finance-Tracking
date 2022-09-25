@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using System.Net.Mime;
 using static Data_Library.Business_Logic.ApplicationProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
@@ -184,45 +185,87 @@ namespace Finance_Tracking.Controllers
                     var list = GetApplications(id.ToString());
                     foreach (var app in list)
                     {
-                        Application application = new Application();
-                        application.Application_ID = app.Application_ID;
-                        application.Student_Identity_Number = app.Student_Identity_Number;
-                        application.Bursary_Code = app.Bursary_Code;
-                        application.Funding_Year = app.Funding_Year;
-                        application.Application_Status = app.Application_Status;
-                        application.Upload_Agreement = app.Upload_Agreement;
-                        application.Upload_Signed_Agreement = app.Upload_Signed_Agreement;
+                        Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
 
                         bursary.Applications.Add(application);
                     }
-
                     Session["Applications"] = bursary;
-
                     return View(bursary);
                 }
             }
             return View();
         }
+        // POST: Funder/ViewApplications
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ViewApplications(Bursary model)
+        {
+            Bursary bursary = (Bursary)Session["Applications"];
+            Bursary result = new Bursary();
 
-        // GET: Funder/ViewApplication/5
+            foreach (var item in bursary.Applications)
+            {
+                if ((item.Student_Identity_Number).Equals(model.Application.Student_Identity_Number))
+                {
+                    result.Applications.Add(item);
+                    return View(result);
+                }
+            }
+            return View(bursary);
+        }
+        // GET: Funder/ViewApplication/Application_ID
         public ActionResult ViewApplication(string id)
         {
             Bursary bursary = (Bursary)Session["Applications"];
-            if (bursary != null)
+
+            foreach (var application in bursary.Applications)
             {
-                foreach (var application in bursary.Applications)
+                if (application.Application_ID.Equals(id))
                 {
-                    if (application.Application_ID.Equals(id))
-                    {
-                        Session["Application"] = application;
-                        return View(application);
-                    }
+                    Session["Application"] = application;
+                    return View(application);
                 }
             }
             return RedirectToAction("ViewApplications", new { id = bursary.Bursary_Code });
         }
-        // GET: Funder/UpdateFundingStatus/5
+        // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)
+        {
+            Application application = (Application)Session["Application"];
+            if (application == null)
+            {
+                return HttpNotFound();
+            }
+            return View(application);
+        }
+
+        // POST: Funder/UpdateApplicationStatus/Application_ID
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateApplicationStatus(Application model)
+        {
+            try
+            {
+                updateApplicationStatus(model.Application_ID, model.Application_Status);
+
+                //Removed the fund request and approved amount on the CreateBursarFund
+                if (model.Application_Status.Equals("Approved"))
+                {
+                    CreateBursarFund(model.Application_ID, "Funded", 0);
+                }
+                ////Binding
+                Application application = (Application)Session["Application"];
+                application.Application_Status = model.Application_Status;
+                Session["Application"] = application;
+
+                return View("ViewApplication", application);
+            }
+            catch
+            {
+                return View(model);
+            }
+        }
+        public ActionResult ViewBursaryAgreement(string id)
         {
             Application application = (Application)Session["Application"];
             if (application == null)
@@ -232,37 +275,29 @@ namespace Finance_Tracking.Controllers
 
             return View(application);
         }
-
-        // POST: Funder/Delete/5
+        // POST: Funder/ViewBursaryAgreement/Application_ID
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateApplicationStatus(Application model)
+        public ActionResult ViewBursaryAgreement(Application model)
         {
-            //try
+            try
             {
+                //ApproveSignedAgreement when the submit button is clicked
                 updateApplicationStatus(model.Application_ID, model.Application_Status);
-                return RedirectToAction("ViewApplication", new { id = model.Application_ID });
-                ////Binding
-                //Bursary bursary = (Bursary)Session["Applications"];
-                //if (bursary != null)
-                //{
-                //    foreach (var application in bursary.Applications)
-                //    {
-                //        if (application.Application_ID.Equals(model.Application_ID))
-                //        {
-                //            application.Application_Status = model.Application_Status;
-                //            return RedirectToAction("ViewApplication", new { id = model.Application_ID });
-                //        }
-                //    }
-                //}
-                //return RedirectToAction("UpdateApplicationStatus", new { id = model.Application_ID });
+
+                //Binding
+                Application application = (Application)Session["Application"];
+                application.Application_Status = model.Application_Status;
+                Session["Application"] = application;
+
+                return View("ViewApplication", application);
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                return View(model);
+            }
         }
-        // GET: Funder/Delete/5
+        // GET: Funder/UploadBursaryAgreement/Application_ID
         public ActionResult UploadBursaryAgreement(string id)
         {
             Application application = (Application)Session["Application"];
@@ -274,84 +309,51 @@ namespace Finance_Tracking.Controllers
             return View(application);
         }
 
-        // POST: Funder/Delete/5
+        // POST: Funder/UploadBursaryAgreement/Application_ID
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UploadBursaryAgreement(Application application)
+        public ActionResult UploadBursaryAgreement(Application model)
         {
-            //try
+            try
             {
-                HttpPostedFileBase Agreement = application.Bursary_Agreement;
+                HttpPostedFileBase Agreement = model.Bursary_Agreement;
 
+                //Convert HttpPostedFileBase to Byte[]
+                Stream str = Agreement.InputStream;
+                BinaryReader Br = new BinaryReader(str);
+                Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                if (Agreement != null)
-                {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = Agreement.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                //Store the file content in Byte[] format on the model
+                model.Upload_Agreement = Agreement_Doc_FileDet;
+                updateApplicationDocs(model.Application_ID, model.Upload_Agreement);
 
-                    //Store the file content in Byte[] format on the model
-                    application.Upload_Agreement = Agreement_Doc_FileDet;
-                    updateApplicationDocs(application.Application_ID, application.Upload_Agreement);
-                }
+                //updateApplicationDocs must also update the status to Agreement Sent
+                updateApplicationStatus(model.Application_ID, "Agreement Sent");
 
-                return RedirectToAction("ViewApplication", new { id = application.Application_ID });
+                ////Binding
+                Application application = (Application)Session["Application"];
+                application.Upload_Agreement = model.Upload_Agreement;
+                application.Application_Status = "Agreement Sent";
+                Session["Application"] = application;
+
+                return View("ViewApplication", application);
             }
-            //catch
-            //{
-            //    return View();
-            //}
-        }
-        // GET: Funder/Delete/5
-        public ActionResult ApproveSignedAgreement(string id)
-        {
-            Application application = (Application)Session["Application"];
-            if (application == null)
+            catch
             {
-                return HttpNotFound();
+                ViewBag.UploadStatus = "Upload failed, please try again or contact your organization Finance Tracking System Admin";
+                return View(model);
             }
-
-            return View(application);
         }
-
-        // POST: Funder/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ApproveSignedAgreement(Application model)
-        {
-            //try
-            {
-                updateApplicationStatus(model.Application_ID, model.Application_Status);
-
-                //Binding
-                Bursary bursary = (Bursary)Session["Applications"];
-                if (bursary != null)
-                {
-                    foreach (var application in bursary.Applications)
-                    {
-                        if (application.Application_ID.Equals(model.Application_ID))
-                        {
-                            application.Application_Status = model.Application_Status;
-                            return RedirectToAction("ViewApplication", new { id = model.Application_ID });
-                        }
-                    }
-                }
-                return RedirectToAction("UpdateApplicationStatus", new { id = model.Application_ID });
-            }
-            //catch
-            //{
-            //    return View();
-            //}
-        }
+        
         [HttpGet]
-        [ValidateAntiForgeryToken]
-        public FileResult DownLoadFile(string id)
+        public FileResult DownloadSignedAgreement(string id)    //No need for a view
         {
             Application application = (Application)Session["Application"];
-
-            return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID);
-
+            if(application.Upload_Signed_Agreement == null)
+            {
+                return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
+            }
+            return File(application.Upload_Signed_Agreement, MediaTypeNames.Application.Octet, application.Application_ID);
         }
         #endregion
 
@@ -386,7 +388,7 @@ namespace Finance_Tracking.Controllers
 
             foreach (var bursary in funder.Bursaries)
             {
-                if(bursary.Funding_Year != null && bursary.Funding_Year.Equals(model.Bursary.Funding_Year))
+                if (bursary.Funding_Year != null && bursary.Funding_Year.Equals(model.Bursary.Funding_Year))
                     fund.Bursaries.Add(bursary);
             }
             return View(fund);

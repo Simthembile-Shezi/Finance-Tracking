@@ -24,8 +24,15 @@
                 @Html.DropDownListFor(model => model.Application_Status, new List<SelectListItem>
                      {
                         new SelectListItem{ Text="Select", Value = "Select" , Selected =true},
-                        new SelectListItem{ Text="Approve", Value = "Approved" },
-                        new SelectListItem{ Text="Reject", Value = "Rejectd" },
+                        new SelectListItem{ Text="Application Received", Value = "Received" },
+                        new SelectListItem{ Text="Approve (Provisional)", Value = "Provisionally Approved" },
+                        new SelectListItem{ Text="Approve (Final)", Value = "Approved" },
+                        new SelectListItem{ Text="Reject Application", Value = "Rejected" },
+                        new SelectListItem{ Text="Incomplete Application", Value = "Incomplete" },
+                        new SelectListItem{ Text="Application Under Review", Value = "Under Review" },
+                        new SelectListItem{ Text="Invite For Interview", Value = "Interview" },
+                        new SelectListItem{ Text="Shortlist Application", Value = "Shortlisted" },
+                        new SelectListItem{ Text="In Progress", Value = "In Progress" },
                         }, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Application_Status, "", new { @class = "text-danger" })
             </div>

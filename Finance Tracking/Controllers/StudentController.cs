@@ -4,6 +4,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.SessionState;
+using System.Net.Mime;
 using static Data_Library.Business_Logic.StudentProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.ApplicationProcessor;
@@ -453,6 +454,7 @@ namespace Finance_Tracking.Controllers
         #endregion
 
         #region Track funding status
+        // GET: Student/TrackFunding
         public ActionResult TrackFunding() //Show all applications
         {
             Student student = (Student)Session["Student"];
@@ -476,6 +478,8 @@ namespace Finance_Tracking.Controllers
             Session["Track"] = model;
             return View(model);
         }
+
+        // GET: Student/ShowApplication/Application_ID
         public ActionResult ShowApplication(string id) // one application
         {
             ApplyBursaryViewModel model = (ApplyBursaryViewModel)Session["Track"];
@@ -489,25 +493,30 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
-        
 
+        // GET: Student/ViewBursaryAgreement/Application_ID
         public ActionResult ViewBursaryAgreement(string id)
         {
             Application application = (Application)Session["Application"];
+            if (application.Upload_Agreement == null)
+            {
+                ViewBag.DownloadFailed = "The funder has not uploaded the bursary agreement";
+                return View(application);
+            }
+            ViewBag.DownloadFailed = "The funder has uploaded the bursary agreement, click the Download button to download the agreement";
             return View(application);
         }
-        // GET: Student/Create
-        public ActionResult DownloadBursaryAgreement()
-        {
-            Application application = (Application)Session["Application"];
-            return View(application);
-        }
-        [HttpGet]
-        public FileResult DownLoadFile(string id)
-        {
-            Application application = (Application)Session["Application"];
 
-            return File(application.Upload_Agreement, "application/pdf", id);
+        // GET: Student/DownloadBursaryAgreement/Application_ID
+        public FileResult DownloadBursaryAgreement(string id)
+        {
+            Application application = (Application)Session["Application"];
+            if(application.Upload_Agreement == null)
+            {
+                RedirectToAction("ViewBursaryAgreement");
+                return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
+            }
+            return File(application.Upload_Agreement, MediaTypeNames.Application.Octet , application.Application_ID);
         }
 
         // GET: Student/UploadSignedAgreement

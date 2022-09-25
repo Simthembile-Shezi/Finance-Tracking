@@ -1,5 +1,12 @@
-﻿
+﻿@model Finance_Tracking.Models.Application
+
+@{
+    ViewBag.Title = "ViewBursaryAgreement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="form-group">
+    @ViewBag.DownloadFailed
     <table class="table table-bordered">
         <tr>
             <th class="col-md-4">

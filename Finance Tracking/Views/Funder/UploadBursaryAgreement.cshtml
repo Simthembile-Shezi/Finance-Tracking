@@ -7,20 +7,15 @@
 
 <h2>Upload Bursary Agreement</h2>
 
-
-
-@using (Html.BeginForm("UploadSignedAgreement", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("UploadBursaryAgreement", "Funder", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10 text-success">
-                @ViewBag.FileStatus
-            </div>
             <div class="col-md-offset-2 col-md-10 text-danger">
-                @ViewBag.FileStatusFailed
+                @ViewBag.UploadStatus
             </div>
         </div>
 
@@ -39,7 +34,7 @@
         <div class="form-group">
             <div class="container-btn">
                 <div class="left-btn-flex">
-                    <a href='@Url.Action("ApproveSignedAgreement", "Funder",  new { id = Model.Application_ID})'>
+                    <a href='@Url.Action("ViewBursaryAgreement", "Funder",  new { id = Model.Application_ID})'>
                         <div>
                             <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                         </div>

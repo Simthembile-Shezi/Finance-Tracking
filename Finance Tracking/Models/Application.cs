@@ -10,6 +10,21 @@ namespace Finance_Tracking.Models
     [Table("Application")]
     public partial class Application
     {
+        public Application(string application_ID, string student_Identity_Number, string bursary_Code, string funding_Year, string application_Status, byte[] upload_Agreement, byte[] upload_Signed_Agreement)
+        {
+            Application_ID = application_ID;
+            Student_Identity_Number = student_Identity_Number;
+            Bursary_Code = bursary_Code;
+            Funding_Year = funding_Year;
+            Application_Status = application_Status;
+            Upload_Agreement = upload_Agreement;
+            Upload_Signed_Agreement = upload_Signed_Agreement;
+        }
+        public Application()
+        {
+
+        }
+
         [Key]
         [StringLength(50)]
         public string Application_ID { get; set; }

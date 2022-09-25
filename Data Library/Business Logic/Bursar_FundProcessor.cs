@@ -6,19 +6,18 @@ namespace Data_Library.Business_Logic
 {
     public static class Bursar_FundProcessor
     {
-        public static int CreateBursarFund(string appID, string updateRequest, string status, decimal? approvedFunds)
+        public static int CreateBursarFund(string appID, string status, decimal? approvedFunds)
 
         {
             Bursar_FundDB data = new Bursar_FundDB
             {
                 Application_ID = appID,
-                Update_Fund_Request = updateRequest,
                 Funding_Status = status,
                 Approved_Funds = approvedFunds
             };
 
-            string sql = @" insert into dbo.[Bursar Funds] (Application_ID Update_Fund_Request, Funding_Status, Approved_Funds)
-                            values (@Application_ID @Update_Fund_Request, @Funding_Status, @Approved_Funds);";
+            string sql = @" insert into dbo.[Bursar Funds] (Application_ID, Funding_Status, Approved_Funds)
+                            values (@Application_ID , @Funding_Status, @Approved_Funds);";
 
             return SqlDataAccess.SaveData(sql, data);
         }
