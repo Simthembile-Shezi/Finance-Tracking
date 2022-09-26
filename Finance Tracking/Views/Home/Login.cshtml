@@ -13,8 +13,8 @@
             @using (Html.BeginForm("Login", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <span class="text-danger">@ViewBag.LoginFailed</span>
                 <section class="login-form">
                     <article>
                         @Html.LabelFor(model => model.UserType)
