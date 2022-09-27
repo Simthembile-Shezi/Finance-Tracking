@@ -27,6 +27,20 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.SaveData(sql, data);
         }
+        public static int UpdateBursaryNumberAvail(string burCode, decimal numAvail)
+        {
+            BursaryDB data = new BursaryDB();
+            data.Bursary_Code = burCode;
+
+            if (numAvail > -1)
+                data.Number_Available = numAvail;
+
+            string sql = @"update dbo.[Bursary] 
+                               set Number_Available = @Number_Available
+                               where Bursary_Code = @Bursary_Code;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
 
         public static int UpdateBursary(string burCode, string burName, System.DateTime startDate, string funderName,
             System.DateTime? endDate, decimal? burAmount, decimal numAvail, string desc, string FY)
@@ -58,7 +72,8 @@ namespace Data_Library.Business_Logic
                                    End_Date = @End_Date,
                                    Bursary_Amount = @Bursary_Amount,
                                    Number_Available = @Number_Available,
-                                   Description = @Description, Funding_Year = @Funding_Year
+                                   Description = @Description,
+                                   Funding_Year = @Funding_Year
                                where Bursary_Code = @Bursary_Code;";
 
             return SqlDataAccess.SaveData(sql, data);

@@ -425,7 +425,8 @@ namespace Finance_Tracking.Controllers
             {
                 if (item.Bursary_Code.Equals(id.ToString()))
                 {
-                    Session["Bursary"] = item;
+                    Bursary bursary = new Bursary(item.Bursary_Code, item.Bursary_Name, item.Start_Date, item.Funder_Name, item.End_Date, item.Bursary_Amount, item.Number_Available, item.Description, item.Funding_Year);
+                    Session["Bursary"] = bursary;
                     return View(item);
                 }
             }
@@ -435,14 +436,25 @@ namespace Finance_Tracking.Controllers
         // POST: Student/Apply/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApplyForFunds(Bursary model)
+        public ActionResult ApplyForFunds(/*Bursary model*/)
         {
             try
             {
-                Student student = (Student)Session["Student"];
-                CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
-
-                return RedirectToAction("ViewBursaries");
+                Bursary model = (Bursary)Session["Bursary"];
+                if (model.Number_Available != 0)
+                {
+                    Student student = (Student)Session["Student"];
+                    CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
+                    decimal num = model.Number_Available - 1;
+                    UpdateBursaryNumberAvail(model.Bursary_Code, num);
+                    return RedirectToAction("ViewBursaries");
+                }
+                else
+                {
+                    Bursary bursary = (Bursary)Session["Bursary"];
+                    ViewBag.ApplicationExist = "No applications available at the moment";
+                    return View(bursary);
+                }
             }
             catch
             {
