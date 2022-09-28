@@ -8,10 +8,6 @@ namespace Finance_Tracking.Models
 {
     public class LoginViewModel
     {
-        public Student Student { get; set; }
-        public Funder Funder { get; set; }
-        public Institution Institution { get; set; }
-
         [Display(Name = "Select user type")]
         public string UserType { get; set; }
 

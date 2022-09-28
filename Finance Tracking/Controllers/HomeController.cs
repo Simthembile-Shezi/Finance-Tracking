@@ -192,45 +192,39 @@ namespace Finance_Tracking.Controllers
                 {
                     if (model.UserType == "STUDENT_USER")
                     {
-                        StudentDB student = GetStudent(model.ToEmail);
+                        //var user = GetStudentEmail(model.ToEmail);
+                        //if(user == null)
+                        {
+                            ViewBag.Title = "Email address does not exist";
+                            return View(model);
+                        }
+                        //SendEmail(user.Student_Email, user.Student_FName + "," + user.Student_LName);
+                        //Session["Student"] = user;
                     }
                     else if (model.UserType == "INSTITUTION_USER")
                     {
-                        InstitutionEmployeeDB institution = GetInstitutionEmp(model.ToEmail);
+                        var user = GetInstitutionEmp(model.ToEmail);
+                        if ( user == null)
+                        {
+                            ViewBag.Title = "Email address does not exist";
+                            return View(model);
+                        }
+                        SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
+                        Session["InstitutionEmployee"] = user;
                     }
                     else if (model.UserType == "FUNDER_USER")
                     {
-                        FunderEmployeeDB funder = GetFunderEmp(model.ToEmail);
+                        var user = GetFunderEmp(model.ToEmail);
+                        if (user == null)
+                        {
+                            ViewBag.Title = "Email address does not exist";
+                            return View(model);
+                        }
+                        SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
+                        Session["FunderEmployee"] = user;
                     }
                     Session["SendEmail"] = model;
 
-                    Random random = new Random();
-                    int code = random.Next(1000, 9999);
-                    Session["Code"] = code;
-
-                    var senderEmail = new MailAddress("s221517979@mandela.ac.za", "No-Reply");
-                    var receiverEmail = new MailAddress(model.ToEmail, "Receiver");
-                    var password = "Your Email Password here";
-                    var sub = "Forgot password";
-                    var body = "Enter this code "+code+",to reset your password";
-
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com",
-                        Port = 587,
-                        EnableSsl = true,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(senderEmail.Address, password)
-                    };
-                    using (var mess = new MailMessage(senderEmail, receiverEmail)
-                    {
-                        Subject = sub,
-                        Body = body
-                    })
-                    {
-                        smtp.Send(mess);
-                    }
                     return RedirectToAction("ChangePassword");
                 }
                 else
@@ -244,6 +238,35 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
+        private void SendEmail(string email, string recever)
+        {
+            Random random = new Random();
+            int code = random.Next(1000, 9999);
+            Session["Code"] = code;
+
+            var senderEmail = new MailAddress("Finance.Tracking@outlook.com", "No-Reply");
+            var receiverEmail = new MailAddress(email, recever);
+            var sub = "Forgot password";
+            var body = "Enter this code " + code + ",to reset your password";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp-mail.outlook.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(senderEmail.Address, "Project2022")
+            };
+            using (var mess = new MailMessage(senderEmail, receiverEmail)
+            {
+                Subject = sub,
+                Body = body
+            })
+            {
+                smtp.Send(mess);
+            }
+        }
         public ActionResult ChangePassword()
         {
             ViewBag.Status = "false";
@@ -252,7 +275,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ChangePassword(ChangePasswordViewModel change)
         {
             string code = Session["Code"].ToString();
-            if(change.Code == code)
+            if(change.Code.Equals(code))
             {
                 SendEmailViewModel model = (SendEmailViewModel)Session["SendEmail"];
 
