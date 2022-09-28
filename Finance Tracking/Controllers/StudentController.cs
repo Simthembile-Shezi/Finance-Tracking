@@ -441,12 +441,12 @@ namespace Finance_Tracking.Controllers
             try
             {
                 Bursary model = (Bursary)Session["Bursary"];
-                if (model.Number_Available != 0)
+                if (int.Parse(model.Number_Available) != 0)
                 {
                     Student student = (Student)Session["Student"];
                     CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
-                    decimal num = model.Number_Available - 1;
-                    UpdateBursaryNumberAvail(model.Bursary_Code, num);
+                    //int num = int.Parse(model.Number_Available) - 1;
+                    //UpdateBursaryNumberAvail(model.Bursary_Code, num);
                     return RedirectToAction("ViewBursaries");
                 }
                 else

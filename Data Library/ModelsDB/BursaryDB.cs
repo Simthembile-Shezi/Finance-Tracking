@@ -14,7 +14,7 @@ namespace Data_Library.ModelsDB
         public string Funder_Name { get; set; }
         public DateTime? End_Date { get; set; }
         public decimal? Bursary_Amount { get; set; }
-        public decimal Number_Available { get; set; }
+        public string Number_Available { get; set; }
         public string Description { get; set; }
         public string Funding_Year { get; set; }
     }

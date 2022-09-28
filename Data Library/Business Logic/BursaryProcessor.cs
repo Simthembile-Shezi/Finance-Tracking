@@ -7,7 +7,7 @@ namespace Data_Library.Business_Logic
     public static class BursaryProcessor
     {
         public static int CreateBursary(string burCode, string burName, System.DateTime startDate, string funderName,
-            System.DateTime? endDate, decimal? burAmount, decimal numAvail, string desc, string FY)
+            System.DateTime? endDate, decimal? burAmount, string numAvail, string desc, string FY)
         {
             BursaryDB data = new BursaryDB
             {
@@ -27,12 +27,12 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.SaveData(sql, data);
         }
-        public static int UpdateBursaryNumberAvail(string burCode, decimal numAvail)
+        public static int UpdateBursaryNumberAvail(string burCode, string numAvail)
         {
             BursaryDB data = new BursaryDB();
             data.Bursary_Code = burCode;
 
-            if (numAvail > -1)
+            if (int.Parse(numAvail) > -1)
                 data.Number_Available = numAvail;
 
             string sql = @"update dbo.[Bursary] 
@@ -43,7 +43,7 @@ namespace Data_Library.Business_Logic
         }
 
         public static int UpdateBursary(string burCode, string burName, System.DateTime startDate, string funderName,
-            System.DateTime? endDate, decimal? burAmount, decimal numAvail, string desc, string FY)
+            System.DateTime? endDate, decimal? burAmount, string numAvail, string desc, string FY)
         {
             BursaryDB data = new BursaryDB();
             data.Bursary_Code = burCode;
@@ -58,7 +58,7 @@ namespace Data_Library.Business_Logic
                 data.End_Date = endDate;
             if (burAmount != null)
                 data.Bursary_Amount = burAmount;
-            if (numAvail != 0)
+            if (int.Parse(numAvail) != 0)
                 data.Number_Available = numAvail;
             if (desc != null)
                 data.Description = desc;

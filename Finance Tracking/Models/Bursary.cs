@@ -13,7 +13,7 @@ namespace Finance_Tracking.Models
         {
             Applications = new List<Application>();
         }
-        public Bursary(string bursary_Code, string bursary_Name, DateTime start_Date, string funder_Name, DateTime? end_Date, decimal? bursary_Amount, decimal number_Available, string description, string funding_Year)
+        public Bursary(string bursary_Code, string bursary_Name, DateTime start_Date, string funder_Name, DateTime? end_Date, decimal? bursary_Amount, string number_Available, string description, string funding_Year)
         {
             Bursary_Code = bursary_Code;
             Bursary_Name = bursary_Name;
@@ -56,7 +56,7 @@ namespace Finance_Tracking.Models
 
         [Display(Name = "Available Bursaries")]
         [Column(TypeName = "numeric")]
-        public decimal Number_Available { get; set; }
+        public string Number_Available { get; set; }
 
         [Required]
         [Display(Name = "Description")]

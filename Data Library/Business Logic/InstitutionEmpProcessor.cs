@@ -26,6 +26,20 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
+        public static int updateInstitutionEmpPassword(string email, string password)
+        {
+            InstitutionEmployeeDB data = new InstitutionEmployeeDB();
+            data.Emp_Email = email;
+            if (password != null)
+                data.Password = password;
+
+            string sql = @"update [dbo].[Institution Employee] 
+                               set Password = @Password
+                               where Emp_Email = @Emp_Email;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
         //public static int UpdateInstitutionEmp(string Emp_Email)
         //{
         //    InstitutionEmployeeDB data = new InstitutionEmployeeDB();

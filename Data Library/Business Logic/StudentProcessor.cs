@@ -33,8 +33,6 @@ namespace Data_Library.Business_Logic
                 Password = Password
             };
 
-            //set identity_insert Institution on;
-
             string sql = @" insert into dbo.Student (Student_Identity_Number, Student_FName, Student_LName, Student_Nationality, Race, Title, Gender, Date_Of_Birth, Marital_Status, Student_Email, 
                             Student_Cellphone_Number, Student_Residential_Address, Upload_Identity_Document, Upload_Residential_Document, Password)
                             values (@Student_Identity_Number, @Student_FName, @Student_LName, @Student_Nationality, @Race, @Title, @Gender, @Date_Of_Birth, @Marital_Status, @Student_Email, 
@@ -60,6 +58,20 @@ namespace Data_Library.Business_Logic
                                    Student_Cellphone_Number = @Student_Cellphone_Number,
                                    Student_Residential_Address = @Student_Residential_Address
                                where Student_Identity_Number = @Student_Identity_Number;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static int updateStudentPassword(string studentID, string password)
+        {
+            StudentDB data = new StudentDB();
+            data.Student_Identity_Number = studentID;
+            if (password != null)
+                data.Password = password;
+
+            string sql = @"update dbo.Student 
+                               set Password = @Password
+                               where studentID = @studentID;";
 
             return SqlDataAccess.SaveData(sql, data);
         }
@@ -102,6 +114,17 @@ namespace Data_Library.Business_Logic
                 {
                     return item;
                 }
+            }
+            return null;
+        }
+
+        public static StudentDB GetStudentEmail(string Student_Email)
+        {
+            var list = LoadStudents();
+            foreach (var item in list)
+            {
+                if (item.Student_Email.Equals(Student_Email))
+                    return item;
             }
             return null;
         }
