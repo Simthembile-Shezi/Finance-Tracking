@@ -1,0 +1,19 @@
+{
+  "FilePath": "c:\\Users\\Simth\\Desktop\\Git Projects\\Finance-Tracking\\Finance-Tracking.Tests\\Finance-Tracking.Tests.csproj",
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  },
+  "ProjectWorkspaceState": {
+    "TagHelpers": [],
+    "CSharpLanguageVersion": 703
+  },
+  "RootNamespace": null,
+  "Documents": [],
+  "SerializationFormat": "0.2"
+}
