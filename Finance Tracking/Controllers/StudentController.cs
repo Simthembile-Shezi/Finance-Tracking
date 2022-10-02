@@ -11,6 +11,8 @@ using static Data_Library.Business_Logic.ApplicationProcessor;
 using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.Enrolled_AtProcessor;
+using static Data_Library.Business_Logic.InstitutionProcessor;
+using System.Collections.Generic;
 
 namespace Finance_Tracking.Controllers
 {
@@ -280,6 +282,8 @@ namespace Finance_Tracking.Controllers
         #region Enrollment
         public ActionResult InstitutionInfo()
         {
+            Session["RegisterInstitutionError"] = null;     //Setting to null this session to make sure it is not affected by past input
+
             Student student = (Student)Session["Student"];
             var uni = GetStudentEnrolledList(student.Student_Identity_Number);
             Student model = new Student();
@@ -308,7 +312,18 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult RegisterInstitutionInfo()
         {
+
+
             Enrolled_At enrolled = new Enrolled_At();
+            List<SelectListItem> items = new List<SelectListItem>();
+            items.Add(new SelectListItem { Text = "Select", Value = "Select" });
+            var institutions = LoadInstitutions();
+            foreach (var item in institutions)
+            {
+                items.Add(new SelectListItem { Text = item.Institution_Name, Value = item.Institution_Name });
+            }
+            ViewBag.InstitutionNames = items;
+            ViewBag.RegisterInstitutionError = Session["RegisterInstitutionError"];
             return View(enrolled);
         }
 
@@ -326,7 +341,8 @@ namespace Finance_Tracking.Controllers
             }
             catch
             {
-                return View();
+                Session["RegisterInstitutionError"] = "You are already enrolled to this institution";
+                return RedirectToAction("RegisterInstitutionInfo");
             }
 
         }
@@ -350,7 +366,7 @@ namespace Finance_Tracking.Controllers
             }
             catch
             {
-                return View();
+                return View(model);
             }
 
         }

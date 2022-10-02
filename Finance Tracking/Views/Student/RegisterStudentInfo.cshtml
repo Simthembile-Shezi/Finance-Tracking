@@ -50,6 +50,7 @@
                         new SelectListItem{ Text="Select", Value = "Select" , Selected =true},
                         new SelectListItem{ Text="Male", Value = "Male" },
                         new SelectListItem{ Text="Female", Value = "Female" },
+                        new SelectListItem{ Text="Other", Value = "Other" },
                         }, new { @class = "login-input form-control" })
                     @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
                 </div>
@@ -92,7 +93,7 @@
                     @Html.DropDownListFor(model => model.Race, new List<SelectListItem>
                     {
                        new SelectListItem{ Text="Select", Value = "Select" , Selected =true},
-                       new SelectListItem{ Text="Black", Value = "Black" },
+                       new SelectListItem{ Text="African", Value = "African" },
                        new SelectListItem{ Text="Coloured", Value = "Coloured" },
                        new SelectListItem{ Text="Indian", Value = "Indian" },
                        new SelectListItem{ Text="Ndebele", Value = "Ndebele" },
