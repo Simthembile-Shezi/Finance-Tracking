@@ -23,7 +23,7 @@
             <div class="col-md-9">
                 @Html.DropDownListFor(model => model.Funding_Status, new List<SelectListItem>
                      {
-                        new SelectListItem{ Text="Select", Value = "Select" , Selected =true},
+                       new SelectListItem{ Text="Select", Value = null, Selected =true},
                         new SelectListItem{ Text="Funded", Value = "Funded" },
                         new SelectListItem{ Text="Rejected", Value = "Rejectd" },
                         }, new { @class = "form-control" })

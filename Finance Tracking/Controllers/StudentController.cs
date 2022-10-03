@@ -36,6 +36,7 @@ namespace Finance_Tracking.Controllers
         // GET: Student/Create
         public ActionResult RegisterStudentInfo()
         {
+            ViewBag.SelectionError = null;
             return View();
         }
 
@@ -44,17 +45,13 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterStudentInfo(Student model)
         {
-            try
+            if(model.Gender == "Select" || model.Marital_Status == "Select" || model.Title == "Select" || model.Race == "Select")
             {
-                Session["StudentInfo"] = model;
-
-                return RedirectToAction("RegisterStudentContacts");
+                ViewBag.SelectionError = "Please select the required options";
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
-
+            Session["StudentInfo"] = model;
+            return RedirectToAction("RegisterStudentContacts");
         }
         // GET: Student/Create
         public ActionResult RegisterStudentContacts()
@@ -148,7 +145,7 @@ namespace Finance_Tracking.Controllers
                 model.City = studentContacts.City;
                 model.Province = studentContacts.Province;
                 model.Zip_Code = studentContacts.Zip_Code;
-                model.Student_Residential_Address = model.Street_Name + ";\n" + model.Sub_Town + ";\n" + model.City + ";\n" + model.Province + ";\n" + model.Zip_Code;
+                model.Student_Residential_Address = model.Street_Name + "; " + model.Sub_Town + "; " + model.City + "; " + model.Province + "; " + model.Zip_Code;
 
                 Session["Student"] = model;
                 return RedirectToAction("SaveProfile");
@@ -177,7 +174,7 @@ namespace Finance_Tracking.Controllers
                     model.Upload_Residential_Document,
                     model.Password);
 
-            return View("Index", model);
+            return RedirectToAction("Login", "Home");
         }
 
         // GET: Student/Edit docs/5
