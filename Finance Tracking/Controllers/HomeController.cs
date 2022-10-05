@@ -284,15 +284,18 @@ namespace Finance_Tracking.Controllers
             {
                 if (model.UserType == "STUDENT_USER")
                 {
-                    updateStudentPassword(model.ToEmail, change.Password);   //updateStudentPassword should change the password using matching emails.
+                    StudentDB student = (StudentDB)Session["Student"];
+                    updateStudentPassword(student.Student_Identity_Number, change.Password);
                 }
                 else if (model.UserType == "INSTITUTION_USER")
                 {
-                    updateInstitutionEmpPassword(model.ToEmail, change.Password);
+                    InstitutionEmployeeDB institutionEmployee = (InstitutionEmployeeDB)Session["InstitutionEmployee"];
+                    updateInstitutionEmpPassword(institutionEmployee.Emp_Email, change.Password);
                 }
                 else if (model.UserType == "FUNDER_USER")
                 {
-                    updateFunderEmpPassword(model.ToEmail, change.Password);
+                    FunderEmployeeDB funderEmployee = (FunderEmployeeDB)Session["FunderEmployee"];
+                    updateFunderEmpPassword(funderEmployee.Emp_Email, change.Password);
                 }
                 return RedirectToAction("Login");
             }
