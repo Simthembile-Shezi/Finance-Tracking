@@ -177,6 +177,7 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult ForgotPassword()
         {
+            ViewBag.NotUser = null;
             ViewBag.Status = "false";
             return View();
         }
@@ -192,21 +193,21 @@ namespace Finance_Tracking.Controllers
                 {
                     if (model.UserType == "STUDENT_USER")
                     {
-                        //var user = GetStudentEmail(model.ToEmail);
-                        //if(user == null)
+                        var user = GetStudentEmail(model.ToEmail);
+                        if(user == null)
                         {
-                            ViewBag.Title = "Email address does not exist";
+                            ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
-                        //SendEmail(user.Student_Email, user.Student_FName + "," + user.Student_LName);
-                        //Session["Student"] = user;
+                        SendEmail(user.Student_Email, user.Student_FName + "," + user.Student_LName);
+                        Session["Student"] = user;
                     }
                     else if (model.UserType == "INSTITUTION_USER")
                     {
                         var user = GetInstitutionEmp(model.ToEmail);
                         if ( user == null)
                         {
-                            ViewBag.Title = "Email address does not exist";
+                            ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
                         SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
@@ -217,7 +218,7 @@ namespace Finance_Tracking.Controllers
                         var user = GetFunderEmp(model.ToEmail);
                         if (user == null)
                         {
-                            ViewBag.Title = "Email address does not exist";
+                            ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
                         SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
@@ -269,35 +270,37 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult ChangePassword()
         {
+            ViewBag.Error = null;
             ViewBag.Status = "false";
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordViewModel change)
         {
-            string code = Session["Code"].ToString();
-            if(change.Code.Equals(code))
+            SendEmailViewModel model = (SendEmailViewModel)Session["SendEmail"];
+            if (change.Code.Equals(Session["Code"].ToString()))
             {
-                SendEmailViewModel model = (SendEmailViewModel)Session["SendEmail"];
-
                 if (model.UserType == "STUDENT_USER")
                 {
-                    StudentDB student = GetStudent(model.ToEmail);
+                    updateStudentPassword(model.ToEmail, change.Password);   //updateStudentPassword should change the password using matching emails.
                 }
                 else if (model.UserType == "INSTITUTION_USER")
                 {
-                    InstitutionEmployeeDB institution = GetInstitutionEmp(model.ToEmail);
+                    updateInstitutionEmpPassword(model.ToEmail, change.Password);
                 }
                 else if (model.UserType == "FUNDER_USER")
                 {
-                    FunderEmployeeDB funder = GetFunderEmp(model.ToEmail);
+                    updateFunderEmpPassword(model.ToEmail, change.Password);
                 }
-
+                return RedirectToAction("Login");
             }
             else
             {
+                ViewBag.Error = "Try again later";
                 return View();
             }
-            return RedirectToAction("Login");
         }
         public ActionResult About()
         {
