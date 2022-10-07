@@ -9,13 +9,12 @@ namespace Finance_Tracking.Models
     [Table("Bursar Funds")]
     public partial class Bursar_Fund
     {
-        public Bursar_Fund(string application_ID, string update_Fund_Request, string funding_Status, decimal? approved_Funds, Application application)
+        public Bursar_Fund(string application_ID, string update_Fund_Request, string funding_Status, decimal? approved_Funds)
         {
             Application_ID = application_ID;
             Update_Fund_Request = update_Fund_Request;
             Funding_Status = funding_Status;
             Approved_Funds = approved_Funds;
-            Application = application;
         }
         public Bursar_Fund()
         {

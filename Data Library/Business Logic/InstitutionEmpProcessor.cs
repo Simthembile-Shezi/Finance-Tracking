@@ -73,27 +73,20 @@ namespace Data_Library.Business_Logic
 
         public static InstitutionEmployeeDB GetInstitutionEmp(string Emp_Email)
         {
-            var list = LoadEmployees();
-            foreach (var item in list)
-            {
-                if (item.Emp_Email.Equals(Emp_Email))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+                           from [dbo].[Institution Employee]
+                           where Emp_Email = '" + Emp_Email + "';";
+
+            return SqlDataAccess.SingleData<InstitutionEmployeeDB>(sql);
         }
 
         public static List<InstitutionEmployeeDB> GetInstitutionEmployees(string name)
         {
-            var list = new List<InstitutionEmployeeDB>();
-            foreach (var item in LoadEmployees())
-            {
-                if (item.Organization_Name.Equals(name))
-                    list.Add(item);
-            }
+            string sql = @"select Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+                           from [dbo].[Institution Employee]
+                           where Organization_Name = '" + name + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<InstitutionEmployeeDB>(sql);
         }
 
         public static List<InstitutionEmployeeDB> LoadEmployees()

@@ -23,6 +23,14 @@ namespace Data_Library.Data_Access
             }
         }
 
+        public static dynamic SingleData<T>(string sql)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return cnn.QuerySingle<T>(sql);
+            }
+        }
+
         public static int SaveData<T>(string sql, T data)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))

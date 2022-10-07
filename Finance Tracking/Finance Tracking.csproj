@@ -138,6 +138,7 @@
     <Compile Include="Models\Academic_Record.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\ApplyBursaryViewModel.cs" />
+    <Compile Include="Models\BursarFundView.cs" />
     <Compile Include="Models\BursarsViewModel.cs" />
     <Compile Include="Models\Bursary.cs" />
     <Compile Include="Models\Bursar_Fund.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\SendEmailViewModel.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\ApplicationView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -219,8 +221,6 @@
     <Content Include="Views\Student\DeleteStudent.cshtml" />
     <Content Include="Views\Student\MaintainStudent.cshtml" />
     <Content Include="Views\Student\RegisterStudentInfo.cshtml" />
-    <Content Include="Views\Student\RegisterStudentContacts.cshtml" />
-    <Content Include="Views\Student\UploadStudentDocs.cshtml" />
     <Content Include="Views\Institution\AdminInstitutionEmployee.cshtml" />
     <Content Include="Views\Funder\AdminFunderEmployee.cshtml" />
     <Content Include="Views\Student\TrackFunding.cshtml" />
@@ -263,7 +263,6 @@
     <Content Include="Views\Student\EditInstitutionInfo.cshtml" />
     <Content Include="Views\Student\ViewInstitutionInfo.cshtml" />
     <Content Include="Views\Student\MaintainStudentDocs.cshtml" />
-    <Content Include="Views\Funder\ViewBursaryAgreement.cshtml" />
     <Content Include="Views\Home\ChangePassword.cshtml" />
     <Content Include="Views\Home\LogOut.cshtml" />
   </ItemGroup>

@@ -59,6 +59,7 @@
     <Compile Include="Data Access\SqlDataAccess.cs" />
     <Compile Include="ModelsDB\Academic_RecordDB.cs" />
     <Compile Include="ModelsDB\ApplicationDB.cs" />
+    <Compile Include="ModelsDB\BursarFundViewDB.cs" />
     <Compile Include="ModelsDB\BursaryDB.cs" />
     <Compile Include="ModelsDB\Bursar_FundDB.cs" />
     <Compile Include="ModelsDB\Enrolled_AtDB.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="ModelsDB\FunderDB.cs" />
     <Compile Include="ModelsDB\InstitutionDB.cs" />
     <Compile Include="ModelsDB\StudentDB.cs" />
+    <Compile Include="ModelsDB\ApplicationViewDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

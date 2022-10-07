@@ -186,10 +186,10 @@ namespace Finance_Tracking.Controllers
                     foreach (var app in list)
                     {
                         Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
-
                         bursary.Applications.Add(application);
                     }
                     Session["Applications"] = bursary;
+
                     return View(bursary);
                 }
             }
@@ -198,40 +198,43 @@ namespace Finance_Tracking.Controllers
         // POST: Funder/ViewApplications
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ViewApplications(Bursary model)
+        public ActionResult ViewApplications(Bursary model) //used for scea
         {
-            Bursary bursary = (Bursary)Session["Applications"];
+            var list = GetApplications(model.Bursary_Code);
             Bursary result = new Bursary();
-
-            foreach (var item in bursary.Applications)
+            foreach (var item in list)
             {
                 if ((item.Student_Identity_Number).Equals(model.Application.Student_Identity_Number))
                 {
-                    result.Applications.Add(item);
+                    Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
+                    result.Applications.Add(application);
                     return View(result);
                 }
             }
-            return View(bursary);
+            return View(model);
         }
-        // GET: Funder/ViewApplication/Application_ID
+
         public ActionResult ViewApplication(string id)
         {
-            Bursary bursary = (Bursary)Session["Applications"];
-
-            foreach (var application in bursary.Applications)
+            var list = viewApplications(id);
+            
+            foreach (var item in list)
             {
-                if (application.Application_ID.Equals(id))
+                if (item.Application_ID.Equals(id))
                 {
-                    Session["Application"] = application;
+                    ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                        item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
                     return View(application);
                 }
             }
-            return RedirectToAction("ViewApplications", new { id = bursary.Bursary_Code });
+            return View();
         }
+
         // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)
         {
-            Application application = (Application)Session["Application"];
+            var item = GetApplication(id);
+            Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
             if (application == null)
             {
                 return HttpNotFound();
@@ -256,39 +259,7 @@ namespace Finance_Tracking.Controllers
                 ////Binding
                 Application application = (Application)Session["Application"];
                 application.Application_Status = model.Application_Status;
-                Session["Application"] = application;
 
-                return View("ViewApplication", application);
-            }
-            catch
-            {
-                return View(model);
-            }
-        }
-        public ActionResult ViewBursaryAgreement(string id)
-        {
-            Application application = (Application)Session["Application"];
-            if (application == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(application);
-        }
-        // POST: Funder/ViewBursaryAgreement/Application_ID
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ViewBursaryAgreement(Application model)
-        {
-            try
-            {
-                //ApproveSignedAgreement when the submit button is clicked
-                updateApplicationStatus(model.Application_ID, model.Application_Status);
-
-                //Binding
-                Application application = (Application)Session["Application"];
-                application.Application_Status = model.Application_Status;
-                Session["Application"] = application;
 
                 return View("ViewApplication", application);
             }
@@ -300,12 +271,12 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/UploadBursaryAgreement/Application_ID
         public ActionResult UploadBursaryAgreement(string id)
         {
-            Application application = (Application)Session["Application"];
+            var item = GetApplication(id);
+            Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
             if (application == null)
             {
                 return HttpNotFound();
             }
-
             return View(application);
         }
 
@@ -334,7 +305,6 @@ namespace Finance_Tracking.Controllers
                 Application application = (Application)Session["Application"];
                 application.Upload_Agreement = model.Upload_Agreement;
                 application.Application_Status = "Agreement Sent";
-                Session["Application"] = application;
 
                 return View("ViewApplication", application);
             }
@@ -348,8 +318,10 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public FileResult DownloadSignedAgreement(string id)    //No need for a view
         {
-            Application application = (Application)Session["Application"];
-            if(application.Upload_Signed_Agreement == null)
+            var item = GetApplication(id);
+            Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
+
+            if (application.Upload_Signed_Agreement == null)
             {
                 return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
             }
@@ -483,16 +455,16 @@ namespace Finance_Tracking.Controllers
         [HttpPost]
         public ActionResult DeleteBursary(Bursary bursary)
         {
-            try
+            //try
             {
                 int result = deleteBursary(bursary.Bursary_Code);
 
                 return RedirectToAction("ViewBursaries");
             }
-            catch
-            {
-                return View(bursary);
-            }
+            //catch
+            //{
+            //    return View(bursary);
+            //}
         }
         #endregion
 
@@ -501,65 +473,63 @@ namespace Finance_Tracking.Controllers
         public ActionResult ViewBursars(string id)
         {
             BursarsViewModel model = new BursarsViewModel();
-            var list = LoadBursars();
-
-            //binding
+            var list = BursarFundViews(id);
             foreach (var item in list)
             {
-                Bursar_Fund funds = new Bursar_Fund();
-                funds.Application_ID = item.Application_ID;
-                funds.Update_Fund_Request = item.Update_Fund_Request;
-                funds.Funding_Status = item.Funding_Status;
-                funds.Approved_Funds = item.Approved_Funds;
-
-                model.Bursars.Add(funds);
+                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
+                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                model.Bursars.Add(bursar);
             }
             Session["Bursars"] = model;
             return View(model);
         }
-
+        [HttpGet]
         // GET: Funder/ViewBursary/5
         public ActionResult ViewBursar(string id)
         {
-            BursarsViewModel model = (BursarsViewModel)Session["Bursars"];
-            foreach (var item in model.Bursars)
+            var list = ((BursarsViewModel)Session["Bursars"]).Bursars;
+            foreach (var item in list)
             {
                 if ((item.Application_ID).Equals(id.ToString()))
                 {
-                    Session["Bursar"] = item;
-                    return View(item);
+                    BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
+                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                    return View(bursar);
                 }
             }
+           
             return View();
         }
-        // GET: Funder/UpdateFundingStatus/5
-        public ActionResult UpdateFundingStatus(string id)
-        {
-            Bursar_Fund model = (Bursar_Fund)Session["Bursar"];
+        //// GET: Funder/UpdateFundingStatus/5
+        //public ActionResult UpdateFundingStatus(string id)
+        //{
+        //    var item = GetBursar(id);
+        //    Bursar_Fund model = new Bursar_Fund(item.Application_ID,item.Update_Fund_Request,item.Funding_Status,item.Approved_Funds);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        // POST: Funder/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateFundingStatus(Bursar_Fund model)
-        {
-            //try
-            {
-                int result = updateFundStatus(model.Application_ID, model.Funding_Status);
+        //// POST: Funder/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult UpdateFundingStatus(Bursar_Fund model)
+        //{
+        //    //try
+        //    {
+        //        updateFundStatus(model.Application_ID, model.Funding_Status);
 
-                return RedirectToAction("ViewBursar", new { id = model.Application_ID });
-            }
-            //catch
-            //{
-            //    return View();
-            //}
-        }
+        //        return RedirectToAction("ViewBursar", new { id = model.Application_ID });
+        //    }
+        //    //catch
+        //    //{
+        //    //    return View();
+        //    //}
+        //}
         // GET: Funder/Delete/5
         public ActionResult UpdateFundRequest(string id)
         {
-            Bursar_Fund model = (Bursar_Fund)Session["Bursar"];
+            var item = GetBursar(id);
+            Bursar_Fund model = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
 
             return View(model);
         }
@@ -571,7 +541,7 @@ namespace Finance_Tracking.Controllers
         {
             //try
             {
-                int result = updateFundsRequested(model.Application_ID, model.Update_Fund_Request);
+               updateFundsRequested(model.Application_ID, model.Update_Fund_Request);
                 return RedirectToAction("ViewBursar", new { id = model.Application_ID });
             }
             //catch
@@ -580,9 +550,10 @@ namespace Finance_Tracking.Controllers
             //}
         }
         // GET: Funder/Delete/5
-        public ActionResult MaintainFunds(int id)
+        public ActionResult MaintainFunds(string id)
         {
-            Bursar_Fund model = (Bursar_Fund)Session["Bursar"];
+            var item = GetBursar(id);
+            Bursar_Fund model = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
 
             return View(model);
         }

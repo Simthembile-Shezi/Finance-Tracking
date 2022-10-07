@@ -33,6 +33,7 @@
                         new SelectListItem{ Text="Invite For Interview", Value = "Interview" },
                         new SelectListItem{ Text="Shortlist Application", Value = "Shortlisted" },
                         new SelectListItem{ Text="In Progress", Value = "In Progress" },
+                        new SelectListItem{ Text="Missing Documents", Value = "Missing Documents" },
                         }, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Application_Status, "", new { @class = "text-danger" })
             </div>

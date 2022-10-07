@@ -9,7 +9,7 @@ namespace Data_Library.ModelsDB
     public class Academic_RecordDB
     {
         public string Student_Number { get; set; }
-        public DateTime Academic_Year { get; set; }
+        public string Academic_Year { get; set; }
         public string Qualification { get; set; }
         public decimal? Avarage_Marks { get; set; }
         public byte[] Upload_Transcript { get; set; }

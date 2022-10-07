@@ -167,15 +167,15 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Delete/5
         public ActionResult ViewFundedStudents() // create a join tables - model name: FundedStudents
         {
-            EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();
-            Session["students"] = students;
-            var list = fundedStudents();
+            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();            
+            var list = fundedStudents(employee.Organization_Name);
             foreach (var item in list)
             {
                 FundedStudents funded = new FundedStudents(item.Student_Number, item.Student_Identity_Number, item.Student_Email, item.Institution_Name, item.Application_Status);
                 students.Students.Add(funded);
             }
-
+            Session["students"] = students;
             return View(students);
         }
         // GET: Institution/Delete/5

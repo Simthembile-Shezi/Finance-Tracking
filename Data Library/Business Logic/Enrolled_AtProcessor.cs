@@ -61,38 +61,31 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static Enrolled_AtDB GetEnrolledDetails(string studentID)
+        public static Enrolled_AtDB GetEnrolledDetails(string studentNum)
         {
-            foreach (var item in LoadEnrolledDetails())
-            {
-                if (item.Student_Number.Equals(studentID))
-                    return item;
-            }
-            return null;
+            string sql = @"select Student_Number, Student_Identity_Number, Institution_Name, Qualification, Student_Email, Study_Residential_Address
+                           from dbo.[Enrolled At]
+                           where Student_Number = '" + studentNum + "';";
+
+            return SqlDataAccess.SingleData<Enrolled_AtDB>(sql);
         }
 
         public static List<Enrolled_AtDB> GetEnrolledDetailsList(string InsName)
         {
-            var list = new List<Enrolled_AtDB>();
-            foreach (var item in LoadEnrolledDetails())
-            {
-                if (item.Institution_Name.Equals(InsName))
-                    list.Add(item);
-            }
+            string sql = @"select Student_Number, Student_Identity_Number, Institution_Name, Qualification, Student_Email, Study_Residential_Address
+                           from dbo.[Enrolled At]
+                           where Institution_Name = '" + InsName + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<Enrolled_AtDB>(sql);
         }
 
-        public static List<Enrolled_AtDB> GetStudentEnrolledList(string id)
+        public static List<Enrolled_AtDB> GetStudentEnrolledList(string studentID)
         {
-            var list = new List<Enrolled_AtDB>();
-            foreach (var item in LoadEnrolledDetails())
-            {
-                if (item.Student_Identity_Number.Equals(id))
-                    list.Add(item);
-            }
+            string sql = @"select Student_Number, Student_Identity_Number, Institution_Name, Qualification, Student_Email, Study_Residential_Address
+                           from dbo.[Enrolled At]
+                           where Student_Identity_Number = '" + studentID + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<Enrolled_AtDB>(sql);
         }
 
         public static List<Enrolled_AtDB> LoadEnrolledDetails()

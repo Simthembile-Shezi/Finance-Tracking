@@ -85,38 +85,43 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static ApplicationDB GetApplication(string code)
+        public static ApplicationDB GetApplication(string appID)
         {
-            foreach (var item in LoadApplications())
-            {
-                if (item.Application_ID.Equals(code))
-                    return item;
-            }
-            return null;
+            string sql = @"select Application_ID, Student_Identity_Number, Bursary_Code, Funding_Year, Application_Status, Upload_Agreement, Upload_Signed_Agreement
+                           from dbo.Application
+                           where Application_ID = '" + appID + "';";
+
+            return SqlDataAccess.SingleData<ApplicationDB>(sql);
         }
 
-        public static List<ApplicationDB> GetApplications(string code)
+        public static List<ApplicationDB> GetApplications(string burCode)
         {
-            var list = new List<ApplicationDB>();
-            foreach (var item in LoadApplications())
-            {
-                if (item.Bursary_Code.Equals(code))
-                    list.Add(item);
-            }
+            string sql = @"select Application_ID, Student_Identity_Number, Bursary_Code, Funding_Year, Application_Status, Upload_Agreement, Upload_Signed_Agreement
+                           from dbo.Application
+                           where Bursary_Code = '" + burCode + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<ApplicationDB>(sql);
         }
 
-        public static List<ApplicationDB> GetStudentApplications(string id)
+        public static List<ApplicationDB> GetStudentApplications(string studentID)
         {
-            var list = new List<ApplicationDB>();
-            foreach (var item in LoadApplications())
-            {
-                if (item.Student_Identity_Number.Equals(id))
-                    list.Add(item);
-            }
+            string sql = @"select Application_ID, Student_Identity_Number, Bursary_Code, Funding_Year, Application_Status, Upload_Agreement, Upload_Signed_Agreement
+                           from dbo.Application
+                           where Student_Identity_Number = '" + studentID + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<ApplicationDB>(sql);
+        }
+        public static List<ApplicationViewDB> viewApplications(string appID)
+        {
+            string sql = @"select A.Application_ID, A.Application_Status, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Student_Residential_Address, 
+                                  E.Student_Number, E.Institution_Name, E.Qualification, AR.Academic_Year, AR.Avarage_Marks, AR.Upload_Transcript, B.Bursary_Code
+                           from dbo.[Bursary] AS B JOIN dbo.[Application] AS A ON B.Bursary_Code=A.Bursary_Code
+                                JOIN dbo.[Student] AS S ON A.Student_Identity_Number=S.Student_Identity_Number 
+                                JOIN dbo.[Enrolled At] AS E ON S.Student_Identity_Number=E.Student_Identity_Number 
+                                JOIN dbo.[Academic Records] AS AR ON E.Student_Number=AR.Student_Number                                
+                           where A.Application_ID = '" + appID + "';";
+
+            return SqlDataAccess.LoadData<ApplicationViewDB>(sql);
         }
 
         public static List<ApplicationDB> LoadApplications()

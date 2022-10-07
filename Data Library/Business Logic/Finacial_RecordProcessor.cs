@@ -94,15 +94,11 @@ namespace Data_Library.Business_Logic
 
         public static Finacial_RecordDB GetStudentFinRec(string studentID, string AY)
         {
-            var list = LoadFinacialRecords();
-            foreach (var item in list)
-            {
-                if (item.Student_Number.Equals(studentID) && item.Academic_Year.Equals(AY))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Student_Number, Academic_Year, Balance_Amount, Upload_Statement, Funding_Status, Request_Funds
+                           from dbo.[Finacial Records]
+                           where Student_Number = '" + studentID + "' and Academic_Year = '" + AY + "'; ";
+
+            return SqlDataAccess.SingleData<Finacial_RecordDB>(sql);
         }
 
         //public static List<FunderEmployeeDB> GetFundersEmployees(string name)

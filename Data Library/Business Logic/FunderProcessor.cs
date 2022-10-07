@@ -63,15 +63,10 @@ namespace Data_Library.Business_Logic
 
         public static FunderDB GetFunder(string funderName)
         {
-            var list = LoadFunders();
-            foreach (var item in list)
-            {
-                if (item.Funder_Name.Equals(funderName))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Funder_Name, Funder_Tax_Number, Funder_Email, Funder_Telephone_Number, Funder_Physical_Address, Funder_Postal_Address
+                           from dbo.Funder
+                           where Funder_Name = '" + funderName + "';";
+            return SqlDataAccess.SingleData<FunderDB>(sql);
         }
 
         public static List<FunderDB> LoadFunders()

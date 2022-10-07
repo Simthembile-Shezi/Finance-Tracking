@@ -107,36 +107,21 @@ namespace Data_Library.Business_Logic
 
         public static StudentDB GetStudent(string studentID)
         {
-            var list = LoadStudents();
-            foreach (var item in list)
-            {
-                if (item.Student_Identity_Number.Equals(studentID))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Student_Identity_Number, Student_FName, Student_LName, Student_Nationality, Race, Title, Gender, Date_Of_Birth, Marital_Status, Student_Email, 
+                           Student_Cellphone_Number, Student_Residential_Address, Upload_Identity_Document, Upload_Residential_Document, Password
+                           from dbo.Student
+                           where Student_Identity_Number = '" + studentID + "';";
+            return SqlDataAccess.SingleData<StudentDB>(sql);
         }
 
         public static StudentDB GetStudentEmail(string Student_Email)
         {
-            var list = LoadStudents();
-            foreach (var item in list)
-            {
-                if (item.Student_Email.Equals(Student_Email))
-                    return item;
-            }
-            return null;
-        }
-
-        public static List<FundedStudentsDB> fundedStudents()
-        {
-            string sql = @"select E.Student_Number, E.Student_Identity_Number, E.Student_Email, E.Institution_Name, A.Application_Status
-                           from (dbo.[Enrolled At] AS E JOIN [dbo].[Application] AS A ON E.Student_Identity_Number=A.Student_Identity_Number)
-                           where A.Application_Status = 'Funded';";
-
-            return SqlDataAccess.LoadData<FundedStudentsDB>(sql);
-        }
+            string sql = @"select Student_Identity_Number, Student_FName, Student_LName, Student_Nationality, Race, Title, Gender, Date_Of_Birth, Marital_Status, Student_Email, 
+                           Student_Cellphone_Number, Student_Residential_Address, Upload_Identity_Document, Upload_Residential_Document, Password
+                           from dbo.Student
+                           where Student_Email = '" + Student_Email + "';";
+            return SqlDataAccess.SingleData<StudentDB>(sql);
+        }        
 
         public static List<StudentDB> LoadStudents()
         {

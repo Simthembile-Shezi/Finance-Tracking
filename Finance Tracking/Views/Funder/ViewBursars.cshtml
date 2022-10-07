@@ -3,33 +3,34 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Bursar_Fund.Update_Fund_Request)
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Student_Identity_Number)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Bursar_Fund.Funding_Status)
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Student_FName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Bursar_Fund.Approved_Funds)
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Student_LName)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model.Bursars) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Update_Fund_Request)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Funding_Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Approved_Funds)
-        </td>
-        <td>
-            @Html.ActionLink("View Bursar", "ViewBursar", new { id=item.Application_ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Bursars)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Identity_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_FName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_LName)
+            </td>
+            <td>
+                @Html.ActionLink("View Bursar", "ViewBursar", new { id = item.Application_ID })
+            </td>
+        </tr>
+    }
 </table>
 <div class="container-btn">
     <div class="left-btn-flex">

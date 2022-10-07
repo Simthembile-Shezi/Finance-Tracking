@@ -77,28 +77,32 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static Bursar_FundDB GetBursar(string code)
+        public static Bursar_FundDB GetBursar(string appID)
         {
-            foreach (var item in LoadBursars())
-            {
-                if (item.Application_ID.Equals(code))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Application_ID, Update_Fund_Request, Funding_Status, Approved_Funds
+                           from dbo.[Bursar Funds]
+                           where Application_ID = '" + appID + "'; ";
+
+            return SqlDataAccess.SingleData<Bursar_FundDB>(sql);
         }
 
-        public static List<Bursar_FundDB> GetBursarList(string code) //gets the list of students from a certain bursary
+        public static List<Bursar_FundDB> GetBursarList(string burCode) //gets the list of students from a certain bursary
         {
-            var list = new List<Bursar_FundDB>();
-            foreach (var item in LoadBursars())
-            {
-                if (item.Application.Bursary_Code.Equals(code))
-                    list.Add(item);
-            }
+            string sql = @"select B.Application_ID, B.Update_Fund_Request, B.Funding_Status, B.Approved_Funds
+                           from dbo.[Bursar Funds] AS B JOIN dbo.[Application] AS A ON B.Application_ID = A.Application_ID
+                           where A.Bursary_Code = '" + burCode + "'; ";
 
-            return list;
+            return SqlDataAccess.LoadData<Bursar_FundDB>(sql);
+        }
+
+        public static List<BursarFundViewDB> BursarFundViews(string burCode)
+        {
+            string sql = @"select B.Application_ID, B.Update_Fund_Request, B.Funding_Status, B.Approved_Funds, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email
+                           from dbo.[Bursar Funds] AS B JOIN dbo.[Application] AS A ON B.Application_ID = A.Application_ID
+                           JOIN dbo.[Student] AS S ON A.Student_Identity_Number=S.Student_Identity_Number 
+                           where A.Bursary_Code = '" + burCode + "'; ";
+
+            return SqlDataAccess.LoadData<BursarFundViewDB>(sql);
         }
 
 

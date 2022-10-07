@@ -67,17 +67,21 @@ namespace Data_Library.Business_Logic
 
         public static InstitutionDB GetInstitution(string Ins_Name)
         {
-            var list = LoadInstitutions();
-            foreach (var item in list)
-            {
-                if (item.Institution_Name.Equals(Ins_Name))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Institution_Name, Institution_Physical_Address, Institution_Postal_Address, Institution_Telephone_Number, Institution_Email_Address
+                           from dbo.Institution
+                           where Institution_Name = '" + Ins_Name + "';";
+            return SqlDataAccess.SingleData<InstitutionDB>(sql);
         }
 
+        public static List<FundedStudentsDB> fundedStudents(string Ins_Name)
+        {
+            string sql = @"select E.Student_Number, E.Student_Identity_Number, E.Student_Email, E.Institution_Name, A.Application_Status
+                           from (dbo.[Enrolled At] AS E JOIN [dbo].[Application] AS A ON E.Student_Identity_Number=A.Student_Identity_Number)
+                           where A.Application_Status = 'Approved' and
+                                 E.Institution_Name = '"+Ins_Name+"';";
+
+            return SqlDataAccess.LoadData<FundedStudentsDB>(sql);
+        }
         public static List<InstitutionDB> LoadInstitutions()
         {
             string sql = @"select Institution_Name, Institution_Physical_Address, Institution_Postal_Address, Institution_Telephone_Number, Institution_Email_Address

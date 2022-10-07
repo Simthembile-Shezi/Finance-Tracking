@@ -45,60 +45,13 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterStudentInfo(Student model)
         {
-            if(model.Gender == "Select" || model.Marital_Status == "Select" || model.Title == "Select" || model.Race == "Select")
-            {
-                ViewBag.SelectionError = "Please select the required options";
-                return View(model);
-            }
-            Session["StudentInfo"] = model;
-            return RedirectToAction("RegisterStudentContacts");
-        }
-        // GET: Student/Create
-        public ActionResult RegisterStudentContacts()
-        {
-            return View();
-        }
-
-        // POST: Student/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RegisterStudentContacts(Student model)
-        {
             try
             {
-                Session["StudentContacts"] = model;
-                return RedirectToAction("UploadStudentDocs");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        // GET: Student/Create
-        public ActionResult UploadStudentDocs()
-        {
-            return View();
-        }
-
-        // POST: Student/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UploadStudentDocs(Student model)
-        {
-            #region PDF
-            //String Residential_FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
-            //String ID_FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
-            //if (Residential_FileExt == ".PDF" && ID_FileExt == ".PDF")
-            //{
-            //}
-            //else
-            //{
-            //    ViewBag.FileStatus = "Invalid file format.";
-            //    return View();
-            //}
-            #endregion
-            try
-            {
+                if (model.Gender == "Select" || model.Marital_Status == "Select" || model.Title == "Select" || model.Race == "Select")
+                {
+                    ViewBag.SelectionError = "Please select the required options";
+                    return View(model);
+                }
                 HttpPostedFileBase Residential_Doc = model.Residential_Document;
                 HttpPostedFileBase ID_Doc = model.Identity_Document;
 
@@ -125,66 +78,40 @@ namespace Finance_Tracking.Controllers
                     //Store the file content in Byte[] format on the model
                     model.Upload_Identity_Document = ID_Doc_FileDet;
                 }
-
-                model.Student_Identity_Number = studentInfo.Student_Identity_Number;
-                model.Student_FName = studentInfo.Student_FName;
-                model.Student_LName = studentInfo.Student_LName;
-                model.Student_Nationality = studentInfo.Student_Nationality;
-                model.Race = studentInfo.Race;
-                model.Title = studentInfo.Title;
-                model.Gender = studentInfo.Gender;
-                model.Date_Of_Birth = studentInfo.Date_Of_Birth;
-                model.Marital_Status = studentInfo.Marital_Status;
-                model.Student_Email = studentContacts.Student_Email;
-                model.ConfirmStudent_Email = studentContacts.ConfirmStudent_Email;
-                model.Student_Cellphone_Number = studentContacts.Student_Cellphone_Number;
-                model.Password = studentContacts.Password;
-                model.ConfirmPassword = studentContacts.ConfirmPassword;
-                model.Street_Name = studentContacts.Street_Name;
-                model.Sub_Town = studentContacts.Sub_Town;
-                model.City = studentContacts.City;
-                model.Province = studentContacts.Province;
-                model.Zip_Code = studentContacts.Zip_Code;
                 model.Student_Residential_Address = model.Street_Name + "; " + model.Sub_Town + "; " + model.City + "; " + model.Province + "; " + model.Zip_Code;
 
-                Session["Student"] = model;
-                return RedirectToAction("SaveProfile");
+                CreateStudent(model.Student_Identity_Number,
+                         model.Student_FName,
+                         model.Student_LName,
+                         model.Student_Nationality,
+                         model.Race,
+                         model.Title,
+                         model.Gender,
+                         model.Date_Of_Birth,
+                         model.Marital_Status,
+                         model.Student_Email,
+                         model.Student_Cellphone_Number,
+                         model.Student_Residential_Address,
+                         model.Upload_Identity_Document,
+                         model.Upload_Residential_Document,
+                         model.Password);
+
+                return RedirectToAction("Login", "Home");
             }
             catch
             {
-                return View();
+                ViewBag.RegistrationError = "You are already registered, if not please contact Finance.Tracking@outlook.com";
+                return View(model);
             }
         }
-        public ActionResult SaveProfile()
-        {
-            Student model = (Student)Session["Student"];
-            CreateStudent(model.Student_Identity_Number,
-                    model.Student_FName,
-                    model.Student_LName,
-                    model.Student_Nationality,
-                    model.Race,
-                    model.Title,
-                    model.Gender,
-                    model.Date_Of_Birth,
-                    model.Marital_Status,
-                    model.Student_Email,
-                    model.Student_Cellphone_Number,
-                    model.Student_Residential_Address,
-                    model.Upload_Identity_Document,
-                    model.Upload_Residential_Document,
-                    model.Password);
-
-            return RedirectToAction("Login", "Home");
-        }
-
-        // GET: Student/Edit docs/5
+        // GET: Student/MaintainStudentDocs
         public ActionResult MaintainStudentDocs()
         {
             Student student = (Student)Session["Student"];
             return View(student);
         }
 
-        // POST: Student/Edit docs/5
+        // POST: Student/MaintainStudentDocs
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult MaintainStudentDocs(Student model)
@@ -589,7 +516,7 @@ namespace Finance_Tracking.Controllers
                 ViewBag.NotApproved = "Your application is still under review";
                 return View("ShowApplication",application);
             }
-            Bursar_Fund bursar = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds, application);
+            Bursar_Fund bursar = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
             return View(bursar);
         }
         #endregion

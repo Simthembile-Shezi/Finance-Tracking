@@ -12,6 +12,7 @@ namespace Finance_Tracking.Models
         public Bursary()
         {
             Applications = new List<Application>();
+            ApplicationViews = new List<ApplicationView>();
         }
         public Bursary(string bursary_Code, string bursary_Name, DateTime start_Date, string funder_Name, DateTime? end_Date, decimal? bursary_Amount, string number_Available, string description, string funding_Year)
         {
@@ -68,6 +69,9 @@ namespace Finance_Tracking.Models
 
         public Application Application { get; set; }
         public List<Application> Applications { get; set; }
+
+        public ApplicationView ApplicationView { get; set; }
+        public List<ApplicationView> ApplicationViews { get; set; }
 
         public virtual Funder Funder { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿@model Finance_Tracking.Models.Bursar_Fund
+﻿@model Finance_Tracking.Models.BursarFundView
 
 @{
     ViewBag.Title = "ViewBursar";
@@ -7,8 +7,58 @@
 
 <h2>View Bursar</h2>
 
-<div class="col-md-8">
+<div class="row col-md-8">
+    @Html.HiddenFor(model => model.Application_ID)
     <dl class="dl-horizontal">
+       
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_LName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_LName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Identity_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Identity_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Cellphone_Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Cellphone_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student_Email)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Update_Fund_Request)
         </dt>
@@ -43,13 +93,13 @@
             </div>
         </a>
     </div>
-    <div class="btn-block">
+    @*<div class="btn-block">
         <a href='@Url.Action("UpdateFundingStatus", "Funder", new { id = Model.Application_ID })'>
             <div>
                 <input type="button" name="selection" value="Update Funding Status" class="btn btn-default btn-block" />
             </div>
         </a>
-    </div>
+    </div>*@
     <div class="btn-block">
         <a href='@Url.Action("UpdateFundRequest", "Funder", new { id = Model.Application_ID })'>
             <div>

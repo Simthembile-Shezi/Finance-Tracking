@@ -18,7 +18,7 @@ namespace Finance_Tracking.Models
         [Key]
         [Display(Name = "Academic Year")]
         [Column(Order = 1, TypeName = "date")]
-        public DateTime Academic_Year { get; set; }
+        public string Academic_Year { get; set; }
 
         [Required]
         [Display(Name = "Qualification")]

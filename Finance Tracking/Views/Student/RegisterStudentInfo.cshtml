@@ -5,23 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Student Personal Info</h2>
+<h2>Biographical details</h2>
+<p>In this section you are required to enter your biographical details.</p>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <fieldset class="documents-fieldset">
-            <legend>Identity Information</legend>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Student_Nationality, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-9 autocomplete">
-                    @Html.EditorFor(model => model.Student_Nationality, new { htmlAttributes = new { @class = "form-control", @id = "nation", @placeholder = "Country" } })
-                    @Html.ValidationMessageFor(model => model.Student_Nationality, "", new { @class = "text-danger" })
-                </div>
+         <div class="col-md-offset-2 col-md-10 text-danger">
+                @ViewBag.RegistrationError
             </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <fieldset class="documents-fieldset">
+            <legend>Nationality</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.Student_Identity_Number, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
@@ -31,14 +28,13 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Date_Of_Birth, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-9">
-                    @Html.EditorFor(model => model.Date_Of_Birth, new { htmlAttributes = new { @class = "form-control", @id = "DoB" } })
-                    @Html.ValidationMessageFor(model => model.Date_Of_Birth, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Student_Nationality, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9 autocomplete">
+                    @Html.EditorFor(model => model.Student_Nationality, new { htmlAttributes = new { @class = "form-control", @id = "nation", @placeholder = "Country" } })
+                    @Html.ValidationMessageFor(model => model.Student_Nationality, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>
-
         <fieldset class="documents-fieldset">
             <legend>Personal Information</legend>
             <span class="text-danger">@ViewBag.SelectionError</span>
@@ -54,6 +50,13 @@
                         new SelectListItem{ Text="Prefer not to say", Value = "Prefer not to say" },
                         }, new { @class = "login-input form-control" })
                     @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Date_Of_Birth, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Date_Of_Birth, new { htmlAttributes = new { @class = "form-control", @id = "DoB" } })
+                    @Html.ValidationMessageFor(model => model.Date_Of_Birth, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
@@ -87,7 +90,20 @@
                     @Html.ValidationMessageFor(model => model.Student_LName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+            <div class="form-group">
+                @Html.LabelFor(model => model.Marital_Status, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.Marital_Status, new List<SelectListItem>
+                     {
+                       new SelectListItem{ Text="Select", Value = null, Selected =true},
+                        new SelectListItem{ Text="Single", Value = "Single" },
+                        new SelectListItem{ Text="Married", Value = "Married" },
+                        new SelectListItem{ Text="Divorced", Value = "Divorced" },
+                        new SelectListItem{ Text="Widow/er", Value = "Widow/er" },
+                     }, new { @class = "login-input form-control" })
+                    @Html.ValidationMessageFor(model => model.Marital_Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Race, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
@@ -111,24 +127,126 @@
                     @Html.ValidationMessageFor(model => model.Race, "", new { @class = "text-danger" })
                 </div>
             </div>
+        </fieldset>
+        <fieldset class="documents-fieldset">
+            <legend >Contact Information</legend>
             <div class="form-group">
-                @Html.LabelFor(model => model.Marital_Status, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.Student_Email, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.Marital_Status, new List<SelectListItem>
-                     {
-                       new SelectListItem{ Text="Select", Value = null, Selected =true},
-                        new SelectListItem{ Text="Single", Value = "Single" },
-                        new SelectListItem{ Text="Married", Value = "Married" },
-                        new SelectListItem{ Text="Divorced", Value = "Divorced" },
-                        new SelectListItem{ Text="Widow/er", Value = "Widow/er" },
-                     }, new { @class = "login-input form-control" })
-                    @Html.ValidationMessageFor(model => model.Marital_Status, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Student_Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Student_Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmStudent_Email, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.ConfirmStudent_Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmStudent_Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Student_Cellphone_Number, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Student_Cellphone_Number, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Student_Cellphone_Number, "", new { @class = "text-danger" })
                 </div>
             </div>
         </fieldset>
+        <fieldset class="documents-fieldset">
+            <legend >Home Residence Information</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Street_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Street_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Street_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
+            <div class="form-group">
+                @Html.LabelFor(model => model.Sub_Town, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Sub_Town, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Sub_Town, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Province, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Province, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Province, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Zip_Code, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Zip_Code, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Zip_Code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="documents-fieldset">
+            <legend class="documents-legend"> @Html.LabelFor(model => model.Identity_Document)</legend>
+            <div class="form-group">
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Identity_Document, "", new { @type = "file", @multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.Identity_Document, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="documents-fieldset">
+            <legend class="documents-legend">@Html.LabelFor(model => model.Residential_Document)</legend>
+            <div class="form-group">
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Residential_Document, "", new { @type = "file", @multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.Identity_Document, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="documents-fieldset">
+            <legend >Create a password</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
         <div class="form-group">
-            @Html.Partial("_Register")
+            <div class="container-btn">
+                <div class="left-btn-flex">
+                    <a href='@Url.Action("SignUp", "Home")'>
+                        <div>
+                            <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                        </div>
+                    </a>
+                </div>
+                <div class="right-btn-flex">
+                    <div>
+                        <input type="submit" name="selection" value="Submit" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }

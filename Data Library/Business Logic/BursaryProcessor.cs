@@ -89,29 +89,22 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static BursaryDB GetBursary(string code)
+        public static BursaryDB GetBursaryCode(string code)
         {
-            var list = LoadBursaries();
-            foreach (var item in list)
-            {
-                if (item.Bursary_Code.Equals(code))
-                {
-                    return item;
-                }
-            }
-            return null;
+            string sql = @"select Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year
+                           from dbo.[Bursary]
+                           where Bursary_Code = '" + code + "';";
+
+            return SqlDataAccess.SingleData<BursaryDB>(sql);
         }
 
-        public static List<BursaryDB> GetBursaries(string name)
+        public static List<BursaryDB> GetBursaries(string funderName)
         {
-            var list = new List<BursaryDB>();
-            foreach (var item in LoadBursaries())
-            {
-                if (item.Funder_Name.Equals(name))
-                    list.Add(item);
-            }
+            string sql = @"select Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year
+                           from dbo.[Bursary]
+                           where Funder_Name = '" + funderName + "';";
 
-            return list;
+            return SqlDataAccess.LoadData<BursaryDB>(sql);
         }
 
         public static List<BursaryDB> LoadBursaries()

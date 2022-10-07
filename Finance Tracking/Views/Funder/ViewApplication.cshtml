@@ -1,4 +1,4 @@
-﻿@model Finance_Tracking.Models.Application
+﻿@model Finance_Tracking.Models.ApplicationView
 
 @{
     ViewBag.Title = "ViewApplication";
@@ -8,38 +8,104 @@
 <h2>View Application</h2>
 
 <div class="col-md-8">
+
     <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Application_Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Application_Status)
+        </dd>
+    </dl>
+    <h4>Student Information</h4>
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_FName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Student_FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_LName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Student_LName)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Student_Identity_Number)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Student_Identity_Number)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Bursary_Code)
+            @Html.DisplayNameFor(model => model.Gender)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Bursary_Code)
+            @Html.DisplayFor(model => model.Gender)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Funding_Year)
+            @Html.DisplayNameFor(model => model.Student_Cellphone_Number)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Funding_Year)
+            @Html.DisplayFor(model => model.Student_Cellphone_Number)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Application_Status)
+            @Html.DisplayNameFor(model => model.Student_Email)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Application_Status)
+            @Html.DisplayFor(model => model.Student_Email)
         </dd>
+    </dl>
+    <h4>Institution Information</h4>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Academic_Year)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Academic_Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student_Number)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Student_Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Institution_Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Institution_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Qualification)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Qualification)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Avarage_Marks)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Avarage_Marks)
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Avarage_Marks)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Avarage_Marks)
+            </dd>*@
 
     </dl>
 </div>
@@ -52,10 +118,13 @@
         </a>
     </div>
     <div class="btn-block">
-        <a href='@Url.Action("ViewBursaryAgreement", "Funder", new { id = Model.Application_ID })'>
-            <div>
-                <input type="button" name="selection" value="View Bursary Agreement" class="btn btn-default btn-block" />
-            </div>
+        <a href='@Url.Action("UploadBursaryAgreement", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Upload Bursary Agreement" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DownloadSignedAgreement", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Download Signed Agreement" class="btn btn-default btn-block" />
         </a>
     </div>
     <div class="btn-block">
