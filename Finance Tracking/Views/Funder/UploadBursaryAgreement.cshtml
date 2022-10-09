@@ -18,7 +18,7 @@
                 @ViewBag.UploadStatus
             </div>
         </div>
-
+        @Html.HiddenFor(model => model.Application_ID)
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <fieldset class="documents-fieldset">

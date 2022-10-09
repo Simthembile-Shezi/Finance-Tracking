@@ -15,6 +15,7 @@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Application_ID)
+        @Html.HiddenFor(model => model.Bursary_Code)
         <div class="form-group">
             <p>Current status for application @Html.DisplayFor(model => model.Application_ID) is @Html.DisplayFor(model => model.Application_Status)</p>
         </div>
@@ -34,8 +35,10 @@
                         new SelectListItem{ Text="Shortlist Application", Value = "Shortlisted" },
                         new SelectListItem{ Text="In Progress", Value = "In Progress" },
                         new SelectListItem{ Text="Missing Documents", Value = "Missing Documents" },
+                        new SelectListItem{ Text="Agreement Sent", Value = "Agreement Sent" },
                         }, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Application_Status, "", new { @class = "text-danger" })
+                <span class="text-danger">@ViewBag.WrongChoice</span>
             </div>
         </div>
 

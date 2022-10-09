@@ -9,6 +9,7 @@ using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.FunderEmpProcessor;
 using static Data_Library.Business_Logic.FunderProcessor;
+using System.Data.SqlClient;
 
 namespace Finance_Tracking.Controllers
 {
@@ -174,31 +175,21 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/ViewApplications
         public ActionResult ViewApplications(string id)
         {
-            Funder fund = (Funder)Session["Funder"];
             Bursary bursary = new Bursary();
-            bursary.Bursary_Code = id;
+            bursary.Bursary_Code = id;              //Used on the HttpPost
+            var list = GetApplications(id);
 
-            foreach (var item in fund.Bursaries)
+            foreach (var app in list)
             {
-                if ((item.Bursary_Code).Equals(bursary.Bursary_Code))
-                {
-                    var list = GetApplications(id.ToString());
-                    foreach (var app in list)
-                    {
-                        Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
-                        bursary.Applications.Add(application);
-                    }
-                    Session["Applications"] = bursary;
-
-                    return View(bursary);
-                }
+                Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
+                bursary.Applications.Add(application);
             }
-            return View();
+            return View(bursary);
         }
         // POST: Funder/ViewApplications
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ViewApplications(Bursary model) //used for scea
+        public ActionResult ViewApplications(Bursary model) //used for searching application using ID number
         {
             var list = GetApplications(model.Bursary_Code);
             Bursary result = new Bursary();
@@ -227,7 +218,7 @@ namespace Finance_Tracking.Controllers
                     return View(application);
                 }
             }
-            return View();
+            return HttpNotFound();
         }
 
         // GET: Funder/UpdateApplicationStatus/Application_ID
@@ -235,9 +226,13 @@ namespace Finance_Tracking.Controllers
         {
             var item = GetApplication(id);
             Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
-            if (application == null)
+            if (application.Application_Status.Equals("Approved"))
             {
-                return HttpNotFound();
+                ViewBag.WrongChoice = "Please be aware that application status for this application is final";
+            }
+            else
+            {
+                ViewBag.WrongChoice = null;
             }
             return View(application);
         }
@@ -249,22 +244,34 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                updateApplicationStatus(model.Application_ID, model.Application_Status);
-
-                //Removed the fund request and approved amount on the CreateBursarFund
-                if (model.Application_Status.Equals("Approved"))
+                if(model.Application_Status.Equals("Select"))
                 {
-                    CreateBursarFund(model.Application_ID, "Funded", 0);
+                    ViewBag.WrongChoice = "Please select the appropriate choice";
+                    return View(model);
                 }
-                ////Binding
-                Application application = (Application)Session["Application"];
-                application.Application_Status = model.Application_Status;
+                else
+                {
+                    updateApplicationStatus(model.Application_ID, model.Application_Status);
 
-
-                return View("ViewApplication", application);
+                    //Removed the fund request and approved amount on the CreateBursarFund
+                    if (model.Application_Status.Equals("Approved"))
+                    {
+                        try
+                        {
+                            CreateBursarFund(model.Application_ID, "Funded", 0);
+                        }
+                        catch
+                        {
+                            ViewBag.WrongChoice = "This application has been approved and already made a bursar, please check the bursars table";
+                            return View(model);
+                        }
+                    }
+                }
+                return RedirectToAction("ViewApplication", new { id = model.Application_ID });
             }
             catch
             {
+                ViewBag.WrongChoice = null;
                 return View(model);
             }
         }
@@ -287,26 +294,28 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                HttpPostedFileBase Agreement = model.Bursary_Agreement;
+                if(model.Bursary_Agreement != null)
+                {
+                    HttpPostedFileBase Agreement = model.Bursary_Agreement;
+                    String FileExt = Path.GetExtension(Agreement.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = Agreement.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                //Convert HttpPostedFileBase to Byte[]
-                Stream str = Agreement.InputStream;
-                BinaryReader Br = new BinaryReader(str);
-                Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Agreement = Agreement_Doc_FileDet;
+                        updateApplicationDocs(model.Application_ID, model.Upload_Agreement);
 
-                //Store the file content in Byte[] format on the model
-                model.Upload_Agreement = Agreement_Doc_FileDet;
-                updateApplicationDocs(model.Application_ID, model.Upload_Agreement);
-
-                //updateApplicationDocs must also update the status to Agreement Sent
-                updateApplicationStatus(model.Application_ID, "Agreement Sent");
-
-                ////Binding
-                Application application = (Application)Session["Application"];
-                application.Upload_Agreement = model.Upload_Agreement;
-                application.Application_Status = "Agreement Sent";
-
-                return View("ViewApplication", application);
+                        //updateApplicationDocs must also update the status to Agreement Sent
+                        updateApplicationStatus(model.Application_ID, "Agreement Sent");
+                        return RedirectToAction("ViewApplication", new { id = model.Application_ID });
+                    }
+                }
+                ViewBag.UploadStatus = "Please try selecting the file again";
+                return View(model);
             }
             catch
             {
@@ -323,9 +332,9 @@ namespace Finance_Tracking.Controllers
 
             if (application.Upload_Signed_Agreement == null)
             {
-                return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
+                 return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
             }
-            return File(application.Upload_Signed_Agreement, MediaTypeNames.Application.Octet, application.Application_ID);
+             return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID);
         }
         #endregion
 

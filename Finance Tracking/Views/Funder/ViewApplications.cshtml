@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
     <div class="form-inline">
         <div class="col-md-6">
-
+            @Html.HiddenFor(model => model.Bursary_Code)
         </div>
         <div class="col-md-3">
             @Html.EditorFor(model => model.Application.Student_Identity_Number, new { htmlAttributes = new { @class = "form-control", @placeholder = "Student Identity Number" } })
