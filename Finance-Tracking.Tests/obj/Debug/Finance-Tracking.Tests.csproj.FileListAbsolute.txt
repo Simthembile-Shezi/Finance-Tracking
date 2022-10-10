@@ -177,3 +177,4 @@ D:\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Te
 D:\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.CopyComplete
 D:\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.dll
 D:\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.pdb
+C:\Users\s219121923\Documents\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.AssemblyReference.cache

@@ -265,6 +265,8 @@
     <Content Include="Views\Student\MaintainStudentDocs.cshtml" />
     <Content Include="Views\Home\ChangePassword.cshtml" />
     <Content Include="Views\Home\LogOut.cshtml" />
+    <Content Include="Views\Funder\ViewAllApplications.cshtml" />
+    <Content Include="Views\Funder\ViewAllBursars.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">
@@ -287,6 +289,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Public\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -121,7 +121,19 @@ namespace Data_Library.Business_Logic
                                 JOIN dbo.[Academic Records] AS AR ON E.Student_Number=AR.Student_Number                                
                            where A.Application_ID = '" + appID + "';";
 
+            //return SqlDataAccess.Joins<ApplicationDB>(sql);
+
             return SqlDataAccess.LoadData<ApplicationViewDB>(sql);
+        }
+
+        public static List<ApplicationDB> GetAllApplications(string name)
+        {
+            string sql = @"select A.Application_ID, A.Student_Identity_Number, A.Bursary_Code, A.Funding_Year, A.Application_Status, A.Upload_Agreement, A.Upload_Signed_Agreement
+                           from dbo.[Bursary] AS B JOIN dbo.[Application] AS A ON B.Bursary_Code=A.Bursary_Code
+                           JOIN dbo.Funder AS F ON B.Funder_Name=F.Funder_Name
+                           where F.Funder_Name = '" + name + "';";
+
+            return SqlDataAccess.LoadData<ApplicationDB>(sql);
         }
 
         public static List<ApplicationDB> LoadApplications()

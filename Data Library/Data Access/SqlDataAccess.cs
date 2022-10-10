@@ -23,7 +23,7 @@ namespace Data_Library.Data_Access
             }
         }
 
-        public static dynamic SingleData<T>(string sql)
+        public static T SingleData<T>(string sql)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
@@ -31,11 +31,27 @@ namespace Data_Library.Data_Access
             }
         }
 
+        //public static dynamic Joins<T>(string sql)
+        //{
+        //    using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+        //    {
+        //        return cnn.QueryMultiple(sql);
+        //    }
+        //}
+
         public static int SaveData<T>(string sql, T data)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
                 return cnn.Execute(sql, data);
+            }
+        }
+
+        public static int DeleteData(string sql)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return cnn.Execute(sql);
             }
         }
     }

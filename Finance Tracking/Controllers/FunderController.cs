@@ -186,6 +186,19 @@ namespace Finance_Tracking.Controllers
             }
             return View(bursary);
         }
+        public ActionResult ViewAllApplications(string id)      //using funder name
+        {
+            Bursary bursary = new Bursary();
+            bursary.Funder_Name = id;              //Used on the HttpPost
+            var list = GetAllApplications(id);
+
+            foreach (var app in list)
+            {
+                Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
+                bursary.Applications.Add(application);
+            }
+            return View(bursary);
+        }
         // POST: Funder/ViewApplications
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -208,7 +221,9 @@ namespace Finance_Tracking.Controllers
         public ActionResult ViewApplication(string id)
         {
             var list = viewApplications(id);
-            
+            //ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+            //            item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+            //return View(application);
             foreach (var item in list)
             {
                 if (item.Application_ID.Equals(id))
@@ -334,7 +349,7 @@ namespace Finance_Tracking.Controllers
             {
                  return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
             }
-             return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID);
+            return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID);
         }
         #endregion
 
@@ -480,6 +495,20 @@ namespace Finance_Tracking.Controllers
         #region View all students funded by the funder and updated if needed
         // GET: Funder/ViewBursaries
         public ActionResult ViewBursars(string id)
+        {
+            BursarsViewModel model = new BursarsViewModel();
+            var list = BursarFundViews(id);
+            foreach (var item in list)
+            {
+                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
+                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                model.Bursars.Add(bursar);
+            }
+            Session["Bursars"] = model;
+            return View(model);
+        }
+        // GET: Funder/ViewBursaries
+        public ActionResult ViewAllBursars(string id)       //Using funder name
         {
             BursarsViewModel model = new BursarsViewModel();
             var list = BursarFundViews(id);

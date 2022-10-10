@@ -52,32 +52,53 @@ namespace Finance_Tracking.Controllers
                     ViewBag.SelectionError = "Please select the required options";
                     return View(model);
                 }
-                HttpPostedFileBase Residential_Doc = model.Residential_Document;
-                HttpPostedFileBase ID_Doc = model.Identity_Document;
 
-                Student studentInfo = (Student)Session["StudentInfo"];
-                Student studentContacts = (Student)Session["StudentContacts"];
+                //Student studentInfo = (Student)Session["StudentInfo"];
+                //Student studentContacts = (Student)Session["StudentContacts"];
 
-                if (Residential_Doc != null)
+                try
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = Residential_Doc.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                    String FileExt;
 
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Residential_Document = Residential_Doc_FileDet;
+                    //if (Residential_Doc != null)
+                    {
+                        HttpPostedFileBase Residential_Doc = model.Residential_Document;
+                        FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
+                        if(FileExt.Equals(".PDF"))
+                        {
+                            //Convert HttpPostedFileBase to Byte[]
+                            Stream str = Residential_Doc.InputStream;
+                            BinaryReader Br = new BinaryReader(str);
+                            Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+
+                            //Store the file content in Byte[] format on the model
+                            model.Upload_Residential_Document = Residential_Doc_FileDet;
+                        }
+                    }
+
+                    //if (ID_Doc != null)
+                    {
+                        HttpPostedFileBase ID_Doc = model.Identity_Document;
+                        FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
+                        if (FileExt.Equals(".PDF"))
+                        {
+                            //Convert HttpPostedFileBase to Byte[]
+                            Stream stream = ID_Doc.InputStream;
+                            BinaryReader Binary = new BinaryReader(stream);
+                            Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
+
+                            //Store the file content in Byte[] format on the model
+                            model.Upload_Identity_Document = ID_Doc_FileDet;
+                        }
+                    }
                 }
-                if (ID_Doc != null)
+                catch
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream stream = ID_Doc.InputStream;
-                    BinaryReader Binary = new BinaryReader(stream);
-                    Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
-
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Identity_Document = ID_Doc_FileDet;
+                    ViewBag.UploadStatus = "Upload failed, please try again or contact the Finance Tracking System Admin";
+                    return View(model);
                 }
+
+
                 model.Student_Residential_Address = model.Street_Name + "; " + model.Sub_Town + "; " + model.City + "; " + model.Province + "; " + model.Zip_Code;
 
                 CreateStudent(model.Student_Identity_Number,

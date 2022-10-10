@@ -11,6 +11,7 @@
 <div>
     @using (Html.BeginForm())
     {
+        @Html.HiddenFor(model => model.Student_Identity_Number)
         @Html.AntiForgeryToken()
 
         <div class="container-btn">
