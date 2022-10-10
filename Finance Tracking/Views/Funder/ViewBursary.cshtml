@@ -79,22 +79,25 @@
     <div class="btn-block">
         <a href='@Url.Action("DeleteBursary", "Funder", new { id = Model.Bursary_Code })'>
             <div>
-                <input type="button" name="selection" value="Delete" class="btn btn-default" />
+                <input type="button" name="selection" value="Delete" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>
     <div class="btn-block">
         <a href='@Url.Action("MaintainBursary", "Funder", new { id = Model.Bursary_Code })'>
             <div>
-                <input type="button" name="selection" value="Maintain" class="btn btn-default" />
+                <input type="button" name="selection" value="Maintain" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>
     <div class="btn-block">
         <a href='@Url.Action("ViewBursaries", "Funder")'>
             <div>
-                <input type="button" name="selection" value="Back" class="btn btn-default" />
+                <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

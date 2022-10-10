@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Bursary_Code)
@@ -88,3 +88,6 @@
     </div>
 }
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

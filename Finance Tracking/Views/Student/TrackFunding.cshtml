@@ -22,20 +22,20 @@
 
     @foreach (var item in Model.Applications)
     {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Bursary_Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Funding_Year)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Application_Status)
-        </td>
-        <td>
-            @Html.ActionLink("View Application", "ShowApplication", new { id = item.Application_ID })
-        </td>
-    </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bursary_Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Funding_Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Application_Status)
+            </td>
+            <td>
+                @Html.ActionLink("View Application", "ShowApplication", new { id = item.Application_ID })
+            </td>
+        </tr>
     }
 
 </table>
@@ -48,3 +48,6 @@
         </a>
     </div>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
