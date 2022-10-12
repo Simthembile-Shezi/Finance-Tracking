@@ -1,18 +1,18 @@
 ﻿using Finance_Tracking.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.SessionState;
-using System.Net.Mime;
-using static Data_Library.Business_Logic.StudentProcessor;
-using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.ApplicationProcessor;
-using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
+using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.Enrolled_AtProcessor;
+using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
-using System.Collections.Generic;
+using static Data_Library.Business_Logic.StudentProcessor;
 
 namespace Finance_Tracking.Controllers
 {
@@ -60,11 +60,11 @@ namespace Finance_Tracking.Controllers
                 {
                     String FileExt;
 
-                    //if (Residential_Doc != null)
+                    HttpPostedFileBase Residential_Doc = model.Residential_Document;
+                    if (Residential_Doc != null)
                     {
-                        HttpPostedFileBase Residential_Doc = model.Residential_Document;
                         FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
-                        if(FileExt.Equals(".PDF"))
+                        if (FileExt.Equals(".PDF"))
                         {
                             //Convert HttpPostedFileBase to Byte[]
                             Stream str = Residential_Doc.InputStream;
@@ -76,9 +76,9 @@ namespace Finance_Tracking.Controllers
                         }
                     }
 
-                    //if (ID_Doc != null)
+                    HttpPostedFileBase ID_Doc = model.Identity_Document;
+                    if (ID_Doc != null)
                     {
-                        HttpPostedFileBase ID_Doc = model.Identity_Document;
                         FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
                         if (FileExt.Equals(".PDF"))
                         {
@@ -139,37 +139,51 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                HttpPostedFileBase Residential_Doc = model.Residential_Document;
-                HttpPostedFileBase ID_Doc = model.Identity_Document;
+                String FileExt;
 
+                HttpPostedFileBase Residential_Doc = model.Residential_Document;
                 if (Residential_Doc != null)
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = Residential_Doc.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                    FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = Residential_Doc.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Residential_Document = Residential_Doc_FileDet;
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Residential_Document = Residential_Doc_FileDet;
+                    }
                 }
+
+                HttpPostedFileBase ID_Doc = model.Identity_Document;
                 if (ID_Doc != null)
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream stream = ID_Doc.InputStream;
-                    BinaryReader Binary = new BinaryReader(stream);
-                    Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
+                    FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream stream = ID_Doc.InputStream;
+                        BinaryReader Binary = new BinaryReader(stream);
+                        Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
 
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Identity_Document = ID_Doc_FileDet;
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Identity_Document = ID_Doc_FileDet;
+                    }
+                }
+
+                if(model.Upload_Identity_Document == null || model.Upload_Residential_Document == null)
+                {
+                    ViewBag.UploadStatus = "Please upload documents as PDF";
+                    return View(model);
                 }
                 UploadDocs(model.Student_Identity_Number, model.Upload_Identity_Document, model.Upload_Residential_Document);
-
-
-
                 return RedirectToAction("Index");
             }
             catch
             {
+                ViewBag.UploadStatus = "Upload failed, please try again or contact the Finance Tracking System Admin";
                 return View(model);
             }
         }
@@ -232,7 +246,7 @@ namespace Finance_Tracking.Controllers
             Student student = (Student)Session["Student"];
             var uni = GetStudentEnrolledList(student.Student_Identity_Number);
             Student model = new Student();
-            foreach(var item in uni)
+            foreach (var item in uni)
             {
                 Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
                 model.Enrolled_Ats.Add(enrolled);
@@ -243,7 +257,7 @@ namespace Finance_Tracking.Controllers
         {
             var item = GetEnrolledDetails(id);
             Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
-            
+
             string[] address = enrolled.Study_Residential_Address.Split(';');
 
             enrolled.Street_Name = address[0];
@@ -306,7 +320,7 @@ namespace Finance_Tracking.Controllers
             {
                 Student student = (Student)Session["Student"];
                 model.Study_Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                UpdateEnrolledDetails(model.Student_Number, model.Student_Identity_Number, model.Institution_Name,model.Qualification, model.Student_Email, model.Study_Residential_Address);
+                UpdateEnrolledDetails(model.Student_Number, model.Student_Identity_Number, model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
                 return RedirectToAction("ViewInstitutionInfo", new { id = model.Student_Number });
             }
             catch
@@ -339,7 +353,7 @@ namespace Finance_Tracking.Controllers
             }
 
         }
-        
+
         public ActionResult ViewFinacialStatement(string id)
         {
             Enrolled_At enrolled = (Enrolled_At)Session["Enrolled"];
@@ -352,7 +366,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ViewFinacialStatement(Finacial_Record model)
         {
             var item = GetStudentFinRec(model.Student_Number, model.Academic_Year);
-            if(item == null)
+            if (item == null)
             {
                 return View(model);
             }
@@ -369,13 +383,13 @@ namespace Finance_Tracking.Controllers
         {
             ApplyBursaryViewModel model = new ApplyBursaryViewModel();
             var list = LoadBursaries();
-            foreach(var item in list)
+            foreach (var item in list)
             {
-                Bursary bursary = new Bursary(item.Bursary_Code,item.Bursary_Name, item.Start_Date, item.Funder_Name, item.End_Date, item.Bursary_Amount, item.Number_Available, item.Description, item.Funding_Year);
-                
+                Bursary bursary = new Bursary(item.Bursary_Code, item.Bursary_Name, item.Start_Date, item.Funder_Name, item.End_Date, item.Bursary_Amount, item.Number_Available, item.Description, item.Funding_Year);
+
                 model.Bursaries.Add(bursary);
                 model.Bursary = bursary;
-            }          
+            }
             Session["Apply"] = model;
             return View(model);
         }
@@ -433,9 +447,9 @@ namespace Finance_Tracking.Controllers
             Student student = (Student)Session["Student"];
             ApplyBursaryViewModel model = new ApplyBursaryViewModel();
 
-           
+
             var list = GetStudentApplications(student.Student_Identity_Number);
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 Application application = new Application();
                 application.Application_ID = item.Application_ID;
@@ -460,9 +474,9 @@ namespace Finance_Tracking.Controllers
             {
                 if (item.Application_ID.Equals(id.ToString()))
                 {
-                    Session["Application"] = item; 
+                    Session["Application"] = item;
                     return View(item);
-                }                   
+                }
             }
             return View(model);
         }
@@ -484,12 +498,12 @@ namespace Finance_Tracking.Controllers
         public FileResult DownloadBursaryAgreement(string id)
         {
             Application application = (Application)Session["Application"];
-            if(application.Upload_Agreement == null)
+            if (application.Upload_Agreement == null)
             {
                 RedirectToAction("ViewBursaryAgreement");
                 return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
             }
-            return File(application.Upload_Agreement, MediaTypeNames.Application.Octet , application.Application_ID);
+            return File(application.Upload_Agreement, MediaTypeNames.Application.Octet, application.Application_ID);
         }
 
         // GET: Student/UploadSignedAgreement
@@ -532,10 +546,10 @@ namespace Finance_Tracking.Controllers
         {
             Application application = (Application)Session["Application"];
             var item = GetBursar(id);
-            if(item == null)
+            if (item == null)
             {
                 ViewBag.NotApproved = "Your application is still under review";
-                return View("ShowApplication",application);
+                return View("ShowApplication", application);
             }
             Bursar_Fund bursar = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
             return View(bursar);

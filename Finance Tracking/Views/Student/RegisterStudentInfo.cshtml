@@ -8,14 +8,14 @@
 <h2>Biographical details</h2>
 <p>In this section you are required to enter your biographical details.</p>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("RegisterStudentInfo", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-         <div class="col-md-offset-2 col-md-10 text-danger">
-                @ViewBag.RegistrationError
-            </div>
+        <div class="col-md-offset-2 col-md-10 text-danger">
+            @ViewBag.RegistrationError
+        </div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <fieldset class="documents-fieldset">
             <legend>Nationality</legend>
@@ -129,7 +129,7 @@
             </div>
         </fieldset>
         <fieldset class="documents-fieldset">
-            <legend >Contact Information</legend>
+            <legend>Contact Information</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.Student_Email, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
@@ -155,7 +155,7 @@
             </div>
         </fieldset>
         <fieldset class="documents-fieldset">
-            <legend >Home Residence Information</legend>
+            <legend>Home Residence Information</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.Street_Name, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
@@ -215,7 +215,7 @@
             </div>
         </fieldset>
         <fieldset class="documents-fieldset">
-            <legend >Create a password</legend>
+            <legend>Create a password</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">

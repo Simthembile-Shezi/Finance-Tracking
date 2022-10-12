@@ -186,19 +186,6 @@ namespace Finance_Tracking.Controllers
             }
             return View(bursary);
         }
-        public ActionResult ViewAllApplications(string id)      //using funder name
-        {
-            Bursary bursary = new Bursary();
-            bursary.Funder_Name = id;              //Used on the HttpPost
-            var list = GetAllApplications(id);
-
-            foreach (var app in list)
-            {
-                Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
-                bursary.Applications.Add(application);
-            }
-            return View(bursary);
-        }
         // POST: Funder/ViewApplications
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -217,7 +204,37 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
+        public ActionResult ViewAllApplications(string id)      //using funder name
+        {
+            Bursary bursary = new Bursary();
+            bursary.Funder_Name = id;              //Used on the HttpPost
+            var list = GetAllApplications(id);
 
+            foreach (var app in list)
+            {
+                Application application = new Application(app.Application_ID, app.Student_Identity_Number, app.Bursary_Code, app.Funding_Year, app.Application_Status, app.Upload_Agreement, app.Upload_Signed_Agreement);
+                bursary.Applications.Add(application);
+            }
+            return View(bursary);
+        }
+        // POST: Funder/ViewApplications
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ViewAllApplications(Bursary model) //used for searching application using ID number
+        {
+            var list = GetAllApplications(model.Funder_Name);
+            Bursary result = new Bursary();
+            foreach (var item in list)
+            {
+                if ((item.Student_Identity_Number).Equals(model.Application.Student_Identity_Number))
+                {
+                    Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
+                    result.Applications.Add(application);
+                    return View(result);
+                }
+            }
+            return View(model);
+        }
         public ActionResult ViewApplication(string id)
         {
             var list = viewApplications(id);
@@ -295,10 +312,7 @@ namespace Finance_Tracking.Controllers
         {
             var item = GetApplication(id);
             Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
-            if (application == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.UploadStatus = null;
             return View(application);
         }
 
@@ -349,7 +363,7 @@ namespace Finance_Tracking.Controllers
             {
                  return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
             }
-            return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID);
+            return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID+".pdf");
         }
         #endregion
 
@@ -511,7 +525,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ViewAllBursars(string id)       //Using funder name
         {
             BursarsViewModel model = new BursarsViewModel();
-            var list = BursarFundViews(id);
+            var list = GeAlltBursarsList(id);
             foreach (var item in list)
             {
                 BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
