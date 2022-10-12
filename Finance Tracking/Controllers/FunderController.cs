@@ -86,38 +86,33 @@ namespace Finance_Tracking.Controllers
             }
             catch
             {
+                ViewBag.FunderAlreadyExist = "Funder Already Exist";
                 return View(model);
             }
         }
-
         // GET: Funder/Create/Employee
         public ActionResult AdminFunderEmployee()
         {
             Funder funder = (Funder)Session["Funder"];
             Funder_Employee employee = new Funder_Employee();
             employee.Organization_Name = funder.Funder_Name;
-            employee.Funder = funder;
             return View(employee);
         }
-
         // POST: Funder/Create/Employee
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AdminFunderEmployee(Funder_Employee employee)
         {
-            Funder funder = (Funder)Session["Funder"];
             try
             {
                 //Insert the Employee on the database
-                //model state
-                AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email,
-                    employee.Organization_Name, employee.Password, employee.Admin_Code);
-
+                AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password, employee.Admin_Code);
                 return RedirectToAction("Login", "Home");
             }
             catch
             {
-                return View(funder);
+                ViewBag.AdminAlreadyExist = "Admin email is already registered with the system";
+                return View(employee);
             }
 
         }
@@ -139,8 +134,7 @@ namespace Finance_Tracking.Controllers
                 string Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
                 UpdateFunder(model.Funder_Name, model.Funder_Email, model.Funder_Telephone_Number, Physical_Address, Postal_Address);
 
-                return View("FunderDetails", model);
-
+                return RedirectToAction("FunderDetails");
             }
             catch
             {
@@ -157,6 +151,7 @@ namespace Finance_Tracking.Controllers
 
         // POST: Funder/DeleteFunder
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteFunder(Funder funder)
         {
             try
@@ -250,7 +245,7 @@ namespace Finance_Tracking.Controllers
                     return View(application);
                 }
             }
-            return HttpNotFound();
+            return RedirectToAction("Error", "Home");
         }
 
         // GET: Funder/UpdateApplicationStatus/Application_ID
@@ -357,13 +352,12 @@ namespace Finance_Tracking.Controllers
         public FileResult DownloadSignedAgreement(string id)    //No need for a view
         {
             var item = GetApplication(id);
-            Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
-
-            if (application.Upload_Signed_Agreement == null)
+            
+            if (item.Upload_Signed_Agreement == null)
             {
-                 return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
+                return null;
             }
-            return File(application.Upload_Signed_Agreement, "application/pdf", application.Application_ID+".pdf");
+            return File(item.Upload_Signed_Agreement, "application/pdf", item.Application_ID+".pdf");
         }
         #endregion
 
@@ -372,7 +366,6 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public ActionResult ViewBursaries()
         {
-
             Funder_Employee funderEmp = (Funder_Employee)Session["FunderEmployee"];
             Funder fund = new Funder();
             fund.Funder_Name = funderEmp.Organization_Name;
@@ -384,7 +377,6 @@ namespace Finance_Tracking.Controllers
                 Bursary model = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
                 fund.Bursaries.Add(model);
             }
-            Session["Funder"] = fund;
             return View(fund);
         }
 
@@ -392,14 +384,14 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ViewBursaries(Funder model)
         {
-            Funder funder = (Funder)Session["Funder"];
             Funder fund = new Funder();
-            fund.Funder_Name = funder.Funder_Name;
+            fund.Funder_Name = model.Funder_Name;
+            var list = GetSearchBursaries(fund.Funder_Name, model.Bursary.Funding_Year);
 
-            foreach (var bursary in funder.Bursaries)
+            foreach (var bursary in list)
             {
-                if (bursary.Funding_Year != null && bursary.Funding_Year.Equals(model.Bursary.Funding_Year))
-                    fund.Bursaries.Add(bursary);
+                Bursary result = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+                fund.Bursaries.Add(result);
             }
             return View(fund);
         }
@@ -408,24 +400,17 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public ActionResult ViewBursary(string id)
         {
-            Funder fund = (Funder)Session["Funder"];
-            foreach (Bursary bursary in fund.Bursaries)
-            {
-                if ((bursary.Bursary_Code).Equals(id.ToString()))
-                {
-                    return View(bursary);
-                }
-            }
-            return View();
+            var bursary = GetBursaryCode(id);
+            Bursary result = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+            return View(result);
         }
 
         // GET: Funder/AddBursary
         public ActionResult AddBursary()
         {
-            Funder fund = (Funder)Session["Funder"];
+            Funder_Employee funderEmp = (Funder_Employee)Session["FunderEmployee"];
             Bursary bursary = new Bursary();
-            bursary.Funder = fund;
-            bursary.Funder_Name = fund.Funder_Name;
+            bursary.Funder_Name = funderEmp.Organization_Name;
             return View(bursary);
         }
 
@@ -436,13 +421,12 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                int result = CreateBursary(bursary.Bursary_Name + bursary.Funding_Year, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,
-                                bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
-
+                CreateBursary(bursary.Bursary_Name + bursary.Funding_Year, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
                 return RedirectToAction("ViewBursaries");
             }
             catch
             {
+                ViewBag.BursaryCodeExist = "Bursary for "+bursary.Funding_Year+" already exist, enter a different year or change bursary name";
                 return View(bursary);
             }
         }
@@ -450,13 +434,9 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/ViewBursary/Bursary_Code
         public ActionResult MaintainBursary(string id)
         {
-            Funder fund = (Funder)Session["Funder"];
-            foreach (Bursary bursary in fund.Bursaries)
-            {
-                if ((bursary.Bursary_Code).Equals(id.ToString()))
-                    return View(bursary);
-            }
-            return View();
+            var bursary = GetBursaryCode(id);
+            Bursary result = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+            return View(result);
         }
 
         // POST: Funder/ViewBursary/Bursary_Code
@@ -466,43 +446,38 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                int result = UpdateBursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,
-                                bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+                UpdateBursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
                 return RedirectToAction("ViewBursaries");
             }
             catch
             {
+                ViewBag.UpdateFailed = "The update failed, please contact us for assistance";
                 return View(bursary);
             }
         }
         // GET: Funder/ViewBursary/5
         public ActionResult DeleteBursary(string id)
         {
-            Funder fund = (Funder)Session["Funder"];
-            foreach (Bursary bursary in fund.Bursaries)
-            {
-                if ((bursary.Bursary_Code).Equals(id))
-                {
-                    return View(bursary);
-                }
-            }
-            return View();
+            var bursary = GetBursaryCode(id);
+            Bursary result = new Bursary(bursary.Bursary_Code, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+            return View(result);
         }
 
         // POST: Funder/ViewBursary/5
         [HttpPost]
         public ActionResult DeleteBursary(Bursary bursary)
         {
-            //try
+            try
             {
-                int result = deleteBursary(bursary.Bursary_Code);
+                deleteBursary(bursary.Bursary_Code);
 
                 return RedirectToAction("ViewBursaries");
             }
-            //catch
-            //{
-            //    return View(bursary);
-            //}
+            catch
+            {
+                ViewBag.DeleteFailed = "The delete failed, please contact us for assistance";
+                return View(bursary);
+            }
         }
         #endregion
 
@@ -514,42 +489,36 @@ namespace Finance_Tracking.Controllers
             var list = BursarFundViews(id);
             foreach (var item in list)
             {
-                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
-                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email, item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
                 model.Bursars.Add(bursar);
             }
-            Session["Bursars"] = model;
             return View(model);
         }
         // GET: Funder/ViewBursaries
         public ActionResult ViewAllBursars(string id)       //Using funder name
         {
             BursarsViewModel model = new BursarsViewModel();
-            var list = GeAlltBursarsList(id);
+            var list = GetAllBursarsList(id);
             foreach (var item in list)
             {
-                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
-                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email, item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
                 model.Bursars.Add(bursar);
             }
-            Session["Bursars"] = model;
             return View(model);
         }
         [HttpGet]
         // GET: Funder/ViewBursary/5
         public ActionResult ViewBursar(string id)
         {
-            var list = ((BursarsViewModel)Session["Bursars"]).Bursars;
+            var list = GetOneBursarsList(id);
             foreach (var item in list)
             {
                 if ((item.Application_ID).Equals(id.ToString()))
                 {
-                    BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email,
-                    item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                    BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email, item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
                     return View(bursar);
                 }
             }
-           
             return View();
         }
         //// GET: Funder/UpdateFundingStatus/5
@@ -591,15 +560,16 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateFundRequest(Bursar_Fund model)
         {
-            //try
+            try
             {
-               updateFundsRequested(model.Application_ID, model.Update_Fund_Request);
+                updateFundsRequested(model.Application_ID, model.Update_Fund_Request);
                 return RedirectToAction("ViewBursar", new { id = model.Application_ID });
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            catch
+            {
+                ViewBag.UpdateFailed = "The update failed, please contact us for assistance";
+                return View(model);
+            }
         }
         // GET: Funder/Delete/5
         public ActionResult MaintainFunds(string id)
@@ -615,16 +585,16 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MaintainFunds(Bursar_Fund model)
         {
-            //try
+            try
             {
-                int result = updateFundsApproved(model.Application_ID, model.Approved_Funds);
-
+                updateFundsApproved(model.Application_ID, model.Approved_Funds);
                 return RedirectToAction("ViewBursar", new { id = model.Application_ID });
             }
-            //catch
-            //{
-            //    return View();
-            //}
+           catch
+            {
+                ViewBag.UpdateFailed = "The update failed, please contact us for assistance";
+                return View(model);
+            }
         }
         #endregion
 
@@ -641,7 +611,7 @@ namespace Finance_Tracking.Controllers
             Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             if (employee.Admin_Code == null)
             {
-                ViewBag.Admin = "Admin code not found, please contact your system admin";
+                ViewBag.Admin = "Admin code not found, please contact your organization admin";
                 return View(model);
             }
             if ((employee.Admin_Code).Equals(model.Admin_Code))
@@ -667,7 +637,6 @@ namespace Finance_Tracking.Controllers
         public ActionResult AddEmployee(Funder_Employee employee)
         {
             AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password, employee.Admin_Code);
-
             return RedirectToAction("FunderDetails");
         }
         #endregion

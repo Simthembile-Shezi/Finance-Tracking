@@ -14,7 +14,7 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+        <span class="text-danger">@ViewBag.UpdateFailed</span>
         <div class="form-group">
             @Html.LabelFor(model => model.Funder_Email, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-9">

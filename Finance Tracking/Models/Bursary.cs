@@ -63,7 +63,7 @@ namespace Finance_Tracking.Models
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You need to enter the funding year.")]
         [Display(Name = "Funding Year")]
         public string Funding_Year { get; set; }
 

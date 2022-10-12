@@ -326,5 +326,10 @@ namespace Finance_Tracking.Controllers
             ViewBag.Message = "Your contact page.";
             return View();
         }
+        public ActionResult Error()
+        {
+            ViewBag.Status = "false";
+            return View();
+        }
     }
 }

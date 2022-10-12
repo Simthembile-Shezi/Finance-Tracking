@@ -95,7 +95,7 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.LoadData<Bursar_FundDB>(sql);
         }
 
-        public static List<BursarFundViewDB> GeAlltBursarsList(string name)
+        public static List<BursarFundViewDB> GetAllBursarsList(string name)
         {
             string sql = @"select B.Application_ID, B.Update_Fund_Request, B.Funding_Status, B.Approved_Funds, S.Student_FName, S.Student_LName, S.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email
                            from dbo.[Bursar Funds] AS B JOIN dbo.[Application] AS A ON B.Application_ID = A.Application_ID
@@ -106,7 +106,15 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.LoadData<BursarFundViewDB>(sql);
         }
+        public static List<BursarFundViewDB> GetOneBursarsList(string appID)
+        {
+            string sql = @"select B.Application_ID, B.Update_Fund_Request, B.Funding_Status, B.Approved_Funds, S.Student_FName, S.Student_LName, S.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email
+                           from dbo.[Bursar Funds] AS B JOIN dbo.[Application] AS A ON B.Application_ID = A.Application_ID
+                           JOIN dbo.[Student] AS S ON A.Student_Identity_Number=S.Student_Identity_Number 
+                           where A.Application_ID = '" + appID + "'; ";
 
+            return SqlDataAccess.LoadData<BursarFundViewDB>(sql);
+        }
         public static List<BursarFundViewDB> BursarFundViews(string burCode)
         {
             string sql = @"select B.Application_ID, B.Update_Fund_Request, B.Funding_Status, B.Approved_Funds, S.Student_FName, S.Student_LName, S.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email

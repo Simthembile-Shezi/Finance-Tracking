@@ -106,7 +106,14 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.LoadData<BursaryDB>(sql);
         }
+        public static List<BursaryDB> GetSearchBursaries(string funderName, string FY)
+        {
+            string sql = @"select Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year
+                           from dbo.[Bursary]
+                           where Funder_Name = '" + funderName + "' and Funding_Year = '" + FY + "';";
 
+            return SqlDataAccess.LoadData<BursaryDB>(sql);
+        }
         public static List<BursaryDB> LoadBursaries()
         {
             string sql = @"select Bursary_Code, Bursary_Name, Start_Date, Funder_Name, End_Date, Bursary_Amount, Number_Available, Description, Funding_Year

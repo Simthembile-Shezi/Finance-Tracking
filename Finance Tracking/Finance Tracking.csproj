@@ -267,6 +267,7 @@
     <Content Include="Views\Home\LogOut.cshtml" />
     <Content Include="Views\Funder\ViewAllApplications.cshtml" />
     <Content Include="Views\Funder\ViewAllBursars.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">
