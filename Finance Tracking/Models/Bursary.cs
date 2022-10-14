@@ -11,6 +11,7 @@ namespace Finance_Tracking.Models
     {
         public Bursary()
         {
+            Application = new Application();
             Applications = new List<Application>();
             ApplicationViews = new List<ApplicationView>();
         }

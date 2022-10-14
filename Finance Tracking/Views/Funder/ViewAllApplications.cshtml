@@ -10,18 +10,18 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="form-inline">
-        <div class="col-md-6">
-            @Html.HiddenFor(model => model.Bursary_Code)
-            @Html.HiddenFor(model => model.Funder_Name)
-        </div>
-        <div class="col-md-3">
-            @Html.EditorFor(model => model.Application.Student_Identity_Number, new { htmlAttributes = new { @class = "form-control", @placeholder = "Student Identity Number" } })
-        </div>
-        <div class="col-md-3">
-            <input type="submit" name="selection" value="Search" class="btn btn-default" />
-        </div>
+<div class="form-inline">
+    <div class="col-md-6">
+        @Html.HiddenFor(model => model.Bursary_Code)
+        @Html.HiddenFor(model => model.Funder_Name)
     </div>
+    <div class="col-md-3">
+        @Html.EditorFor(model => model.Application.Student_Identity_Number, new { htmlAttributes = new { @class = "form-control", @placeholder = "Student Identity Number" } })
+    </div>
+    <div class="col-md-3">
+        <input type="submit" name="selection" value="Search" class="btn btn-default" />
+    </div>
+</div>
 }
 <table class="table">
     <tr>
@@ -37,7 +37,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Application.Application_Status)
         </th>
-        <th></th>
+        <th>
     </tr>
 
     @foreach (var item in Model.Applications)

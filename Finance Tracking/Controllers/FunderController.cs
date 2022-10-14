@@ -3,13 +3,11 @@ using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using System.Net.Mime;
 using static Data_Library.Business_Logic.ApplicationProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.FunderEmpProcessor;
 using static Data_Library.Business_Logic.FunderProcessor;
-using System.Data.SqlClient;
 
 namespace Finance_Tracking.Controllers
 {
@@ -225,28 +223,45 @@ namespace Finance_Tracking.Controllers
                 {
                     Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
                     result.Applications.Add(application);
-                    return View(result);
                 }
             }
-            return View(model);
+            /* I did this bcz the search was only returning the 1st ID of the list
+             * and disregarded the rest ID's in the search
+             */
+            return View(result);
+            //return View(model);
         }
         public ActionResult ViewApplication(string id)
         {
-            var list = viewApplications(id);
-            //ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-            //            item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-            //return View(application);
-            foreach (var item in list)
+            #region
+            //public ActionResult ViewApplication(Bursary model)
+            //{
+            //    var list = viewApplications(model.ApplicationView.Application_ID);
+            //    foreach (var item in list)
+            //    {
+            //        if (item.Application_ID.Equals(model.ApplicationView.Application_ID))
+            //        {
+            //            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+            //                item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+            //            //bursary.ApplicationViews.Add(application);
+            //            return View(application);
+            //        }
+            //    }
+            //    return RedirectToAction("Error", "Home");
+            //}
+            #endregion
+            Bursary bursary = new Bursary();
+            bursary.Application.Application_ID = id;
+            ApplicationView application = new ApplicationView();
+
+            var item = viewApplications(id);
             {
-                if (item.Application_ID.Equals(id))
-                {
-                    ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                    application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
                         item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-                    return View(application);
-                }
+                    bursary.ApplicationViews.Add(application);
             }
-            return RedirectToAction("Error", "Home");
-        }
+            return View(application);
+        }      
 
         // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)
@@ -271,7 +286,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                if(model.Application_Status.Equals("Select"))
+                if (model.Application_Status.Equals("Select"))
                 {
                     ViewBag.WrongChoice = "Please select the appropriate choice";
                     return View(model);
@@ -318,7 +333,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                if(model.Bursary_Agreement != null)
+                if (model.Bursary_Agreement != null)
                 {
                     HttpPostedFileBase Agreement = model.Bursary_Agreement;
                     String FileExt = Path.GetExtension(Agreement.FileName).ToUpper();
@@ -347,17 +362,17 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
-        
+
         [HttpGet]
         public FileResult DownloadSignedAgreement(string id)    //No need for a view
         {
             var item = GetApplication(id);
-            
+
             if (item.Upload_Signed_Agreement == null)
             {
                 return null;
             }
-            return File(item.Upload_Signed_Agreement, "application/pdf", item.Application_ID+".pdf");
+            return File(item.Upload_Signed_Agreement, "application/pdf", item.Application_ID + ".pdf");
         }
         #endregion
 
@@ -421,12 +436,12 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                CreateBursary(bursary.Bursary_Name + bursary.Funding_Year, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date,bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
+                CreateBursary(bursary.Bursary_Name + bursary.Funding_Year, bursary.Bursary_Name, bursary.Start_Date, bursary.Funder_Name, bursary.End_Date, bursary.Bursary_Amount, bursary.Number_Available, bursary.Description, bursary.Funding_Year);
                 return RedirectToAction("ViewBursaries");
             }
             catch
             {
-                ViewBag.BursaryCodeExist = "Bursary for "+bursary.Funding_Year+" already exist, enter a different year or change bursary name";
+                ViewBag.BursaryCodeExist = "Bursary for " + bursary.Funding_Year + " already exist, enter a different year or change bursary name";
                 return View(bursary);
             }
         }
@@ -590,7 +605,7 @@ namespace Finance_Tracking.Controllers
                 updateFundsApproved(model.Application_ID, model.Approved_Funds);
                 return RedirectToAction("ViewBursar", new { id = model.Application_ID });
             }
-           catch
+            catch
             {
                 ViewBag.UpdateFailed = "The update failed, please contact us for assistance";
                 return View(model);

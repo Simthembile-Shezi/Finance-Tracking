@@ -31,11 +31,11 @@ namespace Data_Library.Data_Access
             }
         }
 
-        public static dynamic Joins<T>(string sql)
+        public static T Joins<T>(string sql)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
-                return cnn.Query<T>(sql);
+                return cnn.QuerySingle<T>(sql);
             }
         }
 
