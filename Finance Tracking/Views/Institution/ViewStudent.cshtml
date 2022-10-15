@@ -1,5 +1,11 @@
 ﻿@model Finance_Tracking.Models.FundedStudents
 
+@{
+    ViewBag.Title = "ViewFundedStudent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Funded Student</h2>
 <div class="col-md-8">
     <dl class="dl-horizontal">
         <dt>
@@ -46,16 +52,9 @@
 </div>
 <div class="row col-md-4">
     <div class="btn-block">
-        <a href='@Url.Action("UploadFinacialStatement", "Institution", new {id = Model.Student_Number})'>
+        <a href='@Url.Action("RequestStudentFunds", "Institution", new { id = Model.Student_Number })'>
             <div>
-                <input type="button" name="selection" value="Student Finacial Records" class="btn btn-default btn-block" />
-            </div>
-        </a>
-    </div>
-    <div class="btn-block">
-        <a href='@Url.Action("ProvideStudentResult", "Institution", new {id = Model.Student_Number})'>
-            <div>
-                <input type="button" name="selection" value="Student Academic Records" class="btn btn-default btn-block" />
+                <input type="button" name="selection" value="Request funds" class="btn btn-default btn-block" />
             </div>
         </a>
     </div>

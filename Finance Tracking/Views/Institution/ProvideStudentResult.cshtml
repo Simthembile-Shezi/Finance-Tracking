@@ -5,15 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ProvideStudentResult</h2>
+<h2>Academic Record</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Academic_Record</h4>
-        <hr />
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Qualification, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -41,9 +40,9 @@
         </fieldset>
         <div class="container-btn">
             <div class="left-btn-flex">
-                <a href='@Url.Action("ViewStudent", "Institution", new {id = Model.Student_Number})'>
+                <a href='@Url.Action("ViewEnrolledStudent", "Institution", new {id = Model.Student_Number})'>
                     <div>
-                        <input type="button" name="selection" value="Back" class="btn btn-default" />
+                        <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                     </div>
                 </a>
             </div>

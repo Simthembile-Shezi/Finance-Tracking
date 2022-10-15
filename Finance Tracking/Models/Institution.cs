@@ -12,8 +12,8 @@ namespace Finance_Tracking.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Institution()
         {
-            Enrolled_At = new HashSet<Enrolled_At>();
-            Institution_Employee = new HashSet<Institution_Employee>();
+            Enrolled_Ats = new List<Enrolled_At>();
+            Institution_Employees = new List<Institution_Employee>();
         }
         public Institution(string institution_Name, string institution_Telephone_Number, string institution_Email_Address, string institution_Physical_Address, string institution_Postal_Address)
         {
@@ -22,8 +22,8 @@ namespace Finance_Tracking.Models
             Institution_Email_Address = institution_Email_Address;
             Institution_Physical_Address = institution_Physical_Address;
             Institution_Postal_Address = institution_Postal_Address;
-            Enrolled_At = new HashSet<Enrolled_At>();
-            Institution_Employee = new HashSet<Institution_Employee>();
+            Enrolled_Ats = new List<Enrolled_At>();
+            Institution_Employees = new List<Institution_Employee>();
         }
 
         [Key]
@@ -91,10 +91,10 @@ namespace Finance_Tracking.Models
         [Required]
         public string Institution_Postal_Address { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Enrolled_At> Enrolled_At { get; set; }
+        public Enrolled_At Enrolled_At { get; set; }
+        public virtual List<Enrolled_At> Enrolled_Ats { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Institution_Employee> Institution_Employee { get; set; }
+        public Institution_Employee Institution_Employee { get; set; }
+        public virtual List<Institution_Employee> Institution_Employees { get; set; }
     }
 }

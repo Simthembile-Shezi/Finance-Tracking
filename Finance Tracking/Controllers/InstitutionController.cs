@@ -8,7 +8,7 @@ using static Data_Library.Business_Logic.Academic_RecordProcessor;
 using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionEmpProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
-using static Data_Library.Business_Logic.StudentProcessor;
+using static Data_Library.Business_Logic.Enrolled_AtProcessor;
 
 namespace Finance_Tracking.Controllers
 {
@@ -164,8 +164,8 @@ namespace Finance_Tracking.Controllers
         #endregion
 
         #region View all funded students, update finacial and academic records 
-        // GET: Institution/Delete/5
-        public ActionResult ViewFundedStudents() // create a join tables - model name: FundedStudents
+        // GET: Institution/ViewFundedStudents
+        public ActionResult ViewFundedStudents()
         {
             Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();            
@@ -178,11 +178,38 @@ namespace Finance_Tracking.Controllers
             Session["students"] = students;
             return View(students);
         }
-        // GET: Institution/Delete/5
+        // GET: Institution/ViewStudent/123456789
         public ActionResult ViewStudent(string id) //return a student from
         {
             EnrolledStudentsViewModel students = (EnrolledStudentsViewModel)Session["students"];
             foreach (var item in students.Students)
+            {
+                if (item.Student_Number.Equals(id))
+                {
+                    Session["funded"] = item;
+                    return View(item);
+                }
+            }
+            return View();
+        }
+        // GET: Institution/ViewAllStudents
+        public ActionResult ViewAllStudents()
+        {
+            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            Institution students = new Institution();
+            var list = GetEnrolledDetailsList(employee.Organization_Name);
+            foreach (var item in list)
+            {
+                Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
+                students.Enrolled_Ats.Add(enrolled);
+            }
+            Session["AllStudents"] = students;
+            return View(students);
+        }// GET: Institution/ViewStudent/123456789
+        public ActionResult ViewEnrolledStudent(string id) //return a student from
+        {
+            Institution students = (Institution)Session["AllStudents"];
+            foreach (var item in students.Enrolled_Ats)
             {
                 if (item.Student_Number.Equals(id))
                 {
@@ -195,7 +222,7 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Delete/5
         public ActionResult UploadFinacialStatement(string id)
         {
-            FundedStudents student = (FundedStudents)Session["enrolled"];
+            Enrolled_At student = (Enrolled_At)Session["enrolled"];
             Finacial_Record record = new Finacial_Record();
             record.Student_Number = student.Student_Number;
             return View(record);
@@ -234,7 +261,7 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Delete/5
         public ActionResult RequestStudentFunds(string id)
         {
-            FundedStudents student = (FundedStudents)Session["enrolled"];
+            FundedStudents student = (FundedStudents)Session["funded"];
             Finacial_Record record = new Finacial_Record();
             record.Student_Number = student.Student_Number;
             return View(record);
@@ -259,7 +286,7 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Delete/5
         public ActionResult ProvideStudentResult(string id)
         {
-            FundedStudents student = (FundedStudents)Session["enrolled"];
+            Enrolled_At student = (Enrolled_At)Session["enrolled"];
             Academic_Record record = new Academic_Record();
             record.Student_Number = student.Student_Number;
             return View(record);

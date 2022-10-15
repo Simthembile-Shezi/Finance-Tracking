@@ -1,0 +1,72 @@
+﻿@model Finance_Tracking.Models.Institution
+
+@{
+    ViewBag.Title = "ViewAllStudents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>All Students</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Student_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Student_Identity_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Institution_Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Qualification)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Student_Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolled_At.Study_Residential_Address)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Enrolled_Ats)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Identity_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Institution_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qualification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student_Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Study_Residential_Address)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "ViewEnrolledStudent", new { id = item.Student_Number })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("Index", "Institution")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
