@@ -270,6 +270,10 @@
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Institution\ViewAllStudents.cshtml" />
     <Content Include="Views\Institution\ViewEnrolledStudent.cshtml" />
+    <Content Include="Views\Funder\ViewEmployees.cshtml" />
+    <Content Include="Views\Funder\EmployeeDetails.cshtml" />
+    <Content Include="Views\Funder\MaintainEmployee.cshtml" />
+    <Content Include="Views\Funder\DeleteEmployee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">

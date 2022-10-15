@@ -637,7 +637,49 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
+        public ActionResult ViewEmployees()
+        {
+            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+            Funder funder = new Funder();
+            return View(funder);
+        }
+        public ActionResult EmployeeDetails(string id)
+        {
+            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+            var item = GetFunderEmp(id);
+            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(funder);
+        }
+        public ActionResult MaintainEmployee(string id)
+        {
+            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+            var item = GetFunderEmp(id);
+            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(funder);
+        }
 
+        // POST: Funder/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MaintainEmployee(Funder_Employee employee)
+        {
+            return RedirectToAction("EmployeeDetails", new {id = employee.Emp_Email});
+        }
+        public ActionResult DeleteEmployee(string id)
+        {
+            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+            var item = GetFunderEmp(id);
+            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(funder);
+        }
+
+        // POST: Funder/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteEmployee(Funder_Employee employee)
+        {
+            return RedirectToAction("ViewEmployees");
+        }
         public ActionResult AddEmployee()
         {
             Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];

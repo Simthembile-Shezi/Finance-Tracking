@@ -147,7 +147,7 @@ namespace Finance_Tracking.Controllers
 
                         //Map employee to login
                         Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
-                            funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code, loginFunder);
+                            funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code);
 
                         Session["FunderEmployee"] = loginEmp;
                         FormsAuthentication.SetAuthCookie(modelview.Username, false);

@@ -13,7 +13,7 @@ namespace Finance_Tracking.Models
         {
 
         }
-        public Funder_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code, Funder funder)
+        public Funder_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
         {
             Emp_FName = emp_FName;
             Emp_LName = emp_LName;
@@ -22,7 +22,6 @@ namespace Finance_Tracking.Models
             Organization_Name = organization_Name;
             Password = password;
             Admin_Code = admin_Code;
-            Funder = funder;
         }
 
         [Display(Name = "First Name")]

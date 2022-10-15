@@ -12,7 +12,7 @@ namespace Finance_Tracking.Models
         public Funder()
         {
             Bursaries = new List<Bursary>();
-            Funder_Employee = new List<Funder_Employee>();
+            Funder_Employees = new List<Funder_Employee>();
         }
 
         public Funder(string funder_Name, string funder_Tax_Number, string funder_Email, string funder_Telephone_Number, string funder_Physical_Address, string funder_Postal_Address)
@@ -24,7 +24,7 @@ namespace Finance_Tracking.Models
             Funder_Physical_Address = funder_Physical_Address;
             Funder_Postal_Address = funder_Postal_Address;
             Bursaries = new List<Bursary>();
-            Funder_Employee = new List<Funder_Employee>();
+            Funder_Employees = new List<Funder_Employee>();
         }
 
         [Key]
@@ -103,7 +103,7 @@ namespace Finance_Tracking.Models
 
         public Bursary Bursary { get; set; }
         public List<Bursary> Bursaries = new List<Bursary>();
-
-        public List<Funder_Employee> Funder_Employee { get; set; }
+        public Funder_Employee Funder_Employee { get; set; }
+        public List<Funder_Employee> Funder_Employees { get; set; }
     }
 }
