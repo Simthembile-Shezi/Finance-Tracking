@@ -13,7 +13,7 @@
     <div>
         @Html.HiddenFor(model => model.Bursary_Code)
         @Html.HiddenFor(model => model.Funding_Year)
-        @ViewBag.ApplicationExist
+        <span class="text-danger">@ViewBag.ApplicationExist</span>
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.Bursary_Name)

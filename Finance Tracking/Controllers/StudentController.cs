@@ -411,31 +411,34 @@ namespace Finance_Tracking.Controllers
         // POST: Student/Apply/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApplyForFunds(/*Bursary model*/)
+        public ActionResult ApplyForFunds()
         {
+            Bursary model = (Bursary)Session["Bursary"];
+            Student student = (Student)Session["Student"];
             try
             {
-                Bursary model = (Bursary)Session["Bursary"];
-                if (int.Parse(model.Number_Available) != 0)
+                var list = GetStudentEnrolledList(student.Student_Identity_Number);
+                if(list.Count == 0)
                 {
-                    Student student = (Student)Session["Student"];
-                    CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
-                    //int num = int.Parse(model.Number_Available) - 1;
-                    //UpdateBursaryNumberAvail(model.Bursary_Code, num);
-                    return RedirectToAction("ViewBursaries");
+                    ViewBag.ApplicationExist = "Please complete your profile e.g provide institution details";
+                    return View(model);
+                }
+
+                if (int.Parse(model.Number_Available) == 0)
+                {
+                    ViewBag.ApplicationExist = "No applications available at the moment";
+                    return View(model);
                 }
                 else
                 {
-                    Bursary bursary = (Bursary)Session["Bursary"];
-                    ViewBag.ApplicationExist = "No applications available at the moment";
-                    return View(bursary);
+                    CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
+                    return RedirectToAction("ViewBursaries");                    
                 }
             }
             catch
             {
-                Bursary bursary = (Bursary)Session["Bursary"];
                 ViewBag.ApplicationExist = "You have already applied for this bursary";
-                return View(bursary);
+                return View(model);
             }
         }
         #endregion
