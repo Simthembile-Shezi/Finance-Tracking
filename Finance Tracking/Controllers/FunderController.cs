@@ -20,6 +20,7 @@ namespace Finance_Tracking.Controllers
             try
             {
                 Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+                Session["Organization_Name"] = employee.Organization_Name;
                 return View(employee);
             }
             catch
@@ -31,8 +32,7 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/Details
         public ActionResult FunderDetails()
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
-            var funder = GetFunder(employee.Organization_Name);
+            var funder = GetFunder(Session["Organization_Name"].ToString());
             Funder login = new Funder(funder.Funder_Name, funder.Funder_Tax_Number, funder.Funder_Email, funder.Funder_Telephone_Number, funder.Funder_Physical_Address, funder.Funder_Postal_Address);
 
             //Separating the Physical address
@@ -91,9 +91,8 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/Create/Employee
         public ActionResult AdminFunderEmployee()
         {
-            Funder funder = (Funder)Session["Funder"];
             Funder_Employee employee = new Funder_Employee();
-            employee.Organization_Name = funder.Funder_Name;
+            employee.Organization_Name = Session["Organization_Name"].ToString();
             return View(employee);
         }
         // POST: Funder/Create/Employee
@@ -197,8 +196,41 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
-        public ActionResult ViewAllApplications(string id)      //using funder name
+        
+        public ActionResult ViewApplication(string id)
         {
+            #region
+            //public ActionResult ViewApplication(Bursary model)
+            //{
+            //    var list = viewApplications(model.ApplicationView.Application_ID);
+            //    foreach (var item in list)
+            //    {
+            //        if (item.Application_ID.Equals(model.ApplicationView.Application_ID))
+            //        {
+            //            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+            //                item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+            //            //bursary.ApplicationViews.Add(application);
+            //            return View(application);
+            //        }
+            //    }
+            //    return RedirectToAction("Error", "Home");
+            //}
+            #endregion
+            Bursary bursary = new Bursary();
+            bursary.Application.Application_ID = id;
+            ApplicationView application = new ApplicationView();
+
+            var item = viewApplications(id);
+            {
+                    application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                        item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+                    bursary.ApplicationViews.Add(application);
+            }
+            return View(application);
+        }
+        public ActionResult ViewAllApplications()      //using funder name
+        {
+            string id = Session["Organization_Name"].ToString();
             Bursary bursary = new Bursary();
             bursary.Funder_Name = id;              //Used on the HttpPost
             var list = GetAllApplications(id);
@@ -231,38 +263,6 @@ namespace Finance_Tracking.Controllers
             return View(result);
             //return View(model);
         }
-        public ActionResult ViewApplication(string id)
-        {
-            #region
-            //public ActionResult ViewApplication(Bursary model)
-            //{
-            //    var list = viewApplications(model.ApplicationView.Application_ID);
-            //    foreach (var item in list)
-            //    {
-            //        if (item.Application_ID.Equals(model.ApplicationView.Application_ID))
-            //        {
-            //            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-            //                item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-            //            //bursary.ApplicationViews.Add(application);
-            //            return View(application);
-            //        }
-            //    }
-            //    return RedirectToAction("Error", "Home");
-            //}
-            #endregion
-            Bursary bursary = new Bursary();
-            bursary.Application.Application_ID = id;
-            ApplicationView application = new ApplicationView();
-
-            var item = viewApplications(id);
-            {
-                    application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-                        item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-                    bursary.ApplicationViews.Add(application);
-            }
-            return View(application);
-        }      
-
         // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)
         {
@@ -381,9 +381,8 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public ActionResult ViewBursaries()
         {
-            Funder_Employee funderEmp = (Funder_Employee)Session["FunderEmployee"];
             Funder fund = new Funder();
-            fund.Funder_Name = funderEmp.Organization_Name;
+            fund.Funder_Name = Session["Organization_Name"].ToString();
             var list = GetBursaries(fund.Funder_Name);
 
             //Binding the list of bursaries with the new funder, prevents repeation of the add method
@@ -423,9 +422,8 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/AddBursary
         public ActionResult AddBursary()
         {
-            Funder_Employee funderEmp = (Funder_Employee)Session["FunderEmployee"];
             Bursary bursary = new Bursary();
-            bursary.Funder_Name = funderEmp.Organization_Name;
+            bursary.Funder_Name = Session["Organization_Name"].ToString();
             return View(bursary);
         }
 
@@ -510,10 +508,10 @@ namespace Finance_Tracking.Controllers
             return View(model);
         }
         // GET: Funder/ViewBursaries
-        public ActionResult ViewAllBursars(string id)       //Using funder name
+        public ActionResult ViewAllBursars()       //Using funder name
         {
             BursarsViewModel model = new BursarsViewModel();
-            var list = GetAllBursarsList(id);
+            var list = GetAllBursarsList(Session["Organization_Name"].ToString());
             foreach (var item in list)
             {
                 BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number, item.Student_Email, item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
@@ -639,9 +637,8 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult ViewEmployees()
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             Funder funder = new Funder();
-            var list = GetFundersEmployees(employee.Organization_Name);
+            var list = GetFundersEmployees(Session["Organization_Name"].ToString());
             foreach(var item in list)
             {
                 Funder_Employee result = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
@@ -695,9 +692,8 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult AddEmployee()
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             Funder_Employee model = new Funder_Employee();
-            model.Organization_Name = employee.Organization_Name;
+            model.Organization_Name = Session["Organization_Name"].ToString();
             return View(model);
         }
 

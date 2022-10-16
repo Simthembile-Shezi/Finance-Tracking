@@ -93,13 +93,7 @@
             </div>
         </a>
     </div>
-    @*<div class="btn-block">
-            <a href='@Url.Action("UpdateFundingStatus", "Funder", new { id = Model.Application_ID })'>
-                <div>
-                    <input type="button" name="selection" value="Update Funding Status" class="btn btn-default btn-block" />
-                </div>
-            </a>
-        </div>*@
+    
     <div class="btn-block">
         <a href='@Url.Action("UpdateFundRequest", "Funder", new { id = Model.Application_ID })'>
             <div>
@@ -108,7 +102,7 @@
         </a>
     </div>
     <div class="btn-block">
-        <a href='@Url.Action("ViewBursars", "Funder")'>
+        <a href='@Url.Action("ViewAllBursars", "Funder")'>
             <div>
                 <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />
             </div>
