@@ -1,0 +1,62 @@
+﻿@model Finance_Tracking.Models.Institution
+
+@{
+    ViewBag.Title = "ViewEmployees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Employees</h2>
+
+<div class="btn-block">
+    <a href='@Url.Action("AddEmployee", "Institution")'>
+        <input type="button" name="selection" value="Add Employee" class="btn btn-default btn-block" />
+    </a>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Institution_Employee.Emp_FName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Institution_Employee.Emp_LName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Institution_Employee.Emp_Telephone_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Institution_Employee.Emp_Email)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Institution_Employees)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Emp_FName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Emp_LName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Emp_Telephone_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Emp_Email)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Emp_Email })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("InstitutionDetails", "Institution")'>
+            <div>
+                <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>

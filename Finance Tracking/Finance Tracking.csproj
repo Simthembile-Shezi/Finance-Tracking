@@ -274,6 +274,10 @@
     <Content Include="Views\Funder\EmployeeDetails.cshtml" />
     <Content Include="Views\Funder\MaintainEmployee.cshtml" />
     <Content Include="Views\Funder\DeleteEmployee.cshtml" />
+    <Content Include="Views\Institution\ViewEmployees.cshtml" />
+    <Content Include="Views\Institution\EmployeeDetails.cshtml" />
+    <Content Include="Views\Institution\MaintainEmployee.cshtml" />
+    <Content Include="Views\Institution\DeleteEmployee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">

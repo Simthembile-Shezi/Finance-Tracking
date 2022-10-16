@@ -347,11 +347,66 @@ namespace Finance_Tracking.Controllers
             }
         }
 
+        public ActionResult ViewEmployees()
+        {
+            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            Institution institution = new Institution();
+            var list = GetInstitutionEmployees(employee.Organization_Name);
+            foreach (var item in list)
+            {
+                Institution_Employee result = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                institution.Institution_Employees.Add(result);
+            }
+            return View(institution);
+        }
+        public ActionResult EmployeeDetails(string id)
+        {
+            var item = GetInstitutionEmp(id);
+            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(employee);
+        }
+        public ActionResult MaintainEmployee(string id)
+        {
+            var item = GetInstitutionEmp(id);
+            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(employee);
+        }
+
+        // POST: Funder/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MaintainEmployee(Institution_Employee employee)
+        {
+            int result = UpdateInstitutionEmp(employee.Emp_Email);       //Not working
+            if (result == 0)
+            {
+                return View(employee);
+            }
+            return RedirectToAction("EmployeeDetails", new { id = employee.Emp_Email });
+        }
+        public ActionResult DeleteEmployee(string id)
+        {
+            var item = GetInstitutionEmp(id);
+            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(employee);
+        }
+
+        // POST: Funder/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteEmployee(Funder_Employee employee)
+        {
+            int result = DeleteInstitutionEmp(employee.Emp_Email);
+            if (result == 0)
+            {
+                return View(employee);
+            }
+            return RedirectToAction("ViewEmployees");
+        }
         public ActionResult AddEmployee()
         {
             Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             Institution_Employee model = new Institution_Employee();
-            model.Institution = employee.Institution;
             model.Organization_Name = employee.Organization_Name;
             return View(model);
         }
@@ -361,12 +416,14 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Institution_Employee employee)
         {
-            AddInstitutionEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email,
-                        employee.Organization_Name, employee.Password, employee.Admin_Code);
-
-            return View("InstitutionDetails");
+            int result = AddInstitutionEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
+            if (result == 0)
+            {
+                ViewBag.NotAdded = "Employee profile was not succefully created";
+                return View(employee);
+            }
+            return RedirectToAction("InstitutionDetails");
         }
-
 
         #endregion
     }

@@ -641,18 +641,22 @@ namespace Finance_Tracking.Controllers
         {
             Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             Funder funder = new Funder();
+            var list = GetFundersEmployees(employee.Organization_Name);
+            foreach(var item in list)
+            {
+                Funder_Employee result = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                funder.Funder_Employees.Add(result);
+            }
             return View(funder);
         }
         public ActionResult EmployeeDetails(string id)
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             var item = GetFunderEmp(id);
-            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-            return View(funder);
+            Funder_Employee employee = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            return View(employee);
         }
         public ActionResult MaintainEmployee(string id)
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             var item = GetFunderEmp(id);
             Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(funder);
@@ -663,11 +667,15 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MaintainEmployee(Funder_Employee employee)
         {
+            int result = UpdateFunderEmp(employee.Emp_Email);       //Not working
+            if (result == 0)
+            {
+                return View(employee);
+            }
             return RedirectToAction("EmployeeDetails", new {id = employee.Emp_Email});
         }
         public ActionResult DeleteEmployee(string id)
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
             var item = GetFunderEmp(id);
             Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(funder);
@@ -678,6 +686,11 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteEmployee(Funder_Employee employee)
         {
+            int result = DeleteFunderEmp(employee.Emp_Email);
+            if(result == 0)
+            {
+                return View(employee);
+            }
             return RedirectToAction("ViewEmployees");
         }
         public ActionResult AddEmployee()
@@ -693,7 +706,12 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Funder_Employee employee)
         {
-            AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password, employee.Admin_Code);
+            int result = AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
+            if(result == 0)
+            {
+                ViewBag.NotAdded = "Employee profile was not succefully created";
+                return View(employee);
+            }
             return RedirectToAction("FunderDetails");
         }
         #endregion

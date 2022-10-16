@@ -9,7 +9,7 @@ namespace Finance_Tracking.Models
     [Table("Institution Employee")]
     public partial class Institution_Employee
     {
-        public Institution_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code, Institution institution)
+        public Institution_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
         {
             Emp_FName = emp_FName;
             Emp_LName = emp_LName;
@@ -18,7 +18,6 @@ namespace Finance_Tracking.Models
             Organization_Name = organization_Name;
             Password = password;
             Admin_Code = admin_Code;
-            Institution = institution;
         }
         public Institution_Employee()
         {

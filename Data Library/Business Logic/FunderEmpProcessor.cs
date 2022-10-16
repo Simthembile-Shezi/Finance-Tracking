@@ -25,7 +25,23 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.SaveData(sql, data);
         }
+        public static int AddFunderEmp(string Emp_FName, string Emp_LName, string Emp_Telephone_Number, string Emp_Email, string Organization_Name, string Password)
+        {
+            FunderEmployeeDB data = new FunderEmployeeDB
+            {
+                Emp_FName = Emp_FName,
+                Emp_LName = Emp_LName,
+                Emp_Telephone_Number = Emp_Telephone_Number,
+                Emp_Email = Emp_Email,
+                Organization_Name = Organization_Name,
+                Password = Password
+            };
 
+            string sql = @" insert into dbo.[Funder Employee] (Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password)
+                            values (@Emp_FName, @Emp_LName, @Emp_Telephone_Number, @Emp_Email, @Organization_Name, @Password);";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
         public static int updateFunderEmpPassword(string email, string password)
         {
             FunderEmployeeDB data = new FunderEmployeeDB();
@@ -40,26 +56,26 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        //public static int UpdateFunderEmp(string email)
-        //{
-        //    FunderEmployeeDB data = new FunderEmployeeDB();
-        //    data.Emp_Email = email;
+        public static int UpdateFunderEmp(string email)
+        {
+            FunderEmployeeDB data = new FunderEmployeeDB();
+            data.Emp_Email = email;
 
-        //    if (updateRequest != null)
-        //        data.Update_Fund_Request = updateRequest;
-        //    if (status != null)
-        //        data.Funding_Status = status;
-        //    if (approvedFunds != null)
-        //        data.Approved_Funds = approvedFunds;
+            //if (updateRequest != null)
+            //    data.Update_Fund_Request = updateRequest;
+            //if (status != null)
+            //    data.Funding_Status = status;
+            //if (approvedFunds != null)
+            //    data.Approved_Funds = approvedFunds;
 
-        //    string sql = @"update dbo.[Funder Employee] 
-        //                       set Update_Fund_Request = @Update_Fund_Request,
-        //                           Funding_Status = @Funding_Status,
-        //                           Approved_Funds = @Approved_Funds
-        //                       where Application_ID = @Application_ID;";
+            string sql = @"update dbo.[Funder Employee] 
+                               set Update_Fund_Request = @Update_Fund_Request,
+                                   Funding_Status = @Funding_Status,
+                                   Approved_Funds = @Approved_Funds
+                               where Application_ID = @Application_ID;";
 
-        //    return SqlDataAccess.SaveData(sql, data);
-        //}
+            return SqlDataAccess.SaveData(sql, data);
+        }
 
         public static int DeleteFunderEmp(string email)
         {

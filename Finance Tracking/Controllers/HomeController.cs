@@ -103,7 +103,7 @@ namespace Finance_Tracking.Controllers
 
                         //Map employee to login
                         Institution_Employee loginEmp = new Institution_Employee(institutionEmp.Emp_FName, institutionEmp.Emp_LName, institutionEmp.Emp_Telephone_Number,
-                            institutionEmp.Emp_Email, institutionEmp.Organization_Name, institutionEmp.Password, institutionEmp.Admin_Code, institution);
+                            institutionEmp.Emp_Email, institutionEmp.Organization_Name, institutionEmp.Password, institutionEmp.Admin_Code);
 
                         Session["InstitutionEmployee"] = loginEmp;
                         FormsAuthentication.SetAuthCookie(modelview.Username, false);
