@@ -1,17 +1,13 @@
 ﻿using Data_Library.Data_Access;
 using Data_Library.ModelsDB;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data_Library.Business_Logic
 {
     public static class StudentProcessor
     {
         public static int CreateStudent(string studentID, string Student_FName, string Student_LName, string Student_Nationality, string Race, string Title,
-                string Gender, System.DateTime Date_Of_Birth, string Marital_Status, string Student_Email, string Student_Cellphone_Number, string Student_Residential_Address, 
+                string Gender, System.DateTime Date_Of_Birth, string Marital_Status, string Student_Email, string Student_Cellphone_Number, string Student_Residential_Address,
                 byte[] Upload_Identity_Document, byte[] Upload_Residential_Document, string Password)
         {
             StudentDB data = new StudentDB
@@ -21,10 +17,10 @@ namespace Data_Library.Business_Logic
                 Student_LName = Student_LName,
                 Student_Nationality = Student_Nationality,
                 Race = Race,
-                Title = Title, 
+                Title = Title,
                 Gender = Gender,
                 Date_Of_Birth = Date_Of_Birth,
-                Marital_Status = Marital_Status, 
+                Marital_Status = Marital_Status,
                 Student_Email = Student_Email,
                 Student_Cellphone_Number = Student_Cellphone_Number,
                 Student_Residential_Address = Student_Residential_Address,
@@ -76,19 +72,27 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static int UploadDocs(string studentID, byte[] idDoc, byte[] resDoc)
+        public static int UploadRes_Doc(string studentID, byte[] resDoc)
         {
             StudentDB data = new StudentDB();
             data.Student_Identity_Number = studentID;
-
-            if (idDoc != null)
-                data.Upload_Identity_Document = idDoc;
-            if (resDoc != null)
-                data.Upload_Residential_Document = resDoc;
+            data.Upload_Residential_Document = resDoc;
 
             string sql = @"update dbo.Student 
-                               set Upload_Identity_Document = @Upload_Identity_Document,
-                                   Upload_Residential_Document = @Upload_Residential_Document,
+                               set Upload_Residential_Document = @Upload_Residential_Document
+                               where Student_Identity_Number = @Student_Identity_Number;";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static int UploadID_Doc(string studentID, byte[] idDoc)
+        {
+            StudentDB data = new StudentDB();
+            data.Student_Identity_Number = studentID;
+            data.Upload_Identity_Document = idDoc;
+
+            string sql = @"update dbo.Student 
+                               set Upload_Identity_Document = @Upload_Identity_Document
                                where Student_Identity_Number = @Student_Identity_Number;";
 
             return SqlDataAccess.SaveData(sql, data);
@@ -96,7 +100,7 @@ namespace Data_Library.Business_Logic
 
         public static int deleteStudent(string studentID)
         {
-            
+
             StudentDB data = new StudentDB();
             data.Student_Identity_Number = studentID;
             string sql = @"delete from dbo.Student
@@ -121,7 +125,7 @@ namespace Data_Library.Business_Logic
                            from dbo.Student
                            where Student_Email = '" + Student_Email + "';";
             return SqlDataAccess.SingleData<StudentDB>(sql);
-        }        
+        }
 
         public static List<StudentDB> LoadStudents()
         {

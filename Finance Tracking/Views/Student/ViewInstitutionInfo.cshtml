@@ -41,15 +41,45 @@
             @Html.DisplayFor(model => model.Student_Email)
         </dd>
 
-
         <dt>
-            @Html.DisplayNameFor(model => model.Study_Residential_Address)
+            @Html.DisplayNameFor(model => model.Street_Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Study_Residential_Address)
+            @Html.DisplayFor(model => model.Street_Name)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Sub_Town)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sub_Town)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Province)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Zip_Code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Zip_Code)
+        </dd>
     </dl>
 </div>
 
@@ -57,17 +87,17 @@
 
     <div class="btn-block">
         <a href='@Url.Action("ViewFinacialStatement", "Student", new { id = Model.Student_Number })'>
-            <input type="button" name="selection" value="View Statement" class="btn btn-default btn-block" />
+            <input type="button" name="selection" value="View Finacial Statement" class="btn btn-default btn-block" />
         </a>
     </div>
     <div class="btn-block">
         <a href='@Url.Action("EditInstitutionInfo", "Student", new { id = Model.Student_Number })'>
-            <input type="button" name="selection" value="Edit" class="btn btn-default btn-block" />
+            <input type="button" name="selection" value="Edit Institution Info" class="btn btn-default btn-block" />
         </a>
     </div>
     <div class="btn-block">
         <a href='@Url.Action("DeleteInstitutionInfo", "Student", new { id = Model.Student_Number })'>
-            <input type="button" name="selection" value="Delete" class="btn btn-default btn-block" />
+            <input type="button" name="selection" value="Delete Institution Info" class="btn btn-default btn-block" />
         </a>
     </div>
     <div class="btn-block">

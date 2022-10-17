@@ -217,7 +217,6 @@
     <Content Include="Views\Funder\Index.cshtml" />
     <Content Include="Views\Institution\Index.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
-    <Content Include="Views\Student\StudentDetails.cshtml" />
     <Content Include="Views\Student\DeleteStudent.cshtml" />
     <Content Include="Views\Student\MaintainStudent.cshtml" />
     <Content Include="Views\Student\RegisterStudentInfo.cshtml" />

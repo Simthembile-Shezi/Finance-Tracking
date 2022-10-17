@@ -23,20 +23,12 @@ namespace Finance_Tracking.Controllers
         // GET: Student 
         public ActionResult Index()
         {
-            Student student = (Student)Session["Student"];
-            return View(student);
-        }
-
-        // GET: Student/Details/5
-        public ActionResult StudentDetails()
-        {
-            return View();
+            return View(GetLoginStudent(Session["Student"].ToString()));
         }
 
         // GET: Student/Create
         public ActionResult RegisterStudentInfo()
         {
-            ViewBag.SelectionError = null;
             return View();
         }
 
@@ -52,9 +44,6 @@ namespace Finance_Tracking.Controllers
                     ViewBag.SelectionError = "Please select the required options";
                     return View(model);
                 }
-
-                //Student studentInfo = (Student)Session["StudentInfo"];
-                //Student studentContacts = (Student)Session["StudentContacts"];
 
                 try
                 {
@@ -125,11 +114,11 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
+
         // GET: Student/MaintainStudentDocs
         public ActionResult MaintainStudentDocs()
         {
-            Student student = (Student)Session["Student"];
-            return View(student);
+            return View(GetLoginStudent(Session["Student"].ToString()));
         }
 
         // POST: Student/MaintainStudentDocs
@@ -139,6 +128,12 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
+                if (model.Identity_Document == null && model.Residential_Document == null)
+                {
+                    ViewBag.UploadStatus = "Please upload documents as PDF";
+                    return View(model);
+                }
+
                 String FileExt;
 
                 HttpPostedFileBase Residential_Doc = model.Residential_Document;
@@ -152,8 +147,7 @@ namespace Finance_Tracking.Controllers
                         BinaryReader Br = new BinaryReader(str);
                         Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                        //Store the file content in Byte[] format on the model
-                        model.Upload_Residential_Document = Residential_Doc_FileDet;
+                        UploadRes_Doc(Session["Student"].ToString(), Residential_Doc_FileDet);
                     }
                 }
 
@@ -168,17 +162,9 @@ namespace Finance_Tracking.Controllers
                         BinaryReader Binary = new BinaryReader(stream);
                         Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
 
-                        //Store the file content in Byte[] format on the model
-                        model.Upload_Identity_Document = ID_Doc_FileDet;
+                        UploadID_Doc(Session["Student"].ToString(), ID_Doc_FileDet);
                     }
                 }
-
-                if(model.Upload_Identity_Document == null || model.Upload_Residential_Document == null)
-                {
-                    ViewBag.UploadStatus = "Please upload documents as PDF";
-                    return View(model);
-                }
-                UploadDocs(model.Student_Identity_Number, model.Upload_Identity_Document, model.Upload_Residential_Document);
                 return RedirectToAction("Index");
             }
             catch
@@ -191,8 +177,7 @@ namespace Finance_Tracking.Controllers
         //GET: Student/Edit/5
         public ActionResult MaintainStudent()
         {
-            Student student = (Student)Session["Student"];
-            return View(student);
+            return View(GetLoginStudent(Session["Student"].ToString()));
         }
 
         // POST: Student/Edit/5
@@ -203,7 +188,7 @@ namespace Finance_Tracking.Controllers
             try
             {
                 string Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                UpdateStudent(model.Student_Identity_Number, model.Student_Email, model.Student_Cellphone_Number, Residential_Address);
+                UpdateStudent(Session["Student"].ToString(), model.Student_Email, model.Student_Cellphone_Number, Residential_Address);
                 return RedirectToAction("Index");
             }
             catch
@@ -215,20 +200,17 @@ namespace Finance_Tracking.Controllers
         // GET: Student/Delete/5
         public ActionResult DeleteStudent()
         {
-            Student student = (Student)Session["Student"];
-            return View(student);
+            return View(GetLoginStudent(Session["Student"].ToString()));
         }
 
         // POST: Student/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //Late change
         public ActionResult DeleteStudent(Student model)
         {
             try
             {
                 deleteStudent(model.Student_Identity_Number);
-
                 return RedirectToAction("Login", "Home");
             }
             catch
@@ -241,9 +223,7 @@ namespace Finance_Tracking.Controllers
         #region Enrollment
         public ActionResult InstitutionInfo()
         {
-            Session["RegisterInstitutionError"] = null;     //Setting to null this session to make sure it is not affected by past input
-
-            Student student = (Student)Session["Student"];
+            Student student = GetLoginStudent(Session["Student"].ToString());
             var uni = GetStudentEnrolledList(student.Student_Identity_Number);
             Student model = new Student();
             foreach (var item in uni)
@@ -255,24 +235,11 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult ViewInstitutionInfo(string id)
         {
-            var item = GetEnrolledDetails(id);
-            Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
-
-            string[] address = enrolled.Study_Residential_Address.Split(';');
-
-            enrolled.Street_Name = address[0];
-            enrolled.City = address[1];
-            enrolled.Sub_Town = address[2];
-            enrolled.Province = address[3];
-            enrolled.Zip_Code = address[4];
-
-            Session["Enrolled"] = enrolled;
+            Enrolled_At enrolled = GetEnrolled_At(id);
             return View(enrolled);
         }
         public ActionResult RegisterInstitutionInfo()
         {
-
-
             Enrolled_At enrolled = new Enrolled_At();
             List<SelectListItem> items = new List<SelectListItem>();
             items.Add(new SelectListItem { Text = "Select", Value = "Select" });
@@ -281,8 +248,7 @@ namespace Finance_Tracking.Controllers
             {
                 items.Add(new SelectListItem { Text = item.Institution_Name, Value = item.Institution_Name });
             }
-            ViewBag.InstitutionNames = items;
-            ViewBag.RegisterInstitutionError = Session["RegisterInstitutionError"];
+            Session["InstitutionNames"] = items;
             return View(enrolled);
         }
 
@@ -293,21 +259,21 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                Student student = (Student)Session["Student"];
                 model.Study_Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                CreateEnrolledDetails(model.Student_Number, model.Student_Identity_Number, model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
+                CreateEnrolledDetails(model.Student_Number, Session["Student"].ToString(), model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
                 return RedirectToAction("InstitutionInfo");
             }
             catch
             {
-                Session["RegisterInstitutionError"] = "You are already enrolled to this institution";
-                return RedirectToAction("RegisterInstitutionInfo");
+                ViewBag.RegisterInstitutionError = "You are already enrolled to this institution";
+                return View(model);
             }
 
         }
+        
         public ActionResult EditInstitutionInfo(string id)
         {
-            Enrolled_At enrolled = (Enrolled_At)Session["Enrolled"];
+            Enrolled_At enrolled = GetEnrolled_At(id);
             return View(enrolled);
         }
 
@@ -318,7 +284,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                Student student = (Student)Session["Student"];
+                Student student = GetLoginStudent(Session["Student"].ToString());
                 model.Study_Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
                 UpdateEnrolledDetails(model.Student_Number, model.Student_Identity_Number, model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
                 return RedirectToAction("ViewInstitutionInfo", new { id = model.Student_Number });
@@ -331,7 +297,7 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult DeleteInstitutionInfo(string id)
         {
-            Enrolled_At enrolled = (Enrolled_At)Session["Enrolled"];
+            Enrolled_At enrolled = GetEnrolled_At(id);
             return View(enrolled);
         }
 
@@ -342,7 +308,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                Student student = (Student)Session["Student"];
+                Student student = GetLoginStudent(Session["Student"].ToString());
 
                 DeleteEnrolledDetails(model.Student_Number);
                 return RedirectToAction("InstitutionInfo");
@@ -356,7 +322,7 @@ namespace Finance_Tracking.Controllers
 
         public ActionResult ViewFinacialStatement(string id)
         {
-            Enrolled_At enrolled = (Enrolled_At)Session["Enrolled"];
+            Enrolled_At enrolled = GetEnrolled_At(id);
             Finacial_Record record = new Finacial_Record();
             record.Student_Number = enrolled.Student_Number;
             return View(record);
@@ -393,6 +359,7 @@ namespace Finance_Tracking.Controllers
             Session["Apply"] = model;
             return View(model);
         }
+
         public ActionResult ApplyForFunds(string id)
         {
             ApplyBursaryViewModel model = (ApplyBursaryViewModel)Session["Apply"];
@@ -414,25 +381,29 @@ namespace Finance_Tracking.Controllers
         public ActionResult ApplyForFunds()
         {
             Bursary model = (Bursary)Session["Bursary"];
-            Student student = (Student)Session["Student"];
+            Student student = GetLoginStudent(Session["Student"].ToString());
             try
             {
                 var list = GetStudentEnrolledList(student.Student_Identity_Number);
-                if(list.Count == 0)
+                if (list.Count == 0 || student.Upload_Identity_Document == null || student.Upload_Residential_Document == null)
                 {
-                    ViewBag.ApplicationExist = "Please complete your profile e.g provide institution details";
+                    ViewBag.ApplicationExist = "Please complete your profile e.g provide institution details or upload missing documents";
                     return View(model);
                 }
-
-                if (int.Parse(model.Number_Available) == 0)
+                else if (DateTime.Now > model.End_Date)
+                {
+                    ViewBag.ApplicationExist = "Applications are closed";
+                    return View(model);
+                }
+                else if (int.Parse(model.Number_Available) == 0)
                 {
                     ViewBag.ApplicationExist = "No applications available at the moment";
                     return View(model);
                 }
                 else
                 {
-                    CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Applied");
-                    return RedirectToAction("ViewBursaries");                    
+                    CreateApplication(model.Bursary_Code + student.Student_Identity_Number, student.Student_Identity_Number, model.Bursary_Code, model.Funding_Year, "Received");
+                    return RedirectToAction("ViewBursaries");
                 }
             }
             catch
@@ -447,7 +418,7 @@ namespace Finance_Tracking.Controllers
         // GET: Student/TrackFunding
         public ActionResult TrackFunding() //Show all applications
         {
-            Student student = (Student)Session["Student"];
+            Student student = GetLoginStudent(Session["Student"].ToString());
             ApplyBursaryViewModel model = new ApplyBursaryViewModel();
 
 
@@ -558,5 +529,40 @@ namespace Finance_Tracking.Controllers
             return View(bursar);
         }
         #endregion
+
+        private Student GetLoginStudent(string id)
+        {
+            var student = GetStudent(id);
+
+            Student loginStudent = new Student(student.Student_Identity_Number, student.Student_FName, student.Student_LName,
+                            student.Student_Nationality, student.Race, student.Title, student.Gender, student.Date_Of_Birth, student.Marital_Status,
+                            student.Student_Email, student.Student_Cellphone_Number, student.Student_Residential_Address, student.Upload_Identity_Document, student.Upload_Residential_Document);
+
+            string[] address = (student.Student_Residential_Address).Split(';');
+
+            loginStudent.Street_Name = address[0];
+            loginStudent.City = address[1];
+            loginStudent.Sub_Town = address[2];
+            loginStudent.Province = address[3];
+            loginStudent.Zip_Code = address[4];
+
+            return loginStudent;
+        }
+
+        private Enrolled_At GetEnrolled_At(string id)
+        {
+            var item = GetEnrolledDetails(id);
+            Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
+
+            string[] address = enrolled.Study_Residential_Address.Split(';');
+
+            enrolled.Street_Name = address[0];
+            enrolled.City = address[1];
+            enrolled.Sub_Town = address[2];
+            enrolled.Province = address[3];
+            enrolled.Zip_Code = address[4];
+
+            return enrolled;
+        }
     }
 }

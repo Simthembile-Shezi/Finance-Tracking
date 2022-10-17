@@ -22,11 +22,13 @@ namespace Finance_Tracking.Controllers
             ViewBag.Status = "false";
             return View();
         }
+       
         public ActionResult SignUp()
         {
             ViewBag.Status = "false";
             return View();
         }
+       
         public ActionResult Login()
         {
             ViewBag.Status = "false";
@@ -61,7 +63,7 @@ namespace Finance_Tracking.Controllers
                         loginStudent.Province = address[3];
                         loginStudent.Zip_Code = address[4];
 
-                        Session["Student"] = loginStudent;
+                        Session["Student"] = student.Student_Identity_Number;
                         FormsAuthentication.SetAuthCookie(modelview.Username, false);
                         return RedirectToAction("Index", "Student");
                     }
@@ -175,6 +177,7 @@ namespace Finance_Tracking.Controllers
         {
             return View();
         }
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOut(LoginViewModel modelview)
@@ -183,6 +186,7 @@ namespace Finance_Tracking.Controllers
             Session["user"] = null;
             return RedirectToAction("Login", "Home");
         }
+       
         public ActionResult ForgotPassword()
         {
             ViewBag.NotUser = null;
@@ -247,6 +251,7 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
+        
         private void SendEmail(string email, string recever)
         {
             Random random = new Random();
@@ -313,6 +318,7 @@ namespace Finance_Tracking.Controllers
                 return View();
             }
         }
+        
         public ActionResult About()
         {
             ViewBag.Status = "false";
