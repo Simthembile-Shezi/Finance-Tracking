@@ -13,6 +13,7 @@ using static Data_Library.Business_Logic.Enrolled_AtProcessor;
 using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
 using static Data_Library.Business_Logic.StudentProcessor;
+using static Data_Library.Business_Logic.Academic_RecordProcessor;
 
 namespace Finance_Tracking.Controllers
 {
@@ -233,11 +234,13 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
+        
         public ActionResult ViewInstitutionInfo(string id)
         {
             Enrolled_At enrolled = GetEnrolled_At(id);
             return View(enrolled);
         }
+        
         public ActionResult RegisterInstitutionInfo()
         {
             Enrolled_At enrolled = new Enrolled_At();
@@ -259,8 +262,11 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
+                string year = DateTime.Now.Year.ToString();
                 model.Study_Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
                 CreateEnrolledDetails(model.Student_Number, Session["Student"].ToString(), model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
+                CreateStudentFinRec(model.Student_Number, year);
+                CreateAcademicRecord(model.Student_Number, year, model.Qualification);
                 return RedirectToAction("InstitutionInfo");
             }
             catch
@@ -295,6 +301,7 @@ namespace Finance_Tracking.Controllers
             }
 
         }
+        
         public ActionResult DeleteInstitutionInfo(string id)
         {
             Enrolled_At enrolled = GetEnrolled_At(id);
@@ -315,7 +322,7 @@ namespace Finance_Tracking.Controllers
             }
             catch
             {
-                return View();
+                return View(model);
             }
 
         }
@@ -327,6 +334,7 @@ namespace Finance_Tracking.Controllers
             record.Student_Number = enrolled.Student_Number;
             return View(record);
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ViewFinacialStatement(Finacial_Record model)
@@ -337,10 +345,21 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
             Finacial_Record record = new Finacial_Record(item.Student_Number, item.Academic_Year, item.Balance_Amount, item.Upload_Statement, item.Funding_Status, item.Request_Funds);
-
+            Session["Record"] = record;
             return View(record);
         }
+        
+        // GET: Student/DownloadBursaryAgreement/Application_ID
+        public FileResult DownloadFinacialStatement()
+        {
+            Finacial_Record item = (Finacial_Record)Session["Record"];
 
+            if (item.Upload_Statement == null)
+            {
+                return null;
+            }
+            return File(item.Upload_Statement, "application/pdf", item.Student_Number + ".pdf");
+        }
         #endregion
 
         #region Apply for funding
@@ -469,15 +488,14 @@ namespace Finance_Tracking.Controllers
         }
 
         // GET: Student/DownloadBursaryAgreement/Application_ID
-        public FileResult DownloadBursaryAgreement(string id)
+        public FileResult DownloadBursaryAgreement()
         {
             Application application = (Application)Session["Application"];
             if (application.Upload_Agreement == null)
             {
-                RedirectToAction("ViewBursaryAgreement");
-                return File(new byte[10], MediaTypeNames.Application.Octet, application.Application_ID);
+                return null;
             }
-            return File(application.Upload_Agreement, MediaTypeNames.Application.Octet, application.Application_ID);
+            return File(application.Upload_Agreement, "application/pdf", application.Application_ID + ".pdf");
         }
 
         // GET: Student/UploadSignedAgreement
@@ -495,18 +513,18 @@ namespace Finance_Tracking.Controllers
             try
             {
                 HttpPostedFileBase Agreement = application.Signed_Bursary_Agreement;
-
-
                 if (Agreement != null)
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = Agreement.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                    String FileExt = Path.GetExtension(Agreement.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = Agreement.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                    //Store the file content in Byte[] format on the model
-                    application.Upload_Signed_Agreement = Agreement_Doc_FileDet;
-                    uploadSignedAgreement(application.Application_ID, application.Upload_Signed_Agreement);
+                        uploadSignedAgreement(application.Application_ID, Agreement_Doc_FileDet);
+                    }
                 }
                 return RedirectToAction("ViewBursaryAgreement");
             }
@@ -516,6 +534,7 @@ namespace Finance_Tracking.Controllers
             }
 
         }
+        
         public ActionResult ViewFundRequest(string id)
         {
             Application application = (Application)Session["Application"];

@@ -11,7 +11,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+    <div class="form-horizontal col-md-8">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Student_Number)
         <div class="form-group row">
@@ -48,8 +48,16 @@
                 </dd>
             </dl>
         </div>
-
-        <div  class="row col-md-4">
+    </div>
+    <div class="row col-md-4">
+        <div class="btn-block">
+            <a href="@Url.Action("DownloadFinacialStatement", "Student")">
+                <div>
+                    <input type="button" name="selection" value="Download Finacial Statement" class="btn btn-default btn-block" />
+                </div>
+            </a>
+        </div>
+        <div class="row col-md-4">
             <div class="left-btn-flex">
                 <a href='@Url.Action("ViewInstitutionInfo", "Student", new { id = Model.Student_Number })'>
                     <div>

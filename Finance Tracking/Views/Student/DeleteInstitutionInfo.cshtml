@@ -34,22 +34,6 @@
             @Html.DisplayFor(model => model.Qualification)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Student_Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Student_Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Study_Residential_Address)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Study_Residential_Address)
-        </dd>
-
     </dl>
 
     @using (Html.BeginForm())
@@ -57,6 +41,8 @@
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(model => model.Student_Number)
+        @Html.HiddenFor(model => model.Institution_Name)
+        @Html.HiddenFor(model => model.Qualification)
         <div class="container-btn">
             <div class="left-btn-flex">
                 <a href='@Url.Action("ViewInstitutionInfo", "Student", new { id = Model.Student_Number })'>

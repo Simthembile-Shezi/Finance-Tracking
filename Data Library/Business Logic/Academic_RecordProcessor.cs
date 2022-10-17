@@ -26,7 +26,22 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-       public static int provideStudentResult(string studentNum, string AY, string Quali, decimal? avarageMarks, byte[] transcript)
+        public static int CreateAcademicRecord(string studentNum, string AY, string Quali)
+        {
+            Academic_RecordDB data = new Academic_RecordDB
+            {
+                Student_Number = studentNum,
+                Academic_Year = AY,
+                Qualification = Quali
+            };
+
+            string sql = @" insert into dbo.[Academic Records] (Student_Number, Academic_Year, Qualification)
+                            values (@Student_Number, @Academic_Year, @Qualification);";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static int provideStudentResult(string studentNum, string AY, string Quali, decimal? avarageMarks, byte[] transcript)
        {
             Academic_RecordDB data = new Academic_RecordDB();
             data.Student_Number = studentNum;

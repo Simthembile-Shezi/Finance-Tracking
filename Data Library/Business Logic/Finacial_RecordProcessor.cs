@@ -25,6 +25,19 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
+        public static int CreateStudentFinRec(string StudentNum, string AY)
+        {
+            Finacial_RecordDB data = new Finacial_RecordDB
+            {
+                Student_Number = StudentNum,
+                Academic_Year = AY
+            };
+
+            string sql = @" insert into dbo.[Finacial Records] (Student_Number, Academic_Year)
+                            values (@Student_Number, @Academic_Year);";
+
+            return SqlDataAccess.SaveData(sql, data);
+        }
         public static int uploadFinacialStatement(string StudentNum, string AY, decimal? amount, byte[] statement) // upload the finacial statement of the student and update balance due 
         {
 
