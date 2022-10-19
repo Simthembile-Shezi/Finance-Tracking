@@ -7,7 +7,7 @@
 
 <h2>View Bursary Agreement</h2>
 <div class="col-md-8">
-    @ViewBag.DownloadFailed
+    <span class="text-danger">@ViewBag.DownloadFailed</span>
 </div>
 
 <div class="row col-md-4">
@@ -26,7 +26,7 @@
         </a>
     </div>
     <div class="btn-block">
-        <a href="@Url.Action("ShowApplication", "Student", new {id = Model.Application_ID})">
+        <a href="@Url.Action("TrackFunding", "Student")">
             <div>
                 <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />
             </div>

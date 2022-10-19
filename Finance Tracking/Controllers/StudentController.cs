@@ -444,47 +444,37 @@ namespace Finance_Tracking.Controllers
             var list = GetStudentApplications(student.Student_Identity_Number);
             foreach (var item in list)
             {
-                Application application = new Application();
-                application.Application_ID = item.Application_ID;
-                application.Student_Identity_Number = item.Student_Identity_Number;
-                application.Bursary_Code = item.Bursary_Code;
-                application.Application_Status = item.Application_Status;
-                application.Upload_Agreement = item.Upload_Agreement;
-                application.Upload_Signed_Agreement = item.Upload_Signed_Agreement;
-                application.Funding_Year = item.Funding_Year;
-
+                Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
                 model.Applications.Add(application);
             }
             Session["Track"] = model;
             return View(model);
         }
 
-        // GET: Student/ShowApplication/Application_ID
-        public ActionResult ShowApplication(string id) // one application
+        // GET: Student/ViewBursaryAgreement/Application_ID
+        public ActionResult ViewBursaryAgreement(string id)
         {
             ApplyBursaryViewModel model = (ApplyBursaryViewModel)Session["Track"];
             foreach (var item in model.Applications)
             {
                 if (item.Application_ID.Equals(id.ToString()))
                 {
+                    Application application = item;
                     Session["Application"] = item;
-                    return View(item);
+
+                    if (application.Upload_Agreement == null)
+                    {
+                        ViewBag.DownloadFailed = "The funder has not uploaded the bursary agreement";
+                        return View(application);
+                    }
+                    else
+                    {
+                        ViewBag.DownloadFailed = "The funder has uploaded the bursary agreement, click the Download button to download the agreement";
+                        return View(application);
+                    }
                 }
             }
-            return View(model);
-        }
-
-        // GET: Student/ViewBursaryAgreement/Application_ID
-        public ActionResult ViewBursaryAgreement(string id)
-        {
-            Application application = (Application)Session["Application"];
-            if (application.Upload_Agreement == null)
-            {
-                ViewBag.DownloadFailed = "The funder has not uploaded the bursary agreement";
-                return View(application);
-            }
-            ViewBag.DownloadFailed = "The funder has uploaded the bursary agreement, click the Download button to download the agreement";
-            return View(application);
+            return RedirectToAction("Error", "Home");
         }
 
         // GET: Student/DownloadBursaryAgreement/Application_ID
@@ -524,31 +514,62 @@ namespace Finance_Tracking.Controllers
                         Byte[] Agreement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
                         uploadSignedAgreement(application.Application_ID, Agreement_Doc_FileDet);
+                        return RedirectToAction("ViewBursaryAgreement", new { id = application.Application_ID });
+                    }
+                    else
+                    {
+                        ViewBag.FileStatusFailed = "Please upload the file in PDF formate";
+                        return View(application);
                     }
                 }
-                return RedirectToAction("ViewBursaryAgreement");
+                else
+                {
+                    ViewBag.FileStatusFailed = "No file was selected";
+                    return View(application);
+                }
+                
             }
             catch
             {
-                return View();
+                ViewBag.FileStatusFailed = "Error while uploading. Please contact us on this email Finance.Tracking@outlook.com";
+                return View(application);
             }
 
         }
-        
+        #endregion
+
+        #region Approved bursaries
+        // GET: Student/ShowApplication/Application_ID
+        public ActionResult ShowApprovedApplications() // all approved applications
+        {
+            Student model = GetLoginStudent(Session["Student"].ToString());
+            var list = GetStudentApplications(model.Student_Identity_Number, "Approved");
+
+            foreach (var item in list)
+            {
+                Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
+                model.Applications.Add(application);
+            }
+            if(model.Applications.Count == 0)
+            {
+                ViewBag.NoApprovedApplications = "No applications have been approved currently, please check the Track funding section";
+            }
+            return View(model);
+        }
+
         public ActionResult ViewFundRequest(string id)
         {
-            Application application = (Application)Session["Application"];
             var item = GetBursar(id);
             if (item == null)
             {
-                ViewBag.NotApproved = "Your application is still under review";
-                return View("ShowApplication", application);
+                return RedirectToAction("Error", "Home");
             }
             Bursar_Fund bursar = new Bursar_Fund(item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
             return View(bursar);
         }
         #endregion
 
+        #region Get methods that access the database
         private Student GetLoginStudent(string id)
         {
             var student = GetStudent(id);
@@ -583,5 +604,6 @@ namespace Finance_Tracking.Controllers
 
             return enrolled;
         }
+        #endregion
     }
 }

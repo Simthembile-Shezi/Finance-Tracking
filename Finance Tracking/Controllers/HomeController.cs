@@ -1,5 +1,6 @@
 ﻿using Data_Library.ModelsDB;
 using Finance_Tracking.Models;
+using System;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Web.SessionState;
@@ -8,9 +9,7 @@ using static Data_Library.Business_Logic.FunderProcessor;
 using static Data_Library.Business_Logic.InstitutionEmpProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
 using static Data_Library.Business_Logic.StudentProcessor;
-using System.Net.Mail;
-using System.Net;
-using System;
+using static Data_Library.Business_Logic.Emails;
 
 namespace Finance_Tracking.Controllers
 {
@@ -22,13 +21,13 @@ namespace Finance_Tracking.Controllers
             ViewBag.Status = "false";
             return View();
         }
-       
+
         public ActionResult SignUp()
         {
             ViewBag.Status = "false";
             return View();
         }
-       
+
         public ActionResult Login()
         {
             ViewBag.Status = "false";
@@ -171,13 +170,13 @@ namespace Finance_Tracking.Controllers
             {
                 ViewBag.LoginFailed = "User account does not exist, please register a profile";
                 return View(modelview);
-            }            
+            }
         }
         public ActionResult LogOut()
         {
             return View();
         }
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOut(LoginViewModel modelview)
@@ -186,7 +185,7 @@ namespace Finance_Tracking.Controllers
             Session["user"] = null;
             return RedirectToAction("Login", "Home");
         }
-       
+
         public ActionResult ForgotPassword()
         {
             ViewBag.NotUser = null;
@@ -206,23 +205,31 @@ namespace Finance_Tracking.Controllers
                     if (model.UserType == "STUDENT_USER")
                     {
                         var user = GetStudentEmail(model.ToEmail);
-                        if(user == null)
+                        if (user == null)
                         {
                             ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
-                        SendEmail(user.Student_Email, user.Student_FName + "," + user.Student_LName);
+                        if (SendForgotPassword(user.Student_Email, user.Student_FName + "," + user.Student_LName) == false)
+                        {
+                            ViewBag.Error = "Email was not sent, please try again";
+                            return View(model);
+                        }
                         Session["Student"] = user;
                     }
                     else if (model.UserType == "INSTITUTION_USER")
                     {
                         var user = GetInstitutionEmp(model.ToEmail);
-                        if ( user == null)
+                        if (user == null)
                         {
                             ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
-                        SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
+                        if (SendForgotPassword(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName) == false)
+                        {
+                            ViewBag.Error = "Email was not sent, please try again";
+                            return View(model);
+                        }
                         Session["InstitutionEmployee"] = user;
                     }
                     else if (model.UserType == "FUNDER_USER")
@@ -233,7 +240,11 @@ namespace Finance_Tracking.Controllers
                             ViewBag.NotUser = "Email address does not exist";
                             return View(model);
                         }
-                        SendEmail(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName);
+                        if(SendForgotPassword(user.Emp_Email, user.Emp_FName + "," + user.Emp_LName) == false)
+                        {
+                            ViewBag.Error = "Email was not sent, please try again";
+                            return View(model);
+                        }
                         Session["FunderEmployee"] = user;
                     }
                     Session["SendEmail"] = model;
@@ -242,6 +253,7 @@ namespace Finance_Tracking.Controllers
                 }
                 else
                 {
+                    ViewBag.Error = "Try again later";
                     return View(model);
                 }
             }
@@ -251,35 +263,18 @@ namespace Finance_Tracking.Controllers
                 return View(model);
             }
         }
-        
-        private void SendEmail(string email, string recever)
+        private bool SendForgotPassword(string email, string name)
+        {
+            string sub = "Forgot password";
+            string body = "Enter this code " + RandomCode() + ",to reset your password";
+            return (SendEmail(email, name, sub, body));
+        }
+        private int RandomCode()
         {
             Random random = new Random();
             int code = random.Next(1000, 9999);
             Session["Code"] = code;
-
-            var senderEmail = new MailAddress("Finance.Tracking@outlook.com", "No-Reply");
-            var receiverEmail = new MailAddress(email, recever);
-            var sub = "Forgot password";
-            var body = "Enter this code " + code + ",to reset your password";
-
-            var smtp = new SmtpClient
-            {
-                Host = "smtp-mail.outlook.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(senderEmail.Address, "Project2022")
-            };
-            using (var mess = new MailMessage(senderEmail, receiverEmail)
-            {
-                Subject = sub,
-                Body = body
-            })
-            {
-                smtp.Send(mess);
-            }
+            return code;
         }
         public ActionResult ChangePassword()
         {
@@ -318,7 +313,7 @@ namespace Finance_Tracking.Controllers
                 return View();
             }
         }
-        
+
         public ActionResult About()
         {
             ViewBag.Status = "false";

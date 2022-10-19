@@ -67,7 +67,7 @@ namespace Data_Library.Business_Logic
 
             string sql = @"update dbo.Student 
                                set Password = @Password
-                               where studentID = @studentID;";
+                               where Student_Identity_Number = @Student_Identity_Number;";
 
             return SqlDataAccess.SaveData(sql, data);
         }

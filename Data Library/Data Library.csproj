@@ -49,6 +49,7 @@
     <Compile Include="Business Logic\ApplicationProcessor.cs" />
     <Compile Include="Business Logic\BursaryProcessor.cs" />
     <Compile Include="Business Logic\Bursar_FundProcessor.cs" />
+    <Compile Include="Business Logic\Emails.cs" />
     <Compile Include="Business Logic\Enrolled_AtProcessor.cs" />
     <Compile Include="Business Logic\Finacial_RecordProcessor.cs" />
     <Compile Include="Business Logic\FunderEmpProcessor.cs" />

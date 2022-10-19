@@ -277,6 +277,7 @@
     <Content Include="Views\Institution\EmployeeDetails.cshtml" />
     <Content Include="Views\Institution\MaintainEmployee.cshtml" />
     <Content Include="Views\Institution\DeleteEmployee.cshtml" />
+    <Content Include="Views\Student\ShowApprovedApplications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">

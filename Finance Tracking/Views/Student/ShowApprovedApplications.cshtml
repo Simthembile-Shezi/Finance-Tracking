@@ -1,0 +1,48 @@
+﻿@model Finance_Tracking.Models.Student
+
+@{
+    ViewBag.Title = "ShowApprovedApplications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Show Approved Applications</h2>
+<span class="text-danger">@ViewBag.NoApprovedApplications</span>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Application_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Application.Bursary_Code)
+        </th>
+        
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Applications)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Application_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bursary_Code)
+            </td>
+            <td>
+                @Html.ActionLink("View Fund Request", "ViewFundRequest", new { id = item.Application_ID })
+            </td>
+        </tr>
+    }
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("Index", "Student")'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

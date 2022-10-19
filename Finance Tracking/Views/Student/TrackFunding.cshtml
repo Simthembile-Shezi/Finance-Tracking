@@ -18,6 +18,7 @@
             @Html.DisplayNameFor(model => model.Application.Application_Status)
         </th>
         <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model.Applications)
@@ -33,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Application_Status)
             </td>
             <td>
-                @Html.ActionLink("View Application", "ShowApplication", new { id = item.Application_ID })
+                @Html.ActionLink("View Bursary Agreement", "ViewBursaryAgreement", new { id = item.Application_ID })
             </td>
         </tr>
     }

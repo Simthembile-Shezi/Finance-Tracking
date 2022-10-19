@@ -111,6 +111,14 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.LoadData<ApplicationDB>(sql);
         }
+        public static List<ApplicationDB> GetStudentApplications(string studentID, string status)
+        {
+            string sql = @"select Application_ID, Student_Identity_Number, Bursary_Code, Funding_Year, Application_Status, Upload_Agreement, Upload_Signed_Agreement
+                           from dbo.Application
+                           where Student_Identity_Number = '" + studentID + "' and Application_Status = '" + status + "';";
+
+            return SqlDataAccess.LoadData<ApplicationDB>(sql);
+        }
         public static ApplicationViewDB viewApplications(string appID)
         {
             string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Student_Residential_Address, 
