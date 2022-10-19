@@ -101,7 +101,8 @@ namespace Finance_Tracking.Controllers
                         //Insert the institution on the database
                         CreateFunder(model.Funder_Name, model.Funder_Tax_Number, model.Funder_Email, model.Funder_Telephone_Number, model.Funder_Physical_Address, model.Funder_Postal_Address);
                         //Insert the Employee on the database
-                        employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+                        employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
+                        employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
                         AddFunderAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, funder.Funder_Employee.Password, funder.Funder_Employee.Code);
                     }
                     catch
@@ -241,16 +242,10 @@ namespace Finance_Tracking.Controllers
             //    return RedirectToAction("Error", "Home");
             //}
             #endregion
-            Bursary bursary = new Bursary();
-            bursary.Application.Application_ID = id;
-            ApplicationView application = new ApplicationView();
-
+            
             var item = viewApplications(id);
-            {
-                application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+             ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
                     item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-                bursary.ApplicationViews.Add(application);
-            }
             return View(application);
         }
         public ActionResult ViewAllApplications()      //using funder name
@@ -326,6 +321,9 @@ namespace Finance_Tracking.Controllers
                         try
                         {
                             CreateBursarFund(model.Application_ID, "Funded", 0);
+                            var item = GetBursaryCode(model.Bursary_Code);
+                            int available = int.Parse(item.Number_Available) - 1;
+                            UpdateBursaryNumberAvail(item.Bursary_Code, available.ToString());
                         }
                         catch
                         {
@@ -673,14 +671,14 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult EmployeeDetails(string id)
         {
-            var item = GetFunderEmp(id.Replace(' ', '@'));
+            var item = GetFunderEmpID(id);
             Funder_Employee employee = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(employee);
         }
        
         public ActionResult DeleteEmployee(string id)
         {
-            var item = GetFunderEmp(id.Replace(' ', '@'));
+            var item = GetFunderEmpID(id);
             Funder_Employee funder = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(funder);
         }
@@ -709,14 +707,15 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Funder_Employee employee)
         {
-            employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+            employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
+            employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
             int result = AddFunderEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
             if (result == 0)
             {
                 ViewBag.NotAdded = "Employee profile was not succefully created";
                 return View(employee);
             }
-            return RedirectToAction("FunderDetails");
+            return RedirectToAction("ViewEmployees");
         }
         #endregion
         private Funder GetFunderByName(string name)
@@ -745,7 +744,7 @@ namespace Finance_Tracking.Controllers
         private Funder_Employee GetFunder_Employee(string userID)
         {
             //Get the employee frm the database
-            var funderEmp = GetFunderEmp(userID.Replace(' ', '@'));
+            var funderEmp = GetFunderEmpID(userID);
             //Map employee to login
             Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_UserID, funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
                 funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code);

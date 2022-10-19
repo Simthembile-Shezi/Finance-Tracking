@@ -574,7 +574,7 @@ namespace Finance_Tracking.Controllers
         }
         #endregion
 
-        #region Approved bursaries
+        #region Approved applications
         // GET: Student/ShowApplication/Application_ID
         public ActionResult ShowApprovedApplications() // all approved applications
         {

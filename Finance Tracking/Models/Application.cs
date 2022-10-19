@@ -26,6 +26,7 @@ namespace Finance_Tracking.Models
         }
 
         [Key]
+        [Display(Name = "Application ID")]
         [StringLength(50)]
         public string Application_ID { get; set; }
 

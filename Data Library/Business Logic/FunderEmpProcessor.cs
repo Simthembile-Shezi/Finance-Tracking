@@ -97,6 +97,13 @@ namespace Data_Library.Business_Logic
                            where Emp_Email = '" + Emp_Email + "';";
             return SqlDataAccess.SingleData<FunderEmployeeDB>(sql);
         }
+        public static FunderEmployeeDB GetFunderEmpID(string Emp_UserID)
+        {
+            string sql = @"select Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+                           from dbo.[Funder Employee]
+                           where Emp_UserID = '" + Emp_UserID + "';";
+            return SqlDataAccess.SingleData<FunderEmployeeDB>(sql);
+        }
 
         public static List<FunderEmployeeDB> GetFundersEmployees(string name)
         {

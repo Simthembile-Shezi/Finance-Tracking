@@ -23,7 +23,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+                Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());
                 Session["Organization_Name"] = employee.Organization_Name;
                 return View(employee);
             }
@@ -98,25 +98,18 @@ namespace Finance_Tracking.Controllers
                 if (institution.Institution_Employee.Code.Equals(Session["Code"].ToString()))
                 {
                     try
-                    {
+                    { 
                         //Insert the institution on the database
                         CreateInstitution(model.Institution_Name, model.Institution_Physical_Address, model.Institution_Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
-                    }
-                    catch
-                    {
-                        ViewBag.RegistrationError = "Funder Already Exist";
-                        return View(institution);
-                    }
-                    try
-                    {
                         //Insert the Employee on the database
-                        employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+                        employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
+                        employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
                         AddInstitutionAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, institution.Institution_Employee.Password, institution.Institution_Employee.Code);
                     }
                     catch
                     {
-                        ViewBag.RegistrationError = "Admin email is already registered with the system";
-                        return View(model);
+                        ViewBag.RegistrationError = "Admin email is already registered with the system or Funder Already Exist";
+                        return View(institution);
                     }
                     return RedirectToAction("Login", "Home");
                 }
@@ -153,9 +146,8 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/ViewFundedStudents
         public ActionResult ViewFundedStudents()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();
-            var list = fundedStudents(employee.Organization_Name);
+            var list = fundedStudents(Session["Organization_Name"].ToString());
             foreach (var item in list)
             {
                 FundedStudents funded = new FundedStudents(item.Student_Number, item.Student_Identity_Number, item.Student_Email, item.Institution_Name, item.Application_Status);
@@ -181,9 +173,8 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/ViewAllStudents
         public ActionResult ViewAllStudents()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             Institution students = new Institution();
-            var list = GetEnrolledDetailsList(employee.Organization_Name);
+            var list = GetEnrolledDetailsList(Session["Organization_Name"].ToString());
             foreach (var item in list)
             {
                 Enrolled_At enrolled = new Enrolled_At(item.Student_Number, item.Student_Identity_Number, item.Institution_Name, item.Qualification, item.Student_Email, item.Study_Residential_Address);
@@ -312,8 +303,8 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Edit/5
         public ActionResult MaintainInstitution()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            return View(employee.Institution);
+            Institution model = GetInstitutionByName(Session["Organization_Name"].ToString());
+            return View(model);
         }
 
         // POST: Institution/Edit/5
@@ -337,8 +328,8 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/DeleteInstitution
         public ActionResult DeleteInstitution()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            return View(employee.Institution);
+            Institution model = GetInstitutionByName(Session["Organization_Name"].ToString());
+            return View(model);
         }
 
         // POST: Institution/DeleteInstitution
@@ -366,7 +357,7 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult VerifyAdmin(Institution_Employee model)
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());
             if (employee.Admin_Code == null)
             {
                 ViewBag.Admin = "Admin code not found, please contact your system admin";
@@ -394,15 +385,13 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult EmployeeDetails(string id)
         {
-            var item = GetInstitutionEmpID(id);
-            Institution_Employee employee = new Institution_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            Institution_Employee employee = GetInstitution_Employee(id);
             return View(employee);
         }
 
         public ActionResult DeleteEmployee(string id)
         {
-            var item = GetInstitutionEmpID(id);
-            Institution_Employee employee = new Institution_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            Institution_Employee employee = GetInstitution_Employee(id);
             return View(employee);
         }
 
@@ -431,7 +420,8 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Institution_Employee employee)
         {
-            employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+            employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
+            employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
             int result = AddInstitutionEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
             if (result == 0)
             {

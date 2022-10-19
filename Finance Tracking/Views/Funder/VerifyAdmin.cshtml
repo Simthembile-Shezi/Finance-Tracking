@@ -12,7 +12,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @ViewBag.Admin
+        <span class="text-danger">@ViewBag.Admin</span>
         <div class="form-group">
             @Html.LabelFor(model => model.Admin_Code, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
