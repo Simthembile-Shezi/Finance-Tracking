@@ -53,9 +53,10 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(Model => Model.Emp_Email)
         <div class="container-btn">
             <div class="left-btn-flex">
-                <a href='@Url.Action("EmployeeDetails", "Funder", new {id = Model.Emp_Email})'>
+                <a href='@Url.Action("EmployeeDetails", "Funder", new {id = Model.Emp_UserID})'>
                     <div>
                         <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                     </div>

@@ -83,7 +83,6 @@ C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\bin\De
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\bin\Debug\System.Web.WebPages.xml
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\bin\Debug\System.Web.WebPages.Razor.xml
-C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.AssemblyReference.cache
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.CoreCompileInputs.cache
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.CopyComplete
 C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.dll
@@ -178,3 +177,4 @@ C:\Users\s219121923\Documents\Project\Finance-Tracking\Finance-Tracking.Tests\ob
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.CopyComplete
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.dll
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.pdb
+C:\Users\s221517979\Documents\Git\Finance-Tracking\Finance-Tracking.Tests\obj\Debug\Finance-Tracking.Tests.csproj.AssemblyReference.cache

@@ -61,12 +61,7 @@
 </div>
 <div class="row col-md-4">
     <div class="btn-block">
-        <a href='@Url.Action("MaintainEmployee", "Funder", new { id = Model.Emp_Email })'>
-            <input type="button" name="selection" value="Maintain Employee" class="btn btn-default btn-block" />
-        </a>
-    </div>
-    <div class="btn-block">
-        <a href='@Url.Action("DeleteEmployee", "Funder", new { id = Model.Emp_Email })'>
+        <a href='@Url.Action("DeleteEmployee", "Funder", new { id = Model.Emp_UserID })'>
             <input type="button" name="selection" value="Delete Employee" class="btn btn-default btn-block" />
         </a>
     </div>

@@ -6,11 +6,12 @@ namespace Data_Library.Business_Logic
 {
     public static class FunderEmpProcessor
     {
-        public static int AddFunderEmp(string Emp_FName, string Emp_LName, string Emp_Telephone_Number, string Emp_Email,
+        public static int AddFunderAdminEmp(string ID, string Emp_FName, string Emp_LName, string Emp_Telephone_Number, string Emp_Email,
             string Organization_Name, string Password, string Admin_Code)
         {
             FunderEmployeeDB data = new FunderEmployeeDB
             {
+                Emp_UserID = ID,
                 Emp_FName = Emp_FName,
                 Emp_LName = Emp_LName,
                 Emp_Telephone_Number = Emp_Telephone_Number,
@@ -20,15 +21,17 @@ namespace Data_Library.Business_Logic
                 Admin_Code = Admin_Code
             };
 
-            string sql = @" insert into dbo.[Funder Employee] (Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code)
-                            values (@Emp_FName, @Emp_LName, @Emp_Telephone_Number, @Emp_Email, @Organization_Name, @Password, @Admin_Code);";
+            string sql = @" insert into dbo.[Funder Employee] (Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code)
+                            values (@Emp_UserID, @Emp_FName, @Emp_LName, @Emp_Telephone_Number, @Emp_Email, @Organization_Name, @Password, @Admin_Code);";
 
             return SqlDataAccess.SaveData(sql, data);
         }
-        public static int AddFunderEmp(string Emp_FName, string Emp_LName, string Emp_Telephone_Number, string Emp_Email, string Organization_Name, string Password)
+
+        public static int AddFunderEmp(string ID, string Emp_FName, string Emp_LName, string Emp_Telephone_Number, string Emp_Email, string Organization_Name, string Password)
         {
             FunderEmployeeDB data = new FunderEmployeeDB
             {
+                Emp_UserID = ID,
                 Emp_FName = Emp_FName,
                 Emp_LName = Emp_LName,
                 Emp_Telephone_Number = Emp_Telephone_Number,
@@ -37,8 +40,8 @@ namespace Data_Library.Business_Logic
                 Password = Password
             };
 
-            string sql = @" insert into dbo.[Funder Employee] (Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password)
-                            values (@Emp_FName, @Emp_LName, @Emp_Telephone_Number, @Emp_Email, @Organization_Name, @Password);";
+            string sql = @" insert into dbo.[Funder Employee] (Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password)
+                            values (@Emp_UserID, @Emp_FName, @Emp_LName, @Emp_Telephone_Number, @Emp_Email, @Organization_Name, @Password);";
 
             return SqlDataAccess.SaveData(sql, data);
         }
@@ -47,9 +50,9 @@ namespace Data_Library.Business_Logic
             FunderEmployeeDB data = new FunderEmployeeDB();
             data.Emp_Email = email;
             if (password != null)
-                  data.Password = password;
+                data.Password = password;
 
-                string sql = @"update dbo.[Funder Employee] 
+            string sql = @"update dbo.[Funder Employee] 
                                set Password = @Password
                                where Emp_Email = @Emp_Email;";
 
@@ -89,7 +92,7 @@ namespace Data_Library.Business_Logic
 
         public static FunderEmployeeDB GetFunderEmp(string Emp_Email)
         {
-            string sql = @"select Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+            string sql = @"select Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
                            from dbo.[Funder Employee]
                            where Emp_Email = '" + Emp_Email + "';";
             return SqlDataAccess.SingleData<FunderEmployeeDB>(sql);
@@ -97,7 +100,7 @@ namespace Data_Library.Business_Logic
 
         public static List<FunderEmployeeDB> GetFundersEmployees(string name)
         {
-            string sql = @"select Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+            string sql = @"select Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
                            from dbo.[Funder Employee]
                            where Organization_Name ='" + name + "' ;";
 
@@ -106,7 +109,7 @@ namespace Data_Library.Business_Logic
 
         public static List<FunderEmployeeDB> LoadEmployees()
         {
-            string sql = @"select Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
+            string sql = @"select Emp_UserID, Emp_FName, Emp_LName, Emp_Telephone_Number, Emp_Email, Organization_Name, Password, Admin_Code
                            from dbo.[Funder Employee];";
 
             return SqlDataAccess.LoadData<FunderEmployeeDB>(sql);

@@ -8,6 +8,7 @@ namespace Data_Library.ModelsDB
 {
     public class InstitutionEmployeeDB
     {
+        public string Emp_UserID { get; set; }
         public string Emp_FName { get; set; }
         public string Emp_LName { get; set; }
         public string Emp_Telephone_Number { get; set; }

@@ -5,11 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.SessionState;
 using static Data_Library.Business_Logic.Academic_RecordProcessor;
+using static Data_Library.Business_Logic.Emails;
+using static Data_Library.Business_Logic.Enrolled_AtProcessor;
 using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionEmpProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
-using static Data_Library.Business_Logic.Enrolled_AtProcessor;
-using static Data_Library.Business_Logic.Emails;
 
 namespace Finance_Tracking.Controllers
 {
@@ -24,6 +24,7 @@ namespace Finance_Tracking.Controllers
             try
             {
                 Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+                Session["Organization_Name"] = employee.Organization_Name;
                 return View(employee);
             }
             catch
@@ -35,26 +36,7 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Details
         public ActionResult InstitutionDetails()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            var institution = GetInstitution(employee.Organization_Name);
-            Institution login = new Institution(institution.Institution_Name, institution.Institution_Telephone_Number, institution.Institution_Email_Address, institution.Institution_Physical_Address, institution.Institution_Postal_Address);
-
-            //Separating the Physical address
-            string[] address = institution.Institution_Physical_Address.Split(';');
-            login.Street_Name = address[0];
-            login.Sub_Town = address[1];
-            login.City = address[2];
-            login.Province = address[3];
-            login.Zip_Code = address[4];
-
-            //Separating the Postal Address
-            address = institution.Institution_Postal_Address.Split(';');
-            login.Postal_box = address[0];
-            login.Town = address[1];
-            login.City_Post = address[2];
-            login.Province_Post = address[3];
-            login.Postal_Code = address[4];
-
+            Institution login = GetInstitutionByName(Session["Organization_Name"].ToString());
             return View(login);
         }
 
@@ -69,28 +51,17 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterInstitution(Institution model)
         {
-            try
-            {
+                model.Institution_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+                model.Institution_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
                 Session["Institution"] = model;
-                string Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                string Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
-
-                //Insert the institution on the database
-                CreateInstitution(model.Institution_Name, Physical_Address, Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
+                Session["Organization_Name"] = model.Institution_Name;
                 return RedirectToAction("AdminInstitutionEmployee");
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         public ActionResult AdminInstitutionEmployee()
         {
-            Institution model = (Institution)Session["Institution"];
             Institution_Employee employee = new Institution_Employee();
-            employee.Organization_Name = model.Institution_Name;
-            employee.Institution = model;
+            employee.Organization_Name = Session["Organization_Name"].ToString();
             return View(employee);
         }
 
@@ -98,27 +69,74 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AdminInstitutionEmployee(Institution_Employee employee)
         {
-            Institution funder = (Institution)Session["Institution"];
-            //try
+            if (VerifyAccount(employee.Emp_Email, employee.Emp_FName + ", " + employee.Emp_LName))
             {
-                //if (ModelState.IsValid)
-                {
-                    //Insert the Employee on the database
-                    AddInstitutionEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email,
-                        employee.Organization_Name, employee.Password, employee.Admin_Code);
-                }
-
-                return RedirectToAction("Login", "Home");
+                Session["Verify"] = employee;
+                return RedirectToAction("CreatePassword");
             }
-            //catch
-            //{
-            //    return View();
-            //}
+            else
+            {
+                ViewBag.UploadStatus = "Email was not sent, please try again";
+                return View(employee);
+            }
         }
+
+        [HttpGet]
+        public ActionResult CreatePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePassword(Institution institution)
+        {
+            try
+            {
+                Institution model = (Institution)Session["Institution"];
+                Institution_Employee employee = (Institution_Employee)Session["Verify"];
+                if (institution.Institution_Employee.Code.Equals(Session["Code"].ToString()))
+                {
+                    try
+                    {
+                        //Insert the institution on the database
+                        CreateInstitution(model.Institution_Name, model.Institution_Physical_Address, model.Institution_Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
+                    }
+                    catch
+                    {
+                        ViewBag.RegistrationError = "Funder Already Exist";
+                        return View(institution);
+                    }
+                    try
+                    {
+                        //Insert the Employee on the database
+                        employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+                        AddInstitutionAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, institution.Institution_Employee.Password, institution.Institution_Employee.Code);
+                    }
+                    catch
+                    {
+                        ViewBag.RegistrationError = "Admin email is already registered with the system";
+                        return View(model);
+                    }
+                    return RedirectToAction("Login", "Home");
+                }
+                else
+                {
+                    ViewBag.RegistrationError = "Inncorrect code, please try again";
+                    return View(institution);
+                }
+            }
+            catch
+            {
+                ViewBag.RegistrationError = "You are already registered, if not please contact Finance.Tracking@outlook.com";
+                return View(institution);
+            }
+        }
+
         private bool VerifyAccount(string email, string name)
         {
             string sub = "Account Verification";
-            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account. Also note that this will be your admin code, keep it safe and hidden.";
             return (SendEmail(email, name, sub, body));
         }
         private int RandomCode()
@@ -127,54 +145,8 @@ namespace Finance_Tracking.Controllers
             int code = random.Next(1000, 9999);
             Session["Code"] = code;
             return code;
-        }
-        // GET: Institution/Edit/5
-        public ActionResult MaintainInstitution()
-        {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            return View(employee.Institution);
-        }
-
-        // POST: Institution/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult MaintainInstitution(Institution model)
-        {
-            //try
-            {
-                string Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                string Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
-                UpdateIns(model.Institution_Name, Physical_Address, Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
-                return View("InstitutionDetails", model);
-            }
-            //catch
-            //{
-            //    return View();
-            //}
-        }
-
-        // GET: Institution/DeleteInstitution
-        public ActionResult DeleteInstitution()
-        {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            return View(employee.Institution);
-        }
-
-        // POST: Institution/DeleteInstitution
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteInstitution(Institution model)
-        {
-            //try
-            {
-                DeleteIns(model.Institution_Name);
-                return RedirectToAction("Login", "Home");
-            }
-            //catch
-            //{
-            //    return View();
-            //}
-        }
+        }       
+        
         #endregion
 
         #region View all funded students, update finacial and academic records 
@@ -182,7 +154,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ViewFundedStudents()
         {
             Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
-            EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();            
+            EnrolledStudentsViewModel students = new EnrolledStudentsViewModel();
             var list = fundedStudents(employee.Organization_Name);
             foreach (var item in list)
             {
@@ -337,6 +309,54 @@ namespace Finance_Tracking.Controllers
         #endregion
 
         #region Admin
+        // GET: Institution/Edit/5
+        public ActionResult MaintainInstitution()
+        {
+            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            return View(employee.Institution);
+        }
+
+        // POST: Institution/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MaintainInstitution(Institution model)
+        {
+            try
+            {
+                string Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+                string Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
+                UpdateIns(model.Institution_Name, Physical_Address, Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
+                return RedirectToAction("InstitutionDetails");
+            }
+            catch
+            {
+                return View(model);
+            }
+        }
+
+        // GET: Institution/DeleteInstitution
+        public ActionResult DeleteInstitution()
+        {
+            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
+            return View(employee.Institution);
+        }
+
+        // POST: Institution/DeleteInstitution
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteInstitution(Institution model)
+        {
+            try
+            {
+                DeleteIns(model.Institution_Name);
+                return RedirectToAction("Login", "Home");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         public ActionResult VerifyAdmin()
         {
             return View();
@@ -363,45 +383,26 @@ namespace Finance_Tracking.Controllers
 
         public ActionResult ViewEmployees()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             Institution institution = new Institution();
-            var list = GetInstitutionEmployees(employee.Organization_Name);
+            var list = GetInstitutionEmployees(Session["Organization_Name"].ToString());
             foreach (var item in list)
             {
-                Institution_Employee result = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                Institution_Employee result = new Institution_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
                 institution.Institution_Employees.Add(result);
             }
             return View(institution);
         }
         public ActionResult EmployeeDetails(string id)
         {
-            var item = GetInstitutionEmp(id);
-            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-            return View(employee);
-        }
-        public ActionResult MaintainEmployee(string id)
-        {
-            var item = GetInstitutionEmp(id);
-            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            var item = GetInstitutionEmpID(id);
+            Institution_Employee employee = new Institution_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(employee);
         }
 
-        // POST: Funder/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult MaintainEmployee(Institution_Employee employee)
-        {
-            int result = UpdateInstitutionEmp(employee.Emp_Email);       //Not working
-            if (result == 0)
-            {
-                return View(employee);
-            }
-            return RedirectToAction("EmployeeDetails", new { id = employee.Emp_Email });
-        }
         public ActionResult DeleteEmployee(string id)
         {
-            var item = GetInstitutionEmp(id);
-            Institution_Employee employee = new Institution_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            var item = GetInstitutionEmpID(id);
+            Institution_Employee employee = new Institution_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(employee);
         }
 
@@ -417,11 +418,11 @@ namespace Finance_Tracking.Controllers
             }
             return RedirectToAction("ViewEmployees");
         }
+        
         public ActionResult AddEmployee()
         {
-            Institution_Employee employee = (Institution_Employee)Session["InstitutionEmployee"];
             Institution_Employee model = new Institution_Employee();
-            model.Organization_Name = employee.Organization_Name;
+            model.Organization_Name = Session["Organization_Name"].ToString();
             return View(model);
         }
 
@@ -430,7 +431,8 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Institution_Employee employee)
         {
-            int result = AddInstitutionEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
+            employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+            int result = AddInstitutionEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
             if (result == 0)
             {
                 ViewBag.NotAdded = "Employee profile was not succefully created";
@@ -438,7 +440,41 @@ namespace Finance_Tracking.Controllers
             }
             return RedirectToAction("InstitutionDetails");
         }
-
         #endregion
+
+        private Institution GetInstitutionByName(string name)
+        {
+            var institution = GetInstitution(name);
+            Institution login = new Institution(institution.Institution_Name, institution.Institution_Telephone_Number, institution.Institution_Email_Address, institution.Institution_Physical_Address, institution.Institution_Postal_Address);
+
+            //Separating the Physical address
+            string[] address = institution.Institution_Physical_Address.Split(';');
+            login.Street_Name = address[0];
+            login.Sub_Town = address[1];
+            login.City = address[2];
+            login.Province = address[3];
+            login.Zip_Code = address[4];
+
+            //Separating the Postal Address
+            address = institution.Institution_Postal_Address.Split(';');
+            login.Postal_box = address[0];
+            login.Town = address[1];
+            login.City_Post = address[2];
+            login.Province_Post = address[3];
+            login.Postal_Code = address[4];
+
+            return login;
+        }
+        private Institution_Employee GetInstitution_Employee(string userID)
+        {
+            //Get the employee frm the database
+            var institutionEmp = GetInstitutionEmpID(userID);
+
+            //Map employee to login
+            Institution_Employee loginEmp = new Institution_Employee(institutionEmp.Emp_UserID, institutionEmp.Emp_FName, institutionEmp.Emp_LName, institutionEmp.Emp_Telephone_Number,
+                institutionEmp.Emp_Email, institutionEmp.Organization_Name, institutionEmp.Password, institutionEmp.Admin_Code);
+
+            return loginEmp;
+        }
     }
 }

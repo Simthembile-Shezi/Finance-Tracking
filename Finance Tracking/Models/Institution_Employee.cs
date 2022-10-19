@@ -9,8 +9,14 @@ namespace Finance_Tracking.Models
     [Table("Institution Employee")]
     public partial class Institution_Employee
     {
-        public Institution_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
+        public Institution_Employee()
         {
+
+        }
+
+        public Institution_Employee(string ID, string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
+        {
+            Emp_UserID = ID;
             Emp_FName = emp_FName;
             Emp_LName = emp_LName;
             Emp_Telephone_Number = emp_Telephone_Number;
@@ -19,10 +25,11 @@ namespace Finance_Tracking.Models
             Password = password;
             Admin_Code = admin_Code;
         }
-        public Institution_Employee()
-        {
 
-        }
+        [Required(ErrorMessage = "You need to enter the code sent via email.")]
+        public string Code { get; set; }
+
+        public string Emp_UserID { get; set; }
 
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "You need to enter your first name.")]

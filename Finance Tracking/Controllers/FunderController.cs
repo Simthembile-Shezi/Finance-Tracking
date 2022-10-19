@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using static Data_Library.Business_Logic.ApplicationProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
+using static Data_Library.Business_Logic.Emails;
 using static Data_Library.Business_Logic.FunderEmpProcessor;
 using static Data_Library.Business_Logic.FunderProcessor;
-using static Data_Library.Business_Logic.Emails;
 
 namespace Finance_Tracking.Controllers
 {
@@ -20,7 +20,7 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+                Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
                 Session["Organization_Name"] = employee.Organization_Name;
                 return View(employee);
             }
@@ -33,26 +33,7 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/Details
         public ActionResult FunderDetails()
         {
-            var funder = GetFunder(Session["Organization_Name"].ToString());
-            Funder login = new Funder(funder.Funder_Name, funder.Funder_Tax_Number, funder.Funder_Email, funder.Funder_Telephone_Number, funder.Funder_Physical_Address, funder.Funder_Postal_Address);
-
-            //Separating the Physical address
-            string[] address = funder.Funder_Physical_Address.Split(';');
-            login.Street_Name = address[0];
-            login.Sub_Town = address[1];
-            login.City = address[2];
-            login.Province = address[3];
-            login.Zip_Code = address[4];
-
-            //Separating the Postal Address
-            address = funder.Funder_Postal_Address.Split(';');
-            login.Postal_box = address[0];
-            login.Town = address[1];
-            login.City_Post = address[2];
-            login.Province_Post = address[3];
-            login.Postal_Code = address[4];
-
-            Session["Funder"] = login;
+            Funder login = GetFunderByName(Session["Organization_Name"].ToString());
             return View(login);
         }
 
@@ -67,28 +48,13 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterFunder(Funder model)
         {
+            model.Funder_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+            model.Funder_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
             Session["Funder"] = model;
-            try
-            {
-                //if (ModelState.IsValid)
-                {
-                    string Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                    string Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
-
-                    //Insert the institution on the database
-                    CreateFunder(model.Funder_Name, model.Funder_Tax_Number, model.Funder_Email, model.Funder_Telephone_Number, Physical_Address, Postal_Address);
-                    return RedirectToAction("AdminFunderEmployee");
-                }
-                //else
-                //    return View();
-
-            }
-            catch
-            {
-                ViewBag.FunderAlreadyExist = "Funder Already Exist";
-                return View(model);
-            }
+            Session["Organization_Name"] = model.Funder_Name;
+            return RedirectToAction("AdminFunderEmployee");
         }
+        
         // GET: Funder/Create/Employee
         public ActionResult AdminFunderEmployee()
         {
@@ -96,28 +62,72 @@ namespace Finance_Tracking.Controllers
             employee.Organization_Name = Session["Organization_Name"].ToString();
             return View(employee);
         }
+        
         // POST: Funder/Create/Employee
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AdminFunderEmployee(Funder_Employee employee)
         {
-            try
+            if (VerifyAccount(employee.Emp_Email, employee.Emp_FName + ", " + employee.Emp_LName))
             {
-                //Insert the Employee on the database
-                AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password, employee.Admin_Code);
-                return RedirectToAction("Login", "Home");
+                Session["Verify"] = employee;
+                return RedirectToAction("CreatePassword");
             }
-            catch
+            else
             {
-                ViewBag.AdminAlreadyExist = "Admin email is already registered with the system";
+                ViewBag.UploadStatus = "Email was not sent, please try again";
                 return View(employee);
             }
 
         }
+        [HttpGet]
+        public ActionResult CreatePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePassword(Funder funder)
+        {
+            try
+            {
+                Funder model = (Funder)Session["Funder"];
+                Funder_Employee employee = (Funder_Employee)Session["Verify"];
+                if (funder.Funder_Employee.Code.Equals(Session["Code"].ToString()))
+                {
+                    try
+                    {
+                        //Insert the institution on the database
+                        CreateFunder(model.Funder_Name, model.Funder_Tax_Number, model.Funder_Email, model.Funder_Telephone_Number, model.Funder_Physical_Address, model.Funder_Postal_Address);
+                        //Insert the Employee on the database
+                        employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+                        AddFunderAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, funder.Funder_Employee.Password, funder.Funder_Employee.Code);
+                    }
+                    catch
+                    { 
+                        ViewBag.RegistrationError = "Admin email is already registered with the system or Funder Already Exist";
+                        return View(funder);
+                    }
+                    return RedirectToAction("Login", "Home");
+                }
+                else
+                {
+                    ViewBag.RegistrationError = "Inncorrect code, please try again";
+                    return View(funder);
+                }
+            }
+            catch
+            {
+                ViewBag.RegistrationError = "You are already registered, if not please contact Finance.Tracking@outlook.com";
+                return View(funder);
+            }
+        }
+
         private bool VerifyAccount(string email, string name)
         {
             string sub = "Account Verification";
-            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account. Also note that this will be your admin code, keep it safe and hidden.";
             return (SendEmail(email, name, sub, body));
         }
         private int RandomCode()
@@ -127,11 +137,12 @@ namespace Finance_Tracking.Controllers
             Session["Code"] = code;
             return code;
         }
+        
         // GET: Funder/MaintainFunder
         public ActionResult MaintainFunder()
         {
-            Funder funder = (Funder)Session["Funder"];
-            return View(funder);
+            Funder login = GetFunderByName(Session["Organization_Name"].ToString());
+            return View(login);
         }
 
         // POST: Funder/MaintainFunder
@@ -156,8 +167,8 @@ namespace Finance_Tracking.Controllers
         // GET: Funder/DeleteFunder
         public ActionResult DeleteFunder()
         {
-            Funder funder = (Funder)Session["Funder"];
-            return View(funder);
+            Funder login = GetFunderByName(Session["Organization_Name"].ToString());
+            return View(login);
         }
 
         // POST: Funder/DeleteFunder
@@ -210,7 +221,7 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
-        
+
         public ActionResult ViewApplication(string id)
         {
             #region
@@ -236,9 +247,9 @@ namespace Finance_Tracking.Controllers
 
             var item = viewApplications(id);
             {
-                    application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-                        item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-                    bursary.ApplicationViews.Add(application);
+                application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                    item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+                bursary.ApplicationViews.Add(application);
             }
             return View(application);
         }
@@ -635,7 +646,7 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult VerifyAdmin(Funder_Employee model)
         {
-            Funder_Employee employee = (Funder_Employee)Session["FunderEmployee"];
+            Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
             if (employee.Admin_Code == null)
             {
                 ViewBag.Admin = "Admin code not found, please contact your organization admin";
@@ -653,42 +664,24 @@ namespace Finance_Tracking.Controllers
         {
             Funder funder = new Funder();
             var list = GetFundersEmployees(Session["Organization_Name"].ToString());
-            foreach(var item in list)
+            foreach (var item in list)
             {
-                Funder_Employee result = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                Funder_Employee result = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
                 funder.Funder_Employees.Add(result);
             }
             return View(funder);
         }
         public ActionResult EmployeeDetails(string id)
         {
-            var item = GetFunderEmp(id);
-            Funder_Employee employee = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            var item = GetFunderEmp(id.Replace(' ', '@'));
+            Funder_Employee employee = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(employee);
         }
-        public ActionResult MaintainEmployee(string id)
-        {
-            var item = GetFunderEmp(id);
-            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-            return View(funder);
-        }
-
-        // POST: Funder/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult MaintainEmployee(Funder_Employee employee)
-        {
-            int result = UpdateFunderEmp(employee.Emp_Email);       //Not working
-            if (result == 0)
-            {
-                return View(employee);
-            }
-            return RedirectToAction("EmployeeDetails", new {id = employee.Emp_Email});
-        }
+       
         public ActionResult DeleteEmployee(string id)
         {
-            var item = GetFunderEmp(id);
-            Funder_Employee funder = new Funder_Employee(item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+            var item = GetFunderEmp(id.Replace(' ', '@'));
+            Funder_Employee funder = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
             return View(funder);
         }
 
@@ -698,7 +691,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult DeleteEmployee(Funder_Employee employee)
         {
             int result = DeleteFunderEmp(employee.Emp_Email);
-            if(result == 0)
+            if (result == 0)
             {
                 return View(employee);
             }
@@ -716,8 +709,9 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Funder_Employee employee)
         {
-            int result = AddFunderEmp(employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
-            if(result == 0)
+            employee.Emp_UserID = employee.Emp_Email.Replace('@', ' ');
+            int result = AddFunderEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
+            if (result == 0)
             {
                 ViewBag.NotAdded = "Employee profile was not succefully created";
                 return View(employee);
@@ -725,5 +719,37 @@ namespace Finance_Tracking.Controllers
             return RedirectToAction("FunderDetails");
         }
         #endregion
+        private Funder GetFunderByName(string name)
+        {
+            var funder = GetFunder(name);
+            Funder login = new Funder(funder.Funder_Name, funder.Funder_Tax_Number, funder.Funder_Email, funder.Funder_Telephone_Number, funder.Funder_Physical_Address, funder.Funder_Postal_Address);
+
+            //Separating the Physical address
+            string[] address = funder.Funder_Physical_Address.Split(';');
+            login.Street_Name = address[0];
+            login.Sub_Town = address[1];
+            login.City = address[2];
+            login.Province = address[3];
+            login.Zip_Code = address[4];
+
+            //Separating the Postal Address
+            address = funder.Funder_Postal_Address.Split(';');
+            login.Postal_box = address[0];
+            login.Town = address[1];
+            login.City_Post = address[2];
+            login.Province_Post = address[3];
+            login.Postal_Code = address[4];
+
+            return login;
+        }
+        private Funder_Employee GetFunder_Employee(string userID)
+        {
+            //Get the employee frm the database
+            var funderEmp = GetFunderEmp(userID.Replace(' ', '@'));
+            //Map employee to login
+            Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_UserID, funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
+                funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code);
+            return loginEmp;
+        }
     }
 }

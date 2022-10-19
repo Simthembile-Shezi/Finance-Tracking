@@ -103,10 +103,10 @@ namespace Finance_Tracking.Controllers
                         institution.Postal_Code = address[4];
 
                         //Map employee to login
-                        Institution_Employee loginEmp = new Institution_Employee(institutionEmp.Emp_FName, institutionEmp.Emp_LName, institutionEmp.Emp_Telephone_Number,
+                        Institution_Employee loginEmp = new Institution_Employee(institutionEmp.Emp_UserID,institutionEmp.Emp_FName, institutionEmp.Emp_LName, institutionEmp.Emp_Telephone_Number,
                             institutionEmp.Emp_Email, institutionEmp.Organization_Name, institutionEmp.Password, institutionEmp.Admin_Code);
 
-                        Session["InstitutionEmployee"] = loginEmp;
+                        Session["InstitutionEmployee"] = loginEmp.Emp_UserID;
                         FormsAuthentication.SetAuthCookie(modelview.Username, false);
                         return RedirectToAction("Index", "Institution");
                     }
@@ -147,10 +147,10 @@ namespace Finance_Tracking.Controllers
                         loginFunder.Postal_Code = address[4];
 
                         //Map employee to login
-                        Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
+                        Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_UserID,funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
                             funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code);
 
-                        Session["FunderEmployee"] = loginEmp;
+                        Session["FunderEmployee"] = loginEmp.Emp_UserID;
                         FormsAuthentication.SetAuthCookie(modelview.Username, false);
                         return RedirectToAction("Index", "Funder");
                     }

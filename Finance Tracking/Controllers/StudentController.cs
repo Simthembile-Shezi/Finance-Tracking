@@ -96,40 +96,41 @@ namespace Finance_Tracking.Controllers
                 ViewBag.UploadStatus = "Email was not sent, please try again";
                 return View(model);
             }
-            
+
         }
+
+        [HttpGet]
         public ActionResult CreatePassword()
         {
-            Student password = (Student)Session["Verify"];
-            return View(password);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreatePassword(Student password)
-        {            
+        public ActionResult CreatePassword(Student student)
+        {
             try
             {
                 Student model = (Student)Session["Verify"];
-                if (password.Code.Equals(Session["Code"].ToString()))
+                if (student.Code.Equals(Session["Code"].ToString()))
                 {
                     CreateStudent(model.Student_Identity_Number, model.Student_FName, model.Student_LName, model.Student_Nationality, model.Race, model.Title, model.Gender, model.Date_Of_Birth, model.Marital_Status,
-                       model.Student_Email, model.Student_Cellphone_Number, model.Student_Residential_Address, model.Upload_Identity_Document, model.Upload_Residential_Document, password.Password);
+                       model.Student_Email, model.Student_Cellphone_Number, model.Student_Residential_Address, model.Upload_Identity_Document, model.Upload_Residential_Document, student.Password);
                     return RedirectToAction("Login", "Home");
                 }
                 else
                 {
                     ViewBag.RegistrationError = "Inncorrect code, please try again";
-                    return View(password);
+                    return View(student);
                 }
             }
             catch
             {
                 ViewBag.RegistrationError = "You are already registered, if not please contact Finance.Tracking@outlook.com";
-                return View(password);
+                return View(student);
             }
-
         }
+
         private bool VerifyAccount(string email, string name)
         {
             string sub = "Account Verification";

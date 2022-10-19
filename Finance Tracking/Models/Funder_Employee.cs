@@ -13,8 +13,9 @@ namespace Finance_Tracking.Models
         {
 
         }
-        public Funder_Employee(string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
+        public Funder_Employee(string ID, string emp_FName, string emp_LName, string emp_Telephone_Number, string emp_Email, string organization_Name, string password, string admin_Code)
         {
+            Emp_UserID = ID;
             Emp_FName = emp_FName;
             Emp_LName = emp_LName;
             Emp_Telephone_Number = emp_Telephone_Number;
@@ -24,6 +25,11 @@ namespace Finance_Tracking.Models
             Admin_Code = admin_Code;
         }
 
+        [Required(ErrorMessage = "You need to enter the code sent via email.")]
+        public string Code { get; set; }
+
+        public string Emp_UserID { get; set; }
+        
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "You need to enter your first name.")]
         [StringLength(50)]
