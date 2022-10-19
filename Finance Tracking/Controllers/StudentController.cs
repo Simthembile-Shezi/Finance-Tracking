@@ -2,18 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.SessionState;
+using static Data_Library.Business_Logic.Academic_RecordProcessor;
 using static Data_Library.Business_Logic.ApplicationProcessor;
 using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
+using static Data_Library.Business_Logic.Emails;
 using static Data_Library.Business_Logic.Enrolled_AtProcessor;
 using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
 using static Data_Library.Business_Logic.StudentProcessor;
-using static Data_Library.Business_Logic.Academic_RecordProcessor;
 
 namespace Finance_Tracking.Controllers
 {
@@ -38,84 +38,111 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterStudentInfo(Student model)
         {
+            if (model.Gender == "Select" || model.Marital_Status == "Select" || model.Title == "Select" || model.Race == "Select")
+            {
+                ViewBag.SelectionError = "Please select the required options";
+                return View(model);
+            }
+
             try
             {
-                if (model.Gender == "Select" || model.Marital_Status == "Select" || model.Title == "Select" || model.Race == "Select")
+                String FileExt;
+
+                HttpPostedFileBase Residential_Doc = model.Residential_Document;
+                if (Residential_Doc != null)
                 {
-                    ViewBag.SelectionError = "Please select the required options";
-                    return View(model);
-                }
-
-                try
-                {
-                    String FileExt;
-
-                    HttpPostedFileBase Residential_Doc = model.Residential_Document;
-                    if (Residential_Doc != null)
+                    FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
                     {
-                        FileExt = Path.GetExtension(Residential_Doc.FileName).ToUpper();
-                        if (FileExt.Equals(".PDF"))
-                        {
-                            //Convert HttpPostedFileBase to Byte[]
-                            Stream str = Residential_Doc.InputStream;
-                            BinaryReader Br = new BinaryReader(str);
-                            Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = Residential_Doc.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] Residential_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                            //Store the file content in Byte[] format on the model
-                            model.Upload_Residential_Document = Residential_Doc_FileDet;
-                        }
-                    }
-
-                    HttpPostedFileBase ID_Doc = model.Identity_Document;
-                    if (ID_Doc != null)
-                    {
-                        FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
-                        if (FileExt.Equals(".PDF"))
-                        {
-                            //Convert HttpPostedFileBase to Byte[]
-                            Stream stream = ID_Doc.InputStream;
-                            BinaryReader Binary = new BinaryReader(stream);
-                            Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
-
-                            //Store the file content in Byte[] format on the model
-                            model.Upload_Identity_Document = ID_Doc_FileDet;
-                        }
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Residential_Document = Residential_Doc_FileDet;
                     }
                 }
-                catch
+
+                HttpPostedFileBase ID_Doc = model.Identity_Document;
+                if (ID_Doc != null)
                 {
-                    ViewBag.UploadStatus = "Upload failed, please try again or contact the Finance Tracking System Admin";
-                    return View(model);
+                    FileExt = Path.GetExtension(ID_Doc.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream stream = ID_Doc.InputStream;
+                        BinaryReader Binary = new BinaryReader(stream);
+                        Byte[] ID_Doc_FileDet = Binary.ReadBytes((Int32)stream.Length);
+
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Identity_Document = ID_Doc_FileDet;
+                    }
                 }
+            }
+            catch
+            {
+                ViewBag.UploadStatus = "Upload failed, please try again or contact the Finance Tracking System Admin";
+                return View(model);
+            }
+            model.Student_Residential_Address = model.Street_Name + "; " + model.Sub_Town + "; " + model.City + "; " + model.Province + "; " + model.Zip_Code;
+            if (VerifyAccount(model.Student_Email, model.Student_FName + ", " + model.Student_LName))
+            {
+                Session["Verify"] = model;
+                return RedirectToAction("CreatePassword");
+            }
+            else
+            {
+                ViewBag.UploadStatus = "Email was not sent, please try again";
+                return View(model);
+            }
+            
+        }
+        public ActionResult CreatePassword()
+        {
+            Student password = (Student)Session["Verify"];
+            return View(password);
+        }
 
-
-                model.Student_Residential_Address = model.Street_Name + "; " + model.Sub_Town + "; " + model.City + "; " + model.Province + "; " + model.Zip_Code;
-
-                CreateStudent(model.Student_Identity_Number,
-                         model.Student_FName,
-                         model.Student_LName,
-                         model.Student_Nationality,
-                         model.Race,
-                         model.Title,
-                         model.Gender,
-                         model.Date_Of_Birth,
-                         model.Marital_Status,
-                         model.Student_Email,
-                         model.Student_Cellphone_Number,
-                         model.Student_Residential_Address,
-                         model.Upload_Identity_Document,
-                         model.Upload_Residential_Document,
-                         model.Password);
-
-                return RedirectToAction("Login", "Home");
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePassword(Student password)
+        {            
+            try
+            {
+                Student model = (Student)Session["Verify"];
+                if (password.Code.Equals(Session["Code"].ToString()))
+                {
+                    CreateStudent(model.Student_Identity_Number, model.Student_FName, model.Student_LName, model.Student_Nationality, model.Race, model.Title, model.Gender, model.Date_Of_Birth, model.Marital_Status,
+                       model.Student_Email, model.Student_Cellphone_Number, model.Student_Residential_Address, model.Upload_Identity_Document, model.Upload_Residential_Document, password.Password);
+                    return RedirectToAction("Login", "Home");
+                }
+                else
+                {
+                    ViewBag.RegistrationError = "Inncorrect code, please try again";
+                    return View(password);
+                }
             }
             catch
             {
                 ViewBag.RegistrationError = "You are already registered, if not please contact Finance.Tracking@outlook.com";
-                return View(model);
+                return View(password);
             }
-        }
 
+        }
+        private bool VerifyAccount(string email, string name)
+        {
+            string sub = "Account Verification";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account";
+            return (SendEmail(email, name, sub, body));
+        }
+        private int RandomCode()
+        {
+            Random random = new Random();
+            int code = random.Next(1000, 9999);
+            Session["Code"] = code;
+            return code;
+        }
         // GET: Student/MaintainStudentDocs
         public ActionResult MaintainStudentDocs()
         {
@@ -234,13 +261,13 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
-        
-        public ActionResult ViewInstitutionInfo(string id)
+
+        public ActionResult ViewInstitutionInfo(string id)      //Student number
         {
             Enrolled_At enrolled = GetEnrolled_At(id);
             return View(enrolled);
         }
-        
+
         public ActionResult RegisterInstitutionInfo()
         {
             Enrolled_At enrolled = new Enrolled_At();
@@ -276,7 +303,7 @@ namespace Finance_Tracking.Controllers
             }
 
         }
-        
+
         public ActionResult EditInstitutionInfo(string id)
         {
             Enrolled_At enrolled = GetEnrolled_At(id);
@@ -288,20 +315,20 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditInstitutionInfo(Enrolled_At model)
         {
-            try
+            //try
             {
                 Student student = GetLoginStudent(Session["Student"].ToString());
                 model.Study_Residential_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-                UpdateEnrolledDetails(model.Student_Number, model.Student_Identity_Number, model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
+                UpdateEnrolledDetails(model.Student_Number, student.Student_Identity_Number, model.Institution_Name, model.Qualification, model.Student_Email, model.Study_Residential_Address);
                 return RedirectToAction("ViewInstitutionInfo", new { id = model.Student_Number });
             }
-            catch
-            {
-                return View(model);
-            }
+            //catch
+            //{
+            //    return View(model);
+            //}
 
         }
-        
+
         public ActionResult DeleteInstitutionInfo(string id)
         {
             Enrolled_At enrolled = GetEnrolled_At(id);
@@ -326,39 +353,47 @@ namespace Finance_Tracking.Controllers
             }
 
         }
-
-        public ActionResult ViewFinacialStatement(string id)
+        public ActionResult ViewFinacialStatements(string id)
         {
+            var list = GetStudentFinRec(id);
             Enrolled_At enrolled = GetEnrolled_At(id);
-            Finacial_Record record = new Finacial_Record();
-            record.Student_Number = enrolled.Student_Number;
-            return View(record);
-        }
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ViewFinacialStatement(Finacial_Record model)
-        {
-            var item = GetStudentFinRec(model.Student_Number, model.Academic_Year);
-            if (item == null)
+            foreach (var item in list)
             {
-                return View(model);
+                Finacial_Record record = new Finacial_Record(item.Student_Number, item.Academic_Year, item.Balance_Amount, item.Upload_Statement, item.Funding_Status, item.Request_Funds);
+                enrolled.Finacial_Records.Add(record);
             }
-            Finacial_Record record = new Finacial_Record(item.Student_Number, item.Academic_Year, item.Balance_Amount, item.Upload_Statement, item.Funding_Status, item.Request_Funds);
-            Session["Record"] = record;
-            return View(record);
+            Session["Records"] = enrolled;
+            return View(enrolled);
         }
-        
-        // GET: Student/DownloadBursaryAgreement/Application_ID
-        public FileResult DownloadFinacialStatement()
-        {
-            Finacial_Record item = (Finacial_Record)Session["Record"];
+        //public ActionResult ViewFinacialStatement(string id)    //Academic year
+        //{
+        //    Enrolled_At enrolled = (Enrolled_At)Session["Records"];
+        //    foreach (var item in enrolled.Finacial_Records)
+        //    {
+        //        if (item.Academic_Year.Equals(id))
+        //        {
+        //            return View(item);
+        //        }
+        //    }
+        //    return RedirectToAction("Error", "Home");
+        //}
 
-            if (item.Upload_Statement == null)
+        // GET: Student/DownloadBursaryAgreement/Application_ID
+        public FileResult DownloadFinacialStatement(string id)
+        {
+            Enrolled_At enrolled = (Enrolled_At)Session["Records"];
+            foreach (var item in enrolled.Finacial_Records)
             {
-                return null;
+                if (item.Academic_Year.Equals(id))
+                {
+                    if (item.Upload_Statement == null)
+                    {
+                        return null;
+                    }
+                    return File(item.Upload_Statement, "application/pdf", item.Student_Number + ".pdf");
+                }
             }
-            return File(item.Upload_Statement, "application/pdf", item.Student_Number + ".pdf");
+            return null;
         }
         #endregion
 
@@ -527,7 +562,7 @@ namespace Finance_Tracking.Controllers
                     ViewBag.FileStatusFailed = "No file was selected";
                     return View(application);
                 }
-                
+
             }
             catch
             {
@@ -550,7 +585,7 @@ namespace Finance_Tracking.Controllers
                 Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
                 model.Applications.Add(application);
             }
-            if(model.Applications.Count == 0)
+            if (model.Applications.Count == 0)
             {
                 ViewBag.NoApprovedApplications = "No applications have been approved currently, please check the Track funding section";
             }

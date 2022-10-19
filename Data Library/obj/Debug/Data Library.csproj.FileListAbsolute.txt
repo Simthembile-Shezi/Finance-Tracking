@@ -119,3 +119,4 @@ C:\Users\s219121923\Documents\Project\Finance-Tracking\Data Library\obj\Debug\Da
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Data Library\obj\Debug\Data Library.csproj.CopyComplete
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Data Library\obj\Debug\Data Library.dll
 C:\Users\s219121923\Documents\Project\Finance-Tracking\Data Library\obj\Debug\Data Library.pdb
+C:\Users\s221517979\Documents\Git\Finance-Tracking\Data Library\obj\Debug\Data Library.csproj.AssemblyReference.cache

@@ -105,15 +105,22 @@ namespace Data_Library.Business_Logic
             return SqlDataAccess.SaveData(sql, data);
         }
 
-        public static Finacial_RecordDB GetStudentFinRec(string studentID, string AY)
+        public static List<Finacial_RecordDB> GetStudentFinRec(string studentNum)
         {
             string sql = @"select Student_Number, Academic_Year, Balance_Amount, Upload_Statement, Funding_Status, Request_Funds
                            from dbo.[Finacial Records]
-                           where Student_Number = '" + studentID + "' and Academic_Year = '" + AY + "'; ";
+                           where Student_Number = '" + studentNum + "';";
+
+            return SqlDataAccess.LoadData<Finacial_RecordDB>(sql);
+        }
+        public static Finacial_RecordDB GetStudentFinRec(string studentNum, string AY)
+        {
+            string sql = @"select Student_Number, Academic_Year, Balance_Amount, Upload_Statement, Funding_Status, Request_Funds
+                           from dbo.[Finacial Records]
+                           where Student_Number = '" + studentNum + "' and Academic_Year = '" + AY + "'; ";
 
             return SqlDataAccess.SingleData<Finacial_RecordDB>(sql);
         }
-
         //public static List<FunderEmployeeDB> GetFundersEmployees(string name)
         //{
         //    var list = new List<FunderEmployeeDB>();

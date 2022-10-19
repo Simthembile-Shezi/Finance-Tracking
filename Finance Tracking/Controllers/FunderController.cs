@@ -8,6 +8,7 @@ using static Data_Library.Business_Logic.Bursar_FundProcessor;
 using static Data_Library.Business_Logic.BursaryProcessor;
 using static Data_Library.Business_Logic.FunderEmpProcessor;
 using static Data_Library.Business_Logic.FunderProcessor;
+using static Data_Library.Business_Logic.Emails;
 
 namespace Finance_Tracking.Controllers
 {
@@ -112,6 +113,19 @@ namespace Finance_Tracking.Controllers
                 return View(employee);
             }
 
+        }
+        private bool VerifyAccount(string email, string name)
+        {
+            string sub = "Account Verification";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account";
+            return (SendEmail(email, name, sub, body));
+        }
+        private int RandomCode()
+        {
+            Random random = new Random();
+            int code = random.Next(1000, 9999);
+            Session["Code"] = code;
+            return code;
         }
         // GET: Funder/MaintainFunder
         public ActionResult MaintainFunder()

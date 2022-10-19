@@ -1,0 +1,60 @@
+﻿@model Finance_Tracking.Models.Enrolled_At
+
+@{
+    ViewBag.Title = "ViewFinacialStatements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Finacial Statements</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Finacial_Record.Academic_Year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Finacial_Record.Balance_Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Finacial_Record.Funding_Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Finacial_Record.Request_Funds)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Finacial_Records)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Academic_Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance_Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Funding_Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Request_Funds)
+            </td>
+            <td>
+                @Html.ActionLink("Download Finacial Statement", "DownloadFinacialStatement", new { id = item.Academic_Year })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="container-btn">
+    <div class="left-btn-flex">
+        <a href='@Url.Action("ViewInstitutionInfo", "Student", new { id = Model.Student_Number })'>
+            <div>
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
+            </div>
+        </a>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

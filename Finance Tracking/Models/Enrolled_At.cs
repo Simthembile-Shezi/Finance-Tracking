@@ -84,6 +84,8 @@ namespace Finance_Tracking.Models
 
         public virtual Student Student { get; set; }
 
+        public virtual Finacial_Record Finacial_Record { get; set; }
+
         public List<Finacial_Record> Finacial_Records { get; set; }
     }
 }

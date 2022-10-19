@@ -45,7 +45,7 @@ namespace Data_Library.Business_Logic
                                    Institution_Name = @Institution_Name,
                                    Qualification = @Qualification,
                                    Student_Email = @Student_Email,
-                                   Study_Residential_Address = @Study_Residential_Address,
+                                   Study_Residential_Address = @Study_Residential_Address
                                where Student_Number = @Student_Number;";
 
             return SqlDataAccess.SaveData(sql, data);

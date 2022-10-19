@@ -33,6 +33,8 @@ namespace Finance_Tracking.Models
             Applications = new List<Application>();
             Enrolled_Ats = new List<Enrolled_At>();
         }
+        [Required(ErrorMessage = "You need to enter the code sent via email.")]
+        public string Code { get; set; } 
 
         [Key]
         [Display(Name = "Identity Number")]

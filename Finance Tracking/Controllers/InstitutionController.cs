@@ -9,6 +9,7 @@ using static Data_Library.Business_Logic.Finacial_RecordProcessor;
 using static Data_Library.Business_Logic.InstitutionEmpProcessor;
 using static Data_Library.Business_Logic.InstitutionProcessor;
 using static Data_Library.Business_Logic.Enrolled_AtProcessor;
+using static Data_Library.Business_Logic.Emails;
 
 namespace Finance_Tracking.Controllers
 {
@@ -113,6 +114,19 @@ namespace Finance_Tracking.Controllers
             //{
             //    return View();
             //}
+        }
+        private bool VerifyAccount(string email, string name)
+        {
+            string sub = "Account Verification";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account";
+            return (SendEmail(email, name, sub, body));
+        }
+        private int RandomCode()
+        {
+            Random random = new Random();
+            int code = random.Next(1000, 9999);
+            Session["Code"] = code;
+            return code;
         }
         // GET: Institution/Edit/5
         public ActionResult MaintainInstitution()

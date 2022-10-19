@@ -278,6 +278,8 @@
     <Content Include="Views\Institution\MaintainEmployee.cshtml" />
     <Content Include="Views\Institution\DeleteEmployee.cshtml" />
     <Content Include="Views\Student\ShowApprovedApplications.cshtml" />
+    <Content Include="Views\Student\ViewFinacialStatements.cshtml" />
+    <Content Include="Views\Student\CreatePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Library\Data Library.csproj">
