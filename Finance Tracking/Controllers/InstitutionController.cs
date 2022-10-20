@@ -190,6 +190,13 @@ namespace Finance_Tracking.Controllers
             {
                 if (item.Student_Number.Equals(id))
                 {
+                    string[] address = (item.Study_Residential_Address).Split(';');
+                    item.Street_Name = address[0];
+                    item.City = address[1];
+                    item.Sub_Town = address[2];
+                    item.Province = address[3];
+                    item.Zip_Code = address[4];
+
                     Session["enrolled"] = item;
                     return View(item);
                 }

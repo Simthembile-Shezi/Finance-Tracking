@@ -87,15 +87,15 @@ namespace Finance_Tracking.Models
         [Required(ErrorMessage = "You need to enter your cellphone number.")]
         public string Student_Cellphone_Number { get; set; }
 
-        [Display(Name = "Street Name")]
+        [Display(Name = "Address 1")]
         [Required(ErrorMessage = "You need to enter the street name.")]
         public string Street_Name { get; set; }
 
-        [Display(Name = "Sub Town")]
-        [Required(ErrorMessage = "You need to enter the sub town name.")]
+        [Display(Name = "Address 2")]
+        [Required(ErrorMessage = "You need to enter the suburb name.")]
         public string Sub_Town { get; set; }
 
-        [Display(Name = "City")]
+        [Display(Name = "Address 3")]
         [Required(ErrorMessage = "You need to enter the city name.")]
         public string City { get; set; }
 
@@ -106,6 +106,7 @@ namespace Finance_Tracking.Models
         [Display(Name = "Zip Code")]
         [Required(ErrorMessage = "You need to enter zip code.")]
         public string Zip_Code { get; set; }
+                
         public string Student_Residential_Address { get; set; }
 
         [DataType(DataType.Upload)]

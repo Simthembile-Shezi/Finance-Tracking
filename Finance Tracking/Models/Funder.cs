@@ -55,15 +55,15 @@ namespace Finance_Tracking.Models
         [StringLength(50)]
         public string Funder_Telephone_Number { get; set; }
 
-        [Display(Name = "Street Name")]
+        [Display(Name = "Address 1")]
         [Required(ErrorMessage = "You need to enter the street name.")]
         public string Street_Name { get; set; }
 
-        [Display(Name = "Sub Town")]
-        [Required(ErrorMessage = "You need to enter the sub town name.")]
+        [Display(Name = "Address 2")]
+        [Required(ErrorMessage = "You need to enter the suburb name.")]
         public string Sub_Town { get; set; }
 
-        [Display(Name = "City")]
+        [Display(Name = "Address 3")]
         [Required(ErrorMessage = "You need to enter the city name.")]
         public string City { get; set; }
 
@@ -75,15 +75,15 @@ namespace Finance_Tracking.Models
         [Required(ErrorMessage = "You need to enter zip code.")]
         public string Zip_Code { get; set; }
 
-        [Display(Name = "Postal Box")]
+        [Display(Name = "Address 1")]
         [Required(ErrorMessage = "You need to enter the street name.")]
         public string Postal_box { get; set; }
 
-        [Display(Name = "Town")]
-        [Required(ErrorMessage = "You need to enter the sub town name.")]
+        [Display(Name = "Address 2")]
+        [Required(ErrorMessage = "You need to enter the suburb name.")]
         public string Town { get; set; }
 
-        [Display(Name = "City")]
+        [Display(Name = "Address 3")]
         [Required(ErrorMessage = "You need to enter the city name.")]
         public string City_Post { get; set; }
 
