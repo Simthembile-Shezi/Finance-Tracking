@@ -7,7 +7,7 @@
 
 <h2>Delete Profile</h2>
 
-<h3>Are you sure you want to delete profile for @Html.DisplayFor(model => model.Student_FName) @Html.DisplayFor(model => model.Student_LName)?</h3>
+<h3>Would you like to delete the profile for @Html.DisplayFor(model => model.Student_FName) @Html.DisplayFor(model => model.Student_LName)?</h3>
 <div>
     @using (Html.BeginForm())
     {
@@ -24,7 +24,7 @@
             </div>
             <div class="right-btn-flex">
                 <div>
-                    <input type="submit" name="selection" value="Delete" class="btn btn-default" />
+                    <input type="submit" name="selection" value="Yes" class="btn btn-default" />
                 </div>
             </div>
         </div>

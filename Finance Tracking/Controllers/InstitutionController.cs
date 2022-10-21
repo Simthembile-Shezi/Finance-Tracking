@@ -51,11 +51,16 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterInstitution(Institution model)
         {
+            model.Institution_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+            model.Institution_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
+            if (model.Institution_Postal_Address == null)
                 model.Institution_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+            else
                 model.Institution_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
-                Session["Institution"] = model;
-                Session["Organization_Name"] = model.Institution_Name;
-                return RedirectToAction("AdminInstitutionEmployee");
+
+            Session["Institution"] = model;
+            Session["Organization_Name"] = model.Institution_Name;
+            return RedirectToAction("AdminInstitutionEmployee");
         }
 
         public ActionResult AdminInstitutionEmployee()
@@ -69,7 +74,8 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AdminInstitutionEmployee(Institution_Employee employee)
         {
-            if (VerifyAccount(employee.Emp_Email, employee.Emp_FName + ", " + employee.Emp_LName))
+            Institution model = (Institution)Session["Institution"];
+            if (VerifyAccount(employee.Emp_Email, employee.Emp_FName + ", " + employee.Emp_LName, model))
             {
                 Session["Verify"] = employee;
                 return RedirectToAction("CreatePassword");
@@ -98,7 +104,7 @@ namespace Finance_Tracking.Controllers
                 if (institution.Institution_Employee.Code.Equals(Session["Code"].ToString()))
                 {
                     try
-                    { 
+                    {
                         //Insert the institution on the database
                         CreateInstitution(model.Institution_Name, model.Institution_Physical_Address, model.Institution_Postal_Address, model.Institution_Telephone_Number, model.Institution_Email_Address);
                         //Insert the Employee on the database
@@ -126,10 +132,10 @@ namespace Finance_Tracking.Controllers
             }
         }
 
-        private bool VerifyAccount(string email, string name)
+        private bool VerifyAccount(string email, string name, Institution model)
         {
             string sub = "Account Verification";
-            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account. Also note that this will be your admin code, keep it safe and hidden.";
+            string body = $"Dear {name}\n\nPlease enter this code {RandomCode()} to verify your account as an Institution Admin user. Also note that this will be your admin code, keep it safe and hidden.";
             return (SendEmail(email, name, sub, body));
         }
         private int RandomCode()
@@ -138,8 +144,8 @@ namespace Finance_Tracking.Controllers
             int code = random.Next(1000, 9999);
             Session["Code"] = code;
             return code;
-        }       
-        
+        }
+
         #endregion
 
         #region View all funded students, update finacial and academic records 
@@ -169,8 +175,8 @@ namespace Finance_Tracking.Controllers
                 }
             }
             return View();
-        }
         // GET: Institution/ViewAllStudents
+        }
         public ActionResult ViewAllStudents()
         {
             Institution students = new Institution();
@@ -414,7 +420,7 @@ namespace Finance_Tracking.Controllers
             }
             return RedirectToAction("ViewEmployees");
         }
-        
+
         public ActionResult AddEmployee()
         {
             Institution_Employee model = new Institution_Employee();

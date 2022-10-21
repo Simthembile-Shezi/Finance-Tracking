@@ -39,6 +39,7 @@ namespace Finance_Tracking.Models
         [StringLength(50)]
         public string Bursary_Name { get; set; }
 
+        [Required]
         [Display(Name = "Opening Date")]
         [DataType(DataType.Date)]
         public DateTime Start_Date { get; set; }
@@ -48,14 +49,17 @@ namespace Finance_Tracking.Models
         [StringLength(50)]
         public string Funder_Name { get; set; }
 
+        [Required]
         [Display(Name = "Closing Date")]
         [DataType(DataType.Date)]
         public DateTime? End_Date { get; set; }
 
+        [Required]
         [Display(Name = "Bursary Amount")]
         [Column(TypeName = "money")]
         public decimal? Bursary_Amount { get; set; }
 
+        [Required]
         [Display(Name = "Available Bursaries")]
         [Column(TypeName = "numeric")]
         public string Number_Available { get; set; }

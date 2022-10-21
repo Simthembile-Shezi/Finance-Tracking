@@ -33,8 +33,9 @@ namespace Finance_Tracking.Models
             Applications = new List<Application>();
             Enrolled_Ats = new List<Enrolled_At>();
         }
+
         [Required(ErrorMessage = "You need to enter the code sent via email.")]
-        public string Code { get; set; } 
+        public string Code { get; set; }
 
         [Key]
         [Display(Name = "Identity Number")]
@@ -67,6 +68,7 @@ namespace Finance_Tracking.Models
 
         [Display(Name = "Date of Birth")]
         [DataType(DataType.Date)]
+
         [Required(ErrorMessage = "You need to enter your date of birth.")]
         public DateTime Date_Of_Birth { get; set; }
 
@@ -106,7 +108,7 @@ namespace Finance_Tracking.Models
         [Display(Name = "Zip Code")]
         [Required(ErrorMessage = "You need to enter zip code.")]
         public string Zip_Code { get; set; }
-                
+
         public string Student_Residential_Address { get; set; }
 
         [DataType(DataType.Upload)]

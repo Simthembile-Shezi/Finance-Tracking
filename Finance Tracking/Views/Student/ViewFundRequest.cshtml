@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>View Fund Request</h2>
+<h2>Fund Request</h2>
 
 <div>
     <dl class="dl-horizontal">
@@ -30,7 +30,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Approved_Funds)
+            R @Html.DisplayFor(model => model.Approved_Funds)
         </dd>
 
     </dl>
@@ -39,7 +39,7 @@
     <div class="left-btn-flex">
         <a href='@Url.Action("ShowApprovedApplications", "Student")'>
             <div>
-                <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
             </div>
         </a>
     </div>

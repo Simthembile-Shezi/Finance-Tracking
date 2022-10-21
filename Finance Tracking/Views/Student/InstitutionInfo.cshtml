@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>InstitutionInfo</h2>
+<h2>Enrolled Institutions</h2>
 @Html.AntiForgeryToken()
 <table class="table">
     <tr>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Qualification)
             </td>
             <td>
-                @Html.ActionLink("View", "ViewInstitutionInfo", new { id = item.Student_Number })
+                @Html.ActionLink("Institution Info", "ViewInstitutionInfo", new { id = item.Student_Number })
             </td>
         </tr>
     }
@@ -50,7 +50,7 @@
     <div class="right-btn-flex">
         <a href='@Url.Action("RegisterInstitutionInfo", "Student")'>
             <div>
-                <input type="button" name="selection" value="New Institution" class="btn btn-default" />
+                <input type="button" name="selection" value="Add Institution" class="btn btn-default" />
             </div>
         </a>
     </div>

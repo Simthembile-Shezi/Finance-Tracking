@@ -4,7 +4,7 @@
     ViewBag.Title = "ViewBursaries";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<h2>Bursaries</h2>
 @Html.AntiForgeryToken()
 <table class="table">
     <tr>
@@ -51,7 +51,7 @@
     <div class="left-btn-flex">
         <a href='@Url.Action("Index", "Student")'>
             <div>
-                <input type="button" name="selection" value="Cancel" class="btn btn-default" />
+                <input type="button" name="selection" value="Back" class="btn btn-default" />
             </div>
         </a>
     </div>
