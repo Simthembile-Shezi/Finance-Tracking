@@ -33,7 +33,7 @@
                 @Html.DisplayFor(modelItem => item.Student_Email)
             </td>
             <td>
-                @Html.ActionLink("Details", "ViewStudent", new { id = item.Student_Number })
+                @Html.ActionLink("Request Funds", "RequestStudentFunds", new { id = item.Student_Number })
             </td>
         </tr>
     }

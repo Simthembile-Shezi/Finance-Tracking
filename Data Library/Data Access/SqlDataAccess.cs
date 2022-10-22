@@ -22,7 +22,7 @@ namespace Data_Library.Data_Access
                 return cnn.Query<T>(sql).ToList();
             }
         }
-
+        
         public static T SingleData<T>(string sql)
         {
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))

@@ -56,7 +56,7 @@
         @Html.HiddenFor(Model => Model.Emp_Email)
         <div class="container-btn">
             <div class="left-btn-flex">
-                <a href='@Url.Action("EmployeeDetails", "Funder", new {id = Model.Emp_UserID})'>
+                <a href='@Url.Action("ViewEmployees", "Funder", new {id = Model.Emp_UserID})'>
                     <div>
                         <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                     </div>
@@ -64,7 +64,7 @@
             </div>
             <div class="right-btn-flex">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Delete" class="btn btn-default" />
+                    <input type="submit" value="Yes" class="btn btn-default" />
                 </div>
             </div>
         </div>

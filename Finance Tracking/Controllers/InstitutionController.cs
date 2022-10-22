@@ -180,10 +180,10 @@ namespace Finance_Tracking.Controllers
         // GET: Institution/Delete/5
         public ActionResult RequestStudentFunds(string id)
         {
-            FundedStudents student = (FundedStudents)Session["funded"];
+            FundedStudents student = Student(id);
             Finacial_Record record = new Finacial_Record(student.Student_Number,null,null,null,student.Funding_Status, null);
             return View(record);
-        }
+        }        
 
         // POST: Institution/Delete/5
         [HttpPost]
@@ -194,7 +194,7 @@ namespace Finance_Tracking.Controllers
             {
                 requestFunds(model.Student_Number, model.Academic_Year, model.Request_Funds);
 
-                return RedirectToAction("ViewStudent", new { id = model.Student_Number });
+                return RedirectToAction("ViewFundedStudents");
             }
             catch
             {
@@ -445,6 +445,20 @@ namespace Finance_Tracking.Controllers
             return RedirectToAction("InstitutionDetails");
         }
         #endregion
+
+        //new
+        private FundedStudents Student(string id)
+        {
+            EnrolledStudentsViewModel students = (EnrolledStudentsViewModel)Session["students"];
+            foreach (var item in students.Students)
+            {
+                if (item.Student_Number.Equals(id))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
 
         private Institution GetInstitutionByName(string name)
         {
