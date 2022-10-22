@@ -1,9 +1,6 @@
 ﻿using Data_Library.Data_Access;
 using Data_Library.ModelsDB;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data_Library.Business_Logic
 {
@@ -42,26 +39,24 @@ namespace Data_Library.Business_Logic
         }
 
         public static int provideStudentResult(string studentNum, string AY, string Quali, decimal? avarageMarks, byte[] transcript)
-       {
+        {
             Academic_RecordDB data = new Academic_RecordDB();
             data.Student_Number = studentNum;
             data.Academic_Year = AY;
-
-            if (Quali != null)
-                data.Qualification = Quali;
+            data.Qualification = Quali;
             if (avarageMarks != null)
                 data.Avarage_Marks = avarageMarks;
             if (transcript != null)
                 data.Upload_Transcript = transcript;
 
             string sql = @"update dbo.[Academic Records]
-                                set Qualification =@Qualification,
-                                    Avarage_Marks =@Avarage_Marks,
-                                    Upload_Transcript =@Upload_Transcript
+                                set Avarage_Marks = @Avarage_Marks,
+                                    Upload_Transcript = @Upload_Transcript
                                 where Student_Number = @Student_Number and
+                                      Qualification = @Qualification and                                    
                                       Academic_Year = @Academic_Year;";
             return SqlDataAccess.SaveData(sql, data);
-       }
+        }
 
         public static int DeleteAcademicRecord(string studentNum, string AY)
         {

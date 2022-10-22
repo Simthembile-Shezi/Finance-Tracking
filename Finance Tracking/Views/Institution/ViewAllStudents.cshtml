@@ -16,16 +16,10 @@
             @Html.DisplayNameFor(model => model.Enrolled_At.Student_Identity_Number)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Enrolled_At.Institution_Name)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Enrolled_At.Qualification)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Enrolled_At.Student_Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enrolled_At.Study_Residential_Address)
         </th>
         <th></th>
     </tr>
@@ -40,19 +34,13 @@
                 @Html.DisplayFor(modelItem => item.Student_Identity_Number)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Institution_Name)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Qualification)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Student_Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Study_Residential_Address)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "ViewEnrolledStudent", new { id = item.Student_Number })
+                @Html.ActionLink("Student Details", "ViewEnrolledStudent", new { id = item.Student_Number })
             </td>
         </tr>
     }
