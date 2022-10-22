@@ -5,20 +5,31 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Upload Finacial Statement</h2>
+<h2>Finacial Statement</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("UploadFinacialStatement", "Institution", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Balance_Amount, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.Balance_Amount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Balance_Amount, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Student_Number)
+        <fieldset>
+            <legend>For the year</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Academic_Year, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Academic_Year, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Academic_Year, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Balance_Amount, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Balance_Amount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Balance_Amount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
 
         <fieldset class="documents-fieldset">
             <legend class="documents-legend"> @Html.LabelFor(model => model.Upload_Finacial_Statement)</legend>

@@ -148,7 +148,7 @@ namespace Finance_Tracking.Controllers
 
         #endregion
 
-        #region View all funded students, update finacial and academic records 
+        #region View all funded students
         // GET: Institution/ViewFundedStudents
         public ActionResult ViewFundedStudents()
         {
@@ -156,7 +156,7 @@ namespace Finance_Tracking.Controllers
             var list = fundedStudents(Session["Organization_Name"].ToString());
             foreach (var item in list)
             {
-                FundedStudents funded = new FundedStudents(item.Student_Number, item.Student_Identity_Number, item.Student_Email, item.Institution_Name, item.Application_Status);
+                FundedStudents funded = new FundedStudents(item.Student_Number, item.Student_Identity_Number, item.Student_Email, item.Institution_Name, item.Funding_Status);
                 students.Students.Add(funded);
             }
             Session["students"] = students;
@@ -175,8 +175,36 @@ namespace Finance_Tracking.Controllers
                 }
             }
             return View();
-        // GET: Institution/ViewAllStudents
         }
+        
+        // GET: Institution/Delete/5
+        public ActionResult RequestStudentFunds(string id)
+        {
+            FundedStudents student = (FundedStudents)Session["funded"];
+            Finacial_Record record = new Finacial_Record(student.Student_Number,null,null,null,student.Funding_Status, null);
+            return View(record);
+        }
+
+        // POST: Institution/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RequestStudentFunds(Finacial_Record model)
+        {
+            try
+            {
+                requestFunds(model.Student_Number, model.Academic_Year, model.Request_Funds);
+
+                return RedirectToAction("ViewStudent", new { id = model.Student_Number });
+            }
+            catch
+            {
+                return View(model);
+            }
+        }
+        #endregion
+
+        #region View all students, update finacial and academic records 
+        // GET: Institution/ViewAllStudents
         public ActionResult ViewAllStudents()
         {
             Institution students = new Institution();
@@ -188,7 +216,8 @@ namespace Finance_Tracking.Controllers
             }
             Session["AllStudents"] = students;
             return View(students);
-        }// GET: Institution/ViewStudent/123456789
+        }
+        // GET: Institution/ViewEnrolledStudent/123456789
         public ActionResult ViewEnrolledStudent(string id) //return a student from
         {
             Institution students = (Institution)Session["AllStudents"];
@@ -209,16 +238,15 @@ namespace Finance_Tracking.Controllers
             }
             return View();
         }
-        // GET: Institution/Delete/5
+        // GET: Institution/UploadFinacialStatement/5
         public ActionResult UploadFinacialStatement(string id)
         {
             Enrolled_At student = (Enrolled_At)Session["enrolled"];
-            Finacial_Record record = new Finacial_Record();
-            record.Student_Number = student.Student_Number;
+            Finacial_Record record = new Finacial_Record(student.Student_Number, null, null, null, null, null);
             return View(record);
         }
 
-        // POST: Institution/Delete/5
+        // POST: Institution/UploadFinacialStatement/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult UploadFinacialStatement(Finacial_Record model)
@@ -238,51 +266,24 @@ namespace Finance_Tracking.Controllers
                     model.Upload_Statement = loadStatement_Doc_FileDet;
                 }
                 //Set the academic year
-
                 uploadFinacialStatement(model.Student_Number, model.Academic_Year, model.Balance_Amount, model.Upload_Statement);
 
-                return RedirectToAction("ViewStudent", new { id = model.Student_Number });
+                return RedirectToAction("ViewEnrolledStudent", new { id = model.Student_Number });
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
-        // GET: Institution/Delete/5
-        public ActionResult RequestStudentFunds(string id)
-        {
-            FundedStudents student = (FundedStudents)Session["funded"];
-            Finacial_Record record = new Finacial_Record();
-            record.Student_Number = student.Student_Number;
-            return View(record);
-        }
-
-        // POST: Institution/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RequestStudentFunds(Finacial_Record model)
-        {
-            try
-            {
-                requestFunds(model.Student_Number, model.Academic_Year, model.Request_Funds);
-
-                return RedirectToAction("UploadFinacialStatement", new { id = model.Student_Number });
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        // GET: Institution/Delete/5
+        // GET: Institution/ProvideStudentResult/5
         public ActionResult ProvideStudentResult(string id)
         {
             Enrolled_At student = (Enrolled_At)Session["enrolled"];
-            Academic_Record record = new Academic_Record();
-            record.Student_Number = student.Student_Number;
+            Academic_Record record = new Academic_Record(student.Student_Number, null, student.Qualification, null, null);
             return View(record);
         }
 
-        // POST: Institution/Delete/5
+        // POST: Institution/ProvideStudentResult/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ProvideStudentResult(Academic_Record model)
@@ -303,11 +304,11 @@ namespace Finance_Tracking.Controllers
                 }
                 provideStudentResult(model.Student_Number, model.Academic_Year, model.Qualification, model.Avarage_Marks, model.Upload_Transcript);
 
-                return RedirectToAction("ViewStudent", new { id = model.Student_Number });
+                return RedirectToAction("ViewEnrolledStudent", new { id = model.Student_Number });
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
         #endregion

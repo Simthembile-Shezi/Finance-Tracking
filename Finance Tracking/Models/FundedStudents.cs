@@ -19,7 +19,7 @@ namespace Finance_Tracking.Models
             Student_Identity_Number = StudentID;
             Student_Email = Email;
             Institution_Name = InstName;
-            Application_Status = Status;
+            Funding_Status = Status;
         }
         [Display(Name = "Student Number")]
         public string Student_Number { get; set; }
@@ -34,7 +34,7 @@ namespace Finance_Tracking.Models
         public string Student_Email { get; set; }
 
         [Display(Name = "Funding Status")]
-        public string Application_Status { get; set; }
+        public string Funding_Status { get; set; }
 
         //public virtual Bursar_Fund Bursar_Funds { get; set; }
         //public virtual Bursary Bursary { get; set; }

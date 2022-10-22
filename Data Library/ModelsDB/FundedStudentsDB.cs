@@ -12,7 +12,7 @@ namespace Data_Library.ModelsDB
         public string Student_Identity_Number { get; set; }  
         public string Student_Email { get; set; }      
         public string Institution_Name { get; set; }
-        public string Application_Status { get; set; }
+        public string Funding_Status { get; set; }
 
         //public virtual Bursar_FundDB Bursar_Funds { get; set; }
         //public virtual BursaryDB Bursary { get; set; }

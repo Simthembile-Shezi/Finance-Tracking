@@ -75,10 +75,10 @@ namespace Data_Library.Business_Logic
 
         public static List<FundedStudentsDB> fundedStudents(string Ins_Name)
         {
-            string sql = @"select E.Student_Number, E.Student_Identity_Number, E.Student_Email, E.Institution_Name, A.Application_Status
-                           from (dbo.[Enrolled At] AS E JOIN [dbo].[Application] AS A ON E.Student_Identity_Number=A.Student_Identity_Number)
-                           where A.Application_Status = 'Approved' and
-                                 E.Institution_Name = '"+Ins_Name+"';";
+            string sql = @"select E.Student_Number, E.Student_Identity_Number, E.Student_Email, E.Institution_Name, B.Funding_Status
+                           from (dbo.[Enrolled At] AS E JOIN [dbo].[Application] AS A ON E.Student_Identity_Number = A.Student_Identity_Number)
+                                JOIN dbo.[Bursar Funds] AS B ON A.Application_ID = B.Application_ID
+                           where B.Funding_Status = 'Funded' and E.Institution_Name = '" + Ins_Name+"';";
 
             return SqlDataAccess.LoadData<FundedStudentsDB>(sql);
         }
