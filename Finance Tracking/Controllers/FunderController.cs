@@ -194,6 +194,8 @@ namespace Finance_Tracking.Controllers
         #endregion
 
         #region View all applications, select one and review if needed
+
+        #region old code where first had to view all bursaries
         // GET: Funder/ViewApplications
         public ActionResult ViewApplications(string id)
         {
@@ -226,37 +228,8 @@ namespace Finance_Tracking.Controllers
             }
             return View(model);
         }
+        #endregion
 
-        public ActionResult ViewApplication(string id)
-        {
-            #region
-            //public ActionResult ViewApplication(Bursary model)
-            //{
-            //    var list = viewApplications(model.ApplicationView.Application_ID);
-            //    foreach (var item in list)
-            //    {
-            //        if (item.Application_ID.Equals(model.ApplicationView.Application_ID))
-            //        {
-            //            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-            //                item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-            //            //bursary.ApplicationViews.Add(application);
-            //            return View(application);
-            //        }
-            //    }
-            //    return RedirectToAction("Error", "Home");
-            //}
-            #endregion
-
-            var item = viewApplications(id);
-            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status,item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-                   item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-            
-            if(item.Upload_Signed_Agreement == null)
-            {
-                ViewBag.Agreement = "Student has uploaded the signed bursary agreement";
-            }            
-            return View(application);
-        }
         public ActionResult ViewAllApplications()      //using funder name
         {
             string id = Session["Organization_Name"].ToString();
@@ -290,7 +263,20 @@ namespace Finance_Tracking.Controllers
              * and disregarded the rest ID's in the search
              */
             return View(result);
-            //return View(model);
+        }
+        public ActionResult ViewApplication(string id)
+        {
+
+
+            var item = viewApplications(id);
+            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                   item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+
+            if (item.Upload_Signed_Agreement == null)
+            {
+                ViewBag.Agreement = "Student has uploaded the signed bursary agreement";
+            }
+            return View(application);
         }
         // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)
