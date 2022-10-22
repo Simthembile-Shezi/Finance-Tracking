@@ -40,7 +40,14 @@
                 @Html.DisplayFor(modelItem => item.Request_Funds)
             </td>
             <td>
-                @Html.ActionLink("Download Finacial Statement", "DownloadFinacialStatement", new { id = item.Academic_Year })
+                @if (item.Upload_Finacial_Statement == null)
+                {
+                    <span class="text-danger">@ViewBag.NoFinacial</span>
+                }
+                else
+                {
+                    @Html.ActionLink("Download Finacial Statement", "DownloadFinacialStatement", new { id = item.Academic_Year })
+                }
             </td>
         </tr>
     }

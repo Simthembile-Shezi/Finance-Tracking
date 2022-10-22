@@ -248,8 +248,13 @@ namespace Finance_Tracking.Controllers
             #endregion
 
             var item = viewApplications(id);
-            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status,item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
                    item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+            
+            if(item.Upload_Signed_Agreement == null)
+            {
+                ViewBag.Agreement = "Student has uploaded the signed bursary agreement";
+            }            
             return View(application);
         }
         public ActionResult ViewAllApplications()      //using funder name
@@ -397,7 +402,7 @@ namespace Finance_Tracking.Controllers
 
             if (item.Upload_Signed_Agreement == null)
             {
-                return null;
+                RedirectToAction("Error", "Home");
             }
             return File(item.Upload_Signed_Agreement, "application/pdf", item.Application_ID + ".pdf");
         }

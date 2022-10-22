@@ -17,25 +17,26 @@
         </div>
     </header>
     <div class="navbar navbar-inverse">
-        <ul class="new2 nav navbar-nav">
-            @if (Session["user"] != null && (Session["user"].ToString()).Equals("STUDENT_USER"))
-            {
-                <li>@Html.ActionLink("Home", "Index", "Student")</li>
-            }
-            else if (Session["user"] != null && (Session["user"].ToString()).Equals("INSTITUTION_USER"))
-            {
-                <li>@Html.ActionLink("Home", "Index", "Institution")</li>
-            }
-            else if (Session["user"] != null && (Session["user"].ToString()).Equals("FUNDER_USER"))
-            {
-                <li>@Html.ActionLink("Home", "Index", "Funder")</li>
-            }
-            else
-            {
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-            }
-        </ul>
-        <div class="container">
+        
+        <div class="spacing">
+            <ul class="new2 nav navbar-nav">
+                @if (Session["user"] != null && (Session["user"].ToString()).Equals("STUDENT_USER"))
+                {
+                    <li>@Html.ActionLink("Home", "Index", "Student")</li>
+                }
+                else if (Session["user"] != null && (Session["user"].ToString()).Equals("INSTITUTION_USER"))
+                {
+                    <li>@Html.ActionLink("Home", "Index", "Institution")</li>
+                }
+                else if (Session["user"] != null && (Session["user"].ToString()).Equals("FUNDER_USER"))
+                {
+                    <li>@Html.ActionLink("Home", "Index", "Funder")</li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                }
+            </ul>
             <div class="new1 navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>

@@ -11,6 +11,7 @@ namespace Data_Library.ModelsDB
 
         public string Application_ID { get; set; }
         public string Application_Status { get; set; }
+        public byte[] Upload_Signed_Agreement { get; set; }
 
         //Student details
         public string Student_FName { get; set; }

@@ -20,7 +20,7 @@
         </div>
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+        @Html.HiddenFor(model => model.Application_ID)
         <fieldset class="documents-fieldset">
             <legend class="documents-legend"> @Html.LabelFor(model => model.Signed_Bursary_Agreement)</legend>
             <div class="form-group">

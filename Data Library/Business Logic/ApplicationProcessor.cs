@@ -69,7 +69,7 @@ namespace Data_Library.Business_Logic
                 data.Upload_Agreement = uploadAgreement;
 
             string sql = @"update dbo.Application
-                               set Application_Status = @Application_Status
+                               set Upload_Agreement = @Upload_Agreement
                                where Application_ID = @Application_ID;";
 
             return SqlDataAccess.SaveData(sql, data);
@@ -121,7 +121,7 @@ namespace Data_Library.Business_Logic
         }
         public static ApplicationViewDB viewApplications(string appID)
         {
-            string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Student_Residential_Address, 
+            string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, A.Upload_Signed_Agreement, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Student_Residential_Address, 
                                   E.Student_Number, E.Institution_Name, E.Qualification, AR.Academic_Year, AR.Avarage_Marks, AR.Upload_Transcript
                            from (dbo.[Bursary] AS B JOIN dbo.[Application] AS A ON B.Bursary_Code=A.Bursary_Code) 
                                 JOIN dbo.[Student] AS S ON A.Student_Identity_Number=S.Student_Identity_Number 

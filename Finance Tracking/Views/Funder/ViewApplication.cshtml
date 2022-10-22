@@ -122,11 +122,14 @@
             <input type="button" name="selection" value="Upload Bursary Agreement" class="btn btn-default btn-block" />
         </a>
     </div>
-    <div class="btn-block">
-        <a href='@Url.Action("DownloadSignedAgreement", "Funder", new { id = Model.Application_ID })'>
-            <input type="button" name="selection" value="Download Signed Agreement" class="btn btn-default btn-block" />
-        </a>
-    </div>
+    @if ((ViewBag.Agreement) == null)
+    {
+        <div class="btn-block">
+            <a href='@Url.Action("DownloadSignedAgreement", "Funder", new { id = Model.Application_ID })'>
+                <input type="button" name="selection" value="Download Signed Agreement" class="btn btn-default btn-block" />
+            </a>
+        </div>
+    }
     <div class="btn-block">
         <a href='@Url.Action("ViewAllApplications", "Funder")'>
             <div>

@@ -363,6 +363,7 @@ namespace Finance_Tracking.Controllers
                 Finacial_Record record = new Finacial_Record(item.Student_Number, item.Academic_Year, item.Balance_Amount, item.Upload_Statement, item.Funding_Status, item.Request_Funds);
                 enrolled.Finacial_Records.Add(record);
             }
+            ViewBag.NoFinacial = "Not available";
             Session["Records"] = enrolled;
             return View(enrolled);
         }
@@ -389,7 +390,7 @@ namespace Finance_Tracking.Controllers
                 {
                     if (item.Upload_Statement == null)
                     {
-                        return null;
+                        RedirectToAction("Error", "Home");
                     }
                     return File(item.Upload_Statement, "application/pdf", item.Student_Number + ".pdf");
                 }
@@ -505,7 +506,7 @@ namespace Finance_Tracking.Controllers
                     }
                     else
                     {
-                        ViewBag.DownloadFailed = "The funder has uploaded the bursary agreement, click the Download button to download the agreement";
+                        ViewBag.DownloadSucceful = "The funder has uploaded the bursary agreement, click the Download button to download the agreement";
                         return View(application);
                     }
                 }
@@ -519,7 +520,7 @@ namespace Finance_Tracking.Controllers
             Application application = (Application)Session["Application"];
             if (application.Upload_Agreement == null)
             {
-                return null;
+                RedirectToAction("Error", "Home");
             }
             return File(application.Upload_Agreement, "application/pdf", application.Application_ID + ".pdf");
         }

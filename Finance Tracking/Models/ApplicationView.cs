@@ -11,10 +11,11 @@ namespace Finance_Tracking.Models
 
         }
 
-        public ApplicationView(string appID, string status, string FName, string LName, string studentID, string gender, string Cellphone, string email, string studentNum, string Ins_Name, string Quali, string AY, decimal marks, byte[] transcript, string bursary_Code)
+        public ApplicationView(string appID, string status, byte[] upload_Signed_Agreement, string FName, string LName, string studentID, string gender, string Cellphone, string email, string studentNum, string Ins_Name, string Quali, string AY, decimal marks, byte[] transcript, string bursary_Code)
         {
             Application_ID = appID;
             Application_Status = status;
+            Upload_Signed_Agreement = upload_Signed_Agreement;
 
             //Student details
             Student_FName = FName;
@@ -37,6 +38,7 @@ namespace Finance_Tracking.Models
         }
 
         public string Application_ID { get; set; }
+        public byte[] Upload_Signed_Agreement { get; set; }
 
         //Student details
 
