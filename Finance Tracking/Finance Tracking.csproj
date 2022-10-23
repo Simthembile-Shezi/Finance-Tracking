@@ -143,6 +143,7 @@
     <Compile Include="Models\Bursary.cs" />
     <Compile Include="Models\Bursar_Fund.cs" />
     <Compile Include="Models\ChangePasswordViewModel.cs" />
+    <Compile Include="Models\ContactViewModel.cs" />
     <Compile Include="Models\EnrolledStudentsViewModel.cs" />
     <Compile Include="Models\Enrolled_At.cs" />
     <Compile Include="Models\Finacial_Record.cs" />

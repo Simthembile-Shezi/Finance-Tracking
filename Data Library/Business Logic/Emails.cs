@@ -14,7 +14,7 @@ namespace Data_Library.Business_Logic
         {
             try
             {
-                var senderEmail = new MailAddress("Finance.Tracking@outlook.com", "No-Reply");
+                var senderEmail = new MailAddress("Finance.Tracking@outlook.com", "Finance Tracking");
                 var receiverEmail = new MailAddress(email, recever);
 
                 var smtp = new SmtpClient

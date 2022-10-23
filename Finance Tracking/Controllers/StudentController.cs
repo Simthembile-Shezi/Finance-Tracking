@@ -117,6 +117,13 @@ namespace Finance_Tracking.Controllers
                 {
                     CreateStudent(model.Student_Identity_Number, model.Student_FName, model.Student_LName, model.Student_Nationality, model.Race, model.Title, model.Gender, model.Date_Of_Birth, model.Marital_Status,
                        model.Student_Email, model.Student_Cellphone_Number, model.Student_Residential_Address, model.Upload_Identity_Document, model.Upload_Residential_Document, student.Password);
+
+                    string name = model.Student_FName+", "+model.Student_LName;
+                    string sub = "Successful Registration";
+                    string body = $"Dear {name}\n\nWelcome to Finance Tracking" +
+                        $"\n\nThank you for joining our community of opportunities where you will have constant communication with both your funder(s) and bursary administrator(s)";
+                    SendEmail(model.Student_Email, name, sub, body);
+
                     return RedirectToAction("Login", "Home");
                 }
                 else
@@ -131,7 +138,7 @@ namespace Finance_Tracking.Controllers
                 return View(student);
             }
         }
-
+        
         private bool VerifyAccount(string email, string name)
         {
             string sub = "Account Verification";

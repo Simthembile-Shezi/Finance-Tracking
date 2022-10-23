@@ -322,8 +322,21 @@ namespace Finance_Tracking.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
             return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Contact(ContactViewModel model)
+        {
+            if(SendEmail(model.ToEmail, model.Name, "", model.Body)){
+                ViewBag.EmailSent = "Our team will respond to you shortly";
+                return View();
+            }
+            else
+            {
+                ViewBag.EmailNotSent = "Opps, something went wrong. Please send us an email at Finance.Tracking@outlook.com";
+                return View(model);
+            }
         }
         public ActionResult Error()
         {
