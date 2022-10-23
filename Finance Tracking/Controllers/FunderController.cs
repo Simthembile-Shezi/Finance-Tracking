@@ -266,17 +266,22 @@ namespace Finance_Tracking.Controllers
         }
         public ActionResult ViewApplication(string id)
         {
-
-
-            var item = viewApplications(id);
-            ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-                   item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
-
-            if (item.Upload_Signed_Agreement == null)
+            try
             {
-                ViewBag.Agreement = "Student has uploaded the signed bursary agreement";
+                var item = viewApplications(id);
+                ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                       item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+
+                if (item.Upload_Signed_Agreement == null)
+                {
+                    ViewBag.Agreement = "Student has uploaded the signed bursary agreement";
+                }
+                return View(application);
             }
-            return View(application);
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }            
         }
         // GET: Funder/UpdateApplicationStatus/Application_ID
         public ActionResult UpdateApplicationStatus(string id)

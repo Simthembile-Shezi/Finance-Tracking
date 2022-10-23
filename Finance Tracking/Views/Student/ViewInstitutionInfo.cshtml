@@ -42,43 +42,16 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Street_Name)
+            @Html.DisplayNameFor(model => model.Study_Residential_Address)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Street_Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Sub_Town)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Sub_Town)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.City)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Province)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Province)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Zip_Code)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Zip_Code)
+            <ul class="residential-address">
+                <li>@Html.DisplayFor(model => model.Street_Name)</li>
+                <li>@Html.DisplayFor(model => model.Sub_Town)</li>
+                <li>@Html.DisplayFor(model => model.City)</li>
+                <li>@Html.DisplayFor(model => model.Province)</li>
+                <li>@Html.DisplayFor(model => model.Zip_Code)</li>
+            </ul>
         </dd>
     </dl>
 </div>

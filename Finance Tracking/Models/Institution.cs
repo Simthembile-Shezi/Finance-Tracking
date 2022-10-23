@@ -86,9 +86,11 @@ namespace Finance_Tracking.Models
         public string ConfirmInstitution_Email { get; set; }
 
         [Required]
+        [Display(Name = "Physical Address")]
         public string Institution_Physical_Address { get; set; }
 
         [Required]
+        [Display(Name = "Postal Address")]
         public string Institution_Postal_Address { get; set; }
 
         public Enrolled_At Enrolled_At { get; set; }

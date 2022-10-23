@@ -109,6 +109,7 @@ namespace Finance_Tracking.Models
         [Required(ErrorMessage = "You need to enter zip code.")]
         public string Zip_Code { get; set; }
 
+        [Display(Name = "Home Residential Address")]
         public string Student_Residential_Address { get; set; }
 
         [DataType(DataType.Upload)]
