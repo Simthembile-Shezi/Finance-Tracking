@@ -12,13 +12,16 @@
 </div>
 
 <div class="row col-md-4">
-    <div class="btn-block">
-        <a href="@Url.Action("DownloadBursaryAgreement", "Student")">
-            <div>
-                <input type="button" name="selection" value="Download Agreement" class="btn btn-default btn-block" />
-            </div>
-        </a>
-    </div>
+    @if (Model.Upload_Agreement != null)
+    {
+        <div class="btn-block">
+            <a href="@Url.Action("DownloadBursaryAgreement", "Student")">
+                <div>
+                    <input type="button" name="selection" value="Download Agreement" class="btn btn-default btn-block" />
+                </div>
+            </a>
+        </div>
+    }
     <div class="btn-block">
         <a href='@Url.Action("UploadSignedAgreement", "Student")'>
             <div>

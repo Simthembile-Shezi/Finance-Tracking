@@ -25,12 +25,13 @@
             @Html.DisplayFor(model => model.Funding_Status)
         </dd>
 
-        <dt>
+        <dt>            
             @Html.DisplayNameFor(model => model.Approved_Funds)
         </dt>
 
         <dd>
-            R @Html.DisplayFor(model => model.Approved_Funds)
+            <span>R</span>
+            @Html.DisplayFor(model => model.Approved_Funds)
         </dd>
 
     </dl>

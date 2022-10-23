@@ -47,10 +47,20 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @if (Session["user"] != null && (Session["user"].ToString()).Equals("STUDENT_USER"))
+                    {
+                        <li>@Html.ActionLink("Apply Now", "ViewBursaries", "Student")</li>
+                    }
+                    else if (Session["user"] != null && (Session["user"].ToString()).Equals("INSTITUTION_USER"))
+                    {
+                        <li>@Html.ActionLink("Admin", "VerifyAdmin", "Institution")</li>
+                    }
+                    else if (Session["user"] != null && (Session["user"].ToString()).Equals("FUNDER_USER"))
+                    {
+                        <li>@Html.ActionLink("Admin", "VerifyAdmin", "Funder")</li>
+                    }
 
-                    @if (ViewBag.Status != null && ViewBag.Status.Equals("false"))
+                    @if (Session["Verified"] != null && Session["Verified"].Equals("false"))
                     {
                         <li>@Html.ActionLink("Login", "Login", "Home")</li>
                     }
@@ -73,8 +83,12 @@
 
         </div>
     </div>
-    <footer>
+    <footer class="text-center">
         <p>&copy; @DateTime.Now.Year - Enemy Of Syntex</p>
+        <ul class="large-font">
+            <li>@Html.ActionLink("About", "About", "Home", new { @class = "" })</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home", new { @class = "" })</li>
+        </ul>
     </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

@@ -19,10 +19,11 @@ namespace Finance_Tracking.Models
             Application_Status = application_Status;
             Upload_Agreement = upload_Agreement;
             Upload_Signed_Agreement = upload_Signed_Agreement;
+            Bursar_Funds = new List<BursarFundView>();
         }
         public Application()
         {
-
+            Bursar_Funds = new List<BursarFundView>();
         }
 
         [Key]
@@ -48,7 +49,7 @@ namespace Finance_Tracking.Models
         public string Application_Status { get; set; }
 
         [DataType(DataType.Upload)]
-        [Display(Name = "Upload Bursary_Agreement")]
+        [Display(Name = "Upload Bursary Agreement")]
         public HttpPostedFileBase Bursary_Agreement { get; set; }
         public byte[] Upload_Agreement { get; set; }
 
@@ -57,7 +58,9 @@ namespace Finance_Tracking.Models
         public HttpPostedFileBase Signed_Bursary_Agreement { get; set; }
         public byte[] Upload_Signed_Agreement { get; set; }
 
-        public virtual Bursar_Fund Bursar_Funds { get; set; }
+        public virtual Bursar_Fund Bursar_Fund { get; set; }
+        public virtual BursarFundView BursarFundView { get; set; }
+        public List<BursarFundView> Bursar_Funds { get; set; }
 
         public virtual Bursary Bursary { get; set; }
 

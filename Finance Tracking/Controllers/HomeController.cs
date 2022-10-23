@@ -18,19 +18,19 @@ namespace Finance_Tracking.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Status = "false";
+            Session["Verified"] = "false";
             return View();
         }
 
         public ActionResult SignUp()
         {
-            ViewBag.Status = "false";
+            Session["Verified"] = "false";
             return View();
         }
 
         public ActionResult Login()
         {
-            ViewBag.Status = "false";
+            Session["Verified"] = "false";
             LoginViewModel modelview = new LoginViewModel();
             return View(modelview);
         }
@@ -189,7 +189,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ForgotPassword()
         {
             ViewBag.NotUser = null;
-            ViewBag.Status = "false";
+            Session["Verified"] = "false";
             return View();
         }
 
@@ -279,7 +279,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult ChangePassword()
         {
             ViewBag.Error = null;
-            ViewBag.Status = "false";
+            Session["Verified"] = "false";
             return View();
         }
 
@@ -316,20 +316,17 @@ namespace Finance_Tracking.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Status = "false";
             ViewBag.Message = "Your application description page.";
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Status = "false";
             ViewBag.Message = "Your contact page.";
             return View();
         }
         public ActionResult Error()
         {
-            ViewBag.Status = "false";
             return View();
         }
     }

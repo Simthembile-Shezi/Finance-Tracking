@@ -4,8 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Student Documentation</h2>
-
 @using (Html.BeginForm("MaintainStudentDocs", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 
@@ -48,7 +46,7 @@
                 </div>
                 <div class="right-btn-flex">
                     <div>
-                        <input type="submit" name="selection" value="Submit" class="btn btn-default" />
+                        <input type="submit" name="selection" value="Upload" class="btn btn-default" />
                     </div>
                 </div>
             </div>

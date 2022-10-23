@@ -24,6 +24,7 @@ namespace Finance_Tracking.Controllers
         // GET: Student 
         public ActionResult Index()
         {
+            Session["Verified"] = "true";
             return View(GetLoginStudent(Session["Student"].ToString()));
         }
 
@@ -579,15 +580,15 @@ namespace Finance_Tracking.Controllers
         // GET: Student/ShowApplication/Application_ID
         public ActionResult ShowApprovedApplications() // all approved applications
         {
-            Student model = GetLoginStudent(Session["Student"].ToString());
-            var list = GetStudentApplications(model.Student_Identity_Number, "Approved");
-
+            Application model = new Application();
+            var list = GetIDBursarsList(Session["Student"].ToString());
             foreach (var item in list)
             {
-                Application application = new Application(item.Application_ID, item.Student_Identity_Number, item.Bursary_Code, item.Funding_Year, item.Application_Status, item.Upload_Agreement, item.Upload_Signed_Agreement);
-                model.Applications.Add(application);
+                BursarFundView bursar = new BursarFundView(item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
+                    item.Student_Email, item.Application_ID, item.Update_Fund_Request, item.Funding_Status, item.Approved_Funds);
+                model.Bursar_Funds.Add(bursar);
             }
-            if (model.Applications.Count == 0)
+            if (model.Bursar_Funds.Count == 0)
             {
                 ViewBag.NoApprovedApplications = "No applications have been approved currently, please check the Track funding section";
             }

@@ -119,7 +119,7 @@ namespace Data_Library.Business_Logic
 
             return SqlDataAccess.LoadData<ApplicationDB>(sql);
         }
-        public static ApplicationViewDB viewApplications(string appID)
+        public static ApplicationViewDB viewApplications(string appID, string AY)
         {
             string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, A.Upload_Signed_Agreement, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Upload_Identity_Document, 
                                   E.Student_Number, E.Institution_Name, E.Qualification, AR.Academic_Year, AR.Avarage_Marks, AR.Upload_Transcript, FR.Upload_Statement
@@ -128,7 +128,7 @@ namespace Data_Library.Business_Logic
                                 JOIN dbo.[Enrolled At] AS E ON S.Student_Identity_Number = E.Student_Identity_Number 
                                 JOIN dbo.[Academic Records] AS AR ON E.Student_Number = AR.Student_Number
                                 JOIN dbo.[Finacial Records] AS FR ON E.Student_Number = FR.Student_Number
-                           where A.Application_ID = '" + appID + "';";
+                           where A.Application_ID = '" + appID + "' and AR.Academic_Year ='" + AY + "' ;";
 
             return SqlDataAccess.Joins<ApplicationViewDB>(sql);
 

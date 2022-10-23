@@ -18,6 +18,7 @@ namespace Finance_Tracking.Controllers
         // GET: Funder
         public ActionResult Index()
         {
+            Session["Verified"] = "true";
             try
             {
                 Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
@@ -268,7 +269,8 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
-                var item = viewApplications(id);
+                var year = DateTime.Now.Year;
+                var item = viewApplications(id, year.ToString());
                 ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
                        item.Student_Email, item.Upload_Identity_Document, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Upload_Statement, item.Bursary_Code);
 
@@ -401,7 +403,8 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public FileResult DownloadStudentID(string id)
         {
-            var item = viewApplications(id);
+            var year = DateTime.Now.Year;
+            var item = viewApplications(id, year.ToString());
 
             if (item.Upload_Identity_Document == null)
             {
@@ -413,7 +416,8 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public FileResult DownloadAcademicRecord(string id)
         {
-            var item = viewApplications(id);
+            var year = DateTime.Now.Year;
+            var item = viewApplications(id, year.ToString());
 
             if (item.Upload_Transcript == null)
             {
@@ -425,7 +429,8 @@ namespace Finance_Tracking.Controllers
         [HttpGet]
         public FileResult DownloadFinancialRecord(string id)
         {
-            var item = viewApplications(id);
+            var year = DateTime.Now.Year;
+            var item = viewApplications(id, year.ToString());
 
             if (item.Upload_Statement == null)
             {

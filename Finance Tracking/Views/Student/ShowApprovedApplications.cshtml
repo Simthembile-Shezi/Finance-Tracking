@@ -1,4 +1,4 @@
-﻿@model Finance_Tracking.Models.Student
+﻿@model Finance_Tracking.Models.Application
 
 @{
     ViewBag.Title = "ShowApprovedApplications";
@@ -10,27 +10,31 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Application.Application_ID)
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Application_ID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Application.Bursary_Code)
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Funding_Status)
         </th>
-        
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Approved_Funds)
+        </th>
     </tr>
 
-    @foreach (var item in Model.Applications)
+    @foreach (var item in Model.Bursar_Funds)
     {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Application_ID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Bursary_Code)
+                @Html.DisplayFor(modelItem => item.Funding_Status)
             </td>
             <td>
-                @Html.ActionLink("View Fund Request", "ViewFundRequest", new { id = item.Application_ID })
+                @Html.DisplayFor(modelItem => item.Approved_Funds)
             </td>
+            @*<td>
+                @Html.ActionLink("View Fund Request", "ViewFundRequest", new { id = item.Application_ID })
+            </td>*@
         </tr>
     }
 </table>

@@ -5,9 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Upload Signed Agreement</h2>
-
-
 @using (Html.BeginForm("UploadSignedAgreement", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 
@@ -34,7 +31,7 @@
         <div class="form-group">
             <div class="container-btn">
                 <div class="left-btn-flex">
-                    <a href='@Url.Action("ViewBursaryAgreement", "Student")'>
+                    <a href='@Url.Action("ViewBursaryAgreement", "Student", new {id = Model.Application_ID})'>
                         <div>
                             <input type="button" name="selection" value="Cancel" class="btn btn-default" />
                         </div>

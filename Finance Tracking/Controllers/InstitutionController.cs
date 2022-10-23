@@ -21,6 +21,7 @@ namespace Finance_Tracking.Controllers
         // GET: Institution
         public ActionResult Index()
         {
+            Session["Verified"] = "true";
             try
             {
                 Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());

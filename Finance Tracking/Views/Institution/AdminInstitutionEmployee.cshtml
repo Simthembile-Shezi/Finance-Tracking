@@ -13,11 +13,21 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Employee</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <span class="text-danger">@ViewBag.UploadStatus</span>
         <span class="text-danger">@ViewBag.RegistrationError</span>
+
+        <fieldset class="documents-fieldset">
+            <legend>Organization</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Organization_Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Organization_Name, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Organization_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
 
         <fieldset class="documents-fieldset">
             <legend>Personal details</legend>
@@ -65,16 +75,6 @@
             </div>
         </fieldset>
 
-        <fieldset class="documents-fieldset">
-            <legend>Organization</legend>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Organization_Name, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.Organization_Name, new { @class = "form-control", @readonly = "readonly" })
-                    @Html.ValidationMessageFor(model => model.Organization_Name, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </fieldset>
         <div class="container-btn">
             <div class="left-btn-flex">
                 <a href='@Url.Action("RegisterInstitution", "Institution")'>

@@ -15,8 +15,8 @@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Student_Number)
-        <fieldset>
-            <legend>For the year</legend>
+        <fieldset class="documents-fieldset">
+            <legend class="documents-legend">For the year</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.Academic_Year, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
