@@ -14,7 +14,7 @@ namespace Finance_Tracking.Models
         [StringLength(50)]
         public string ToEmail { get; set; }
 
-        [Display(Name = "Message")]
+        [Display(Name = "Name")]
         [Required(ErrorMessage = "Please enter your name")]
         public string Name { get; set; }
 

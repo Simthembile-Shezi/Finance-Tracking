@@ -328,7 +328,10 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Contact(ContactViewModel model)
         {
-            if(SendEmail(model.ToEmail, model.Name, "", model.Body)){
+            string sub = "New Case Created";
+            string body = $"New Request Logged."+ $"\n\nThe case is as follow:  {model.Body} ";
+
+            if(SendEmail(model.ToEmail, model.Name, sub, body)){
                 ViewBag.EmailSent = "Our team will respond to you shortly";
                 return View();
             }

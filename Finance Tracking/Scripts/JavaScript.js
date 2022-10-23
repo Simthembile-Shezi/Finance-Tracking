@@ -262,4 +262,3 @@ function checkFirstNr(digit) {
         return false;
     }
 }
-

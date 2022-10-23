@@ -223,3 +223,9 @@ input {
     color:#022140;
     text-decoration: none;
 }
+img {
+    vertical-align: middle;
+}
+.index-images{
+    width: 100%;
+}
