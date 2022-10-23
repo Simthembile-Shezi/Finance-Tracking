@@ -8,7 +8,7 @@ namespace Data_Library.ModelsDB
 {
     public class ApplicationViewDB
     {
-
+        public string Bursary_Code { get; set; }
         public string Application_ID { get; set; }
         public string Application_Status { get; set; }
         public byte[] Upload_Signed_Agreement { get; set; }
@@ -20,7 +20,7 @@ namespace Data_Library.ModelsDB
         public string Gender { get; set; }
         public string Student_Cellphone_Number { get; set; }
         public string Student_Email { get; set; }
-        public string Student_Residential_Address { get; set; }
+        public byte[] Upload_Identity_Document { get; set; }
 
         //Institution details
         public string Student_Number { get; set; }
@@ -29,7 +29,6 @@ namespace Data_Library.ModelsDB
         public string Academic_Year { get; set; }
         public decimal Avarage_Marks { get; set; }
         public byte[] Upload_Transcript { get; set; }
-
-        public string Bursary_Code { get; set; }
+        public byte[] Upload_Statement { get; set; }
     }
 }

@@ -11,7 +11,8 @@ namespace Finance_Tracking.Models
 
         }
 
-        public ApplicationView(string appID, string status, byte[] upload_Signed_Agreement, string FName, string LName, string studentID, string gender, string Cellphone, string email, string studentNum, string Ins_Name, string Quali, string AY, decimal marks, byte[] transcript, string bursary_Code)
+        public ApplicationView(string appID, string status, byte[] upload_Signed_Agreement, string FName, string LName, string studentID, string gender, 
+            string Cellphone, string email, byte[] Identity_Document, string studentNum, string Ins_Name, string Quali, string AY, decimal marks, byte[] transcript, byte[] statement, string bursary_Code)
         {
             Application_ID = appID;
             Application_Status = status;
@@ -24,6 +25,7 @@ namespace Finance_Tracking.Models
             Gender = gender;
             Student_Cellphone_Number = Cellphone;
             Student_Email = email;
+            Upload_Identity_Document = Identity_Document;
 
             //Institution details
             Student_Number = studentNum;
@@ -32,6 +34,7 @@ namespace Finance_Tracking.Models
             Academic_Year = AY;
             Avarage_Marks = marks;
             Upload_Transcript = transcript;
+            Upload_Statement = statement;
 
             //Bursary
             Bursary_Code = bursary_Code;
@@ -77,6 +80,10 @@ namespace Finance_Tracking.Models
         [Display(Name = "Zip Code")]
         public string Zip_Code { get; set; }
 
+        [Display(Name = "Upload Identity Document")]
+        public byte[] Upload_Identity_Document { get; set; }
+        public HttpPostedFileBase Identity_Document { get; set; }
+
         //Institution details
 
 
@@ -94,11 +101,15 @@ namespace Finance_Tracking.Models
 
         [Display(Name = "Avarage Marks")]
         public decimal Avarage_Marks { get; set; }
-
+        
         [Display(Name = "Upload Transcript")]
         public byte[] Upload_Transcript { get; set; }
-
         public HttpPostedFileBase transcript { get; set; }
+
+        [Display(Name = "Upload Statement")]
+        public byte[] Upload_Statement { get; set; }
+        public HttpPostedFileBase Upload_Finacial_Statement { get; set; }
+
 
         public string Bursary_Code { get; set; }
 

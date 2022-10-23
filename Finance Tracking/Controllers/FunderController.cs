@@ -270,7 +270,7 @@ namespace Finance_Tracking.Controllers
             {
                 var item = viewApplications(id);
                 ApplicationView application = new ApplicationView(item.Application_ID, item.Application_Status, item.Upload_Signed_Agreement, item.Student_FName, item.Student_LName, item.Student_Identity_Number, item.Gender, item.Student_Cellphone_Number,
-                       item.Student_Email, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Bursary_Code);
+                       item.Student_Email, item.Upload_Identity_Document, item.Student_Number, item.Institution_Name, item.Qualification, item.Academic_Year, item.Avarage_Marks, item.Upload_Transcript, item.Upload_Statement, item.Bursary_Code);
 
                 if (item.Upload_Signed_Agreement == null)
                 {
@@ -397,6 +397,43 @@ namespace Finance_Tracking.Controllers
             }
             return File(item.Upload_Signed_Agreement, "application/pdf", item.Application_ID + ".pdf");
         }
+
+        [HttpGet]
+        public FileResult DownloadStudentID(string id)
+        {
+            var item = viewApplications(id);
+
+            if (item.Upload_Identity_Document == null)
+            {
+                RedirectToAction("Error", "Home");
+            }
+            return File(item.Upload_Identity_Document, "application/pdf", item.Application_ID + ".pdf");
+        }
+
+        [HttpGet]
+        public FileResult DownloadAcademicRecord(string id)
+        {
+            var item = viewApplications(id);
+
+            if (item.Upload_Transcript == null)
+            {
+                RedirectToAction("Error", "Home");
+            }
+            return File(item.Upload_Transcript, "application/pdf", item.Application_ID + ".pdf");
+        }
+
+        [HttpGet]
+        public FileResult DownloadFinancialRecord(string id)
+        {
+            var item = viewApplications(id);
+
+            if (item.Upload_Statement == null)
+            {
+                RedirectToAction("Error", "Home");
+            }
+            return File(item.Upload_Statement, "application/pdf", item.Application_ID + ".pdf");
+        }
+
         #endregion
 
         #region View all the bursaries by a specific funder and make update if needed

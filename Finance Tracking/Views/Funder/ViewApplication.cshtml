@@ -124,6 +124,21 @@
         </div>
     }
     <div class="btn-block">
+        <a href='@Url.Action("DownloadStudentID", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Download Student ID" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DownloadAcademicRecord", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Download Academic Record" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
+        <a href='@Url.Action("DownloadFinancialRecord", "Funder", new { id = Model.Application_ID })'>
+            <input type="button" name="selection" value="Download Financial Record" class="btn btn-default btn-block" />
+        </a>
+    </div>
+    <div class="btn-block">
         <a href='@Url.Action("ViewAllApplications", "Funder")'>
             <div>
                 <input type="button" name="selection" value="Back" class="btn btn-default btn-block" />

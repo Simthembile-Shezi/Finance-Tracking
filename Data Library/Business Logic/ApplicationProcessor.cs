@@ -121,12 +121,13 @@ namespace Data_Library.Business_Logic
         }
         public static ApplicationViewDB viewApplications(string appID)
         {
-            string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, A.Upload_Signed_Agreement, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Student_Residential_Address, 
-                                  E.Student_Number, E.Institution_Name, E.Qualification, AR.Academic_Year, AR.Avarage_Marks, AR.Upload_Transcript
-                           from (dbo.[Bursary] AS B JOIN dbo.[Application] AS A ON B.Bursary_Code=A.Bursary_Code) 
-                                JOIN dbo.[Student] AS S ON A.Student_Identity_Number=S.Student_Identity_Number 
-                                JOIN dbo.[Enrolled At] AS E ON S.Student_Identity_Number=E.Student_Identity_Number 
-                                JOIN dbo.[Academic Records] AS AR ON E.Student_Number=AR.Student_Number                                
+            string sql = @"select B.Bursary_Code, A.Application_ID, A.Application_Status, A.Upload_Signed_Agreement, S.Student_FName, S.Student_LName, A.Student_Identity_Number, S.Gender, S.Student_Cellphone_Number, S.Student_Email, S.Upload_Identity_Document, 
+                                  E.Student_Number, E.Institution_Name, E.Qualification, AR.Academic_Year, AR.Avarage_Marks, AR.Upload_Transcript, FR.Upload_Statement
+                           from (dbo.[Bursary] AS B JOIN dbo.[Application] AS A ON B.Bursary_Code = A.Bursary_Code) 
+                                JOIN dbo.[Student] AS S ON A.Student_Identity_Number = S.Student_Identity_Number 
+                                JOIN dbo.[Enrolled At] AS E ON S.Student_Identity_Number = E.Student_Identity_Number 
+                                JOIN dbo.[Academic Records] AS AR ON E.Student_Number = AR.Student_Number
+                                JOIN dbo.[Finacial Records] AS FR ON E.Student_Number = FR.Student_Number
                            where A.Application_ID = '" + appID + "';";
 
             return SqlDataAccess.Joins<ApplicationViewDB>(sql);
