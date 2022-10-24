@@ -16,6 +16,9 @@
             @Html.DisplayNameFor(model => model.Bursar_Fund.Funding_Status)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Bursar_Fund.Update_Fund_Request)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Bursar_Fund.Approved_Funds)
         </th>
     </tr>
@@ -29,7 +32,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Funding_Status)
             </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Update_Fund_Request)
+            </td>
             <td>
+                <span>R</span>
                 @Html.DisplayFor(modelItem => item.Approved_Funds)
             </td>
             @*<td>

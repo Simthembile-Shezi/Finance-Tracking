@@ -96,9 +96,11 @@ namespace Finance_Tracking.Models
         public string Postal_Code { get; set; }
 
         [Required]
+        [Display(Name = "Physical Address")]
         public string Funder_Physical_Address { get; set; }
 
         [Required]
+        [Display(Name = "Postal Address")]
         public string Funder_Postal_Address { get; set; }
 
         public Bursary Bursary { get; set; }

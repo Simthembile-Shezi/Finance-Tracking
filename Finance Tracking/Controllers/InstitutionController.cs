@@ -26,6 +26,7 @@ namespace Finance_Tracking.Controllers
             {
                 Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());
                 Session["Organization_Name"] = employee.Organization_Name;
+                Session["InstitutionEmployee"] = employee.Emp_UserID;
                 return View(employee);
             }
             catch
@@ -53,9 +54,8 @@ namespace Finance_Tracking.Controllers
         public ActionResult RegisterInstitution(Institution model)
         {
             model.Institution_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-            model.Institution_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
-            if (model.Institution_Postal_Address == null)
-                model.Institution_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
+            if (model.Postal_box == null || model.Town == null || model.City_Post == null || model.Province_Post == null || model.Postal_Code == null)
+                model.Institution_Postal_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
             else
                 model.Institution_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
 
@@ -112,6 +112,11 @@ namespace Finance_Tracking.Controllers
                         employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
                         employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
                         AddInstitutionAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, institution.Institution_Employee.Password, institution.Institution_Employee.Code);
+                        string name = employee.Emp_FName + ", " + employee.Emp_LName;
+                        string sub = "Successful Registration";
+                        string body = $"Dear {name}\n\nWelcome to Finance Tracking" +
+                            $"\n\nThank you for joining our community of opportunities where you will have constant communication with both your funder(s) and bursary administrator(s)";
+                        SendEmail(employee.Emp_Email, name, sub, body);
                     }
                     catch
                     {
@@ -194,7 +199,6 @@ namespace Finance_Tracking.Controllers
             try
             {
                 requestFunds(model.Student_Number, model.Academic_Year, model.Request_Funds);
-
                 return RedirectToAction("ViewFundedStudents");
             }
             catch
@@ -254,17 +258,27 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
+                String FileExt;
                 HttpPostedFileBase loadStatement = model.Upload_Finacial_Statement;
 
                 if (loadStatement != null)
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = loadStatement.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] loadStatement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                    FileExt = Path.GetExtension(loadStatement.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = loadStatement.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] loadStatement_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Statement = loadStatement_Doc_FileDet;
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Statement = loadStatement_Doc_FileDet;
+                    }
+                }
+                else
+                {
+                    ViewBag.UploadStatus = "Please upload a pdf file";
+                    return View(model);
                 }
                 //Set the academic year
                 uploadFinacialStatement(model.Student_Number, model.Academic_Year, model.Balance_Amount, model.Upload_Statement);
@@ -291,17 +305,27 @@ namespace Finance_Tracking.Controllers
         {
             try
             {
+                String FileExt;
                 HttpPostedFileBase transcript = model.transcript;
 
                 if (transcript != null)
                 {
-                    //Convert HttpPostedFileBase to Byte[]
-                    Stream str = transcript.InputStream;
-                    BinaryReader Br = new BinaryReader(str);
-                    Byte[] Transcript_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
+                    FileExt = Path.GetExtension(transcript.FileName).ToUpper();
+                    if (FileExt.Equals(".PDF"))
+                    {
+                        //Convert HttpPostedFileBase to Byte[]
+                        Stream str = transcript.InputStream;
+                        BinaryReader Br = new BinaryReader(str);
+                        Byte[] Transcript_Doc_FileDet = Br.ReadBytes((Int32)str.Length);
 
-                    //Store the file content in Byte[] format on the model
-                    model.Upload_Transcript = Transcript_Doc_FileDet;
+                        //Store the file content in Byte[] format on the model
+                        model.Upload_Transcript = Transcript_Doc_FileDet;
+                    }
+                    else
+                    {
+                        ViewBag.UploadStatus = "Please upload a pdf file";
+                        return View(model);
+                    }
                 }
                 provideStudentResult(model.Student_Number, model.Academic_Year, model.Qualification, model.Avarage_Marks, model.Upload_Transcript);
 
@@ -372,18 +396,26 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult VerifyAdmin(Institution_Employee model)
         {
-            Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());
-            if (employee.Admin_Code == null)
+            try
             {
-                ViewBag.Admin = "Admin code not found, please contact your system admin";
-                return View(model);
+                Institution_Employee employee = GetInstitution_Employee(Session["InstitutionEmployee"].ToString());
+                if (employee.Admin_Code == null)
+                {
+                    ViewBag.Admin = "Admin code not found, please contact your system admin";
+                    return View(model);
+                }
+                if ((employee.Admin_Code).Equals(model.Admin_Code))
+                    return RedirectToAction("InstitutionDetails");
+                else
+                {
+                    ViewBag.Admin = "Admin code is invalid, please check the code and try again";
+                    return View(model);
+                }
             }
-            if ((employee.Admin_Code).Equals(model.Admin_Code))
-                return RedirectToAction("InstitutionDetails");
-            else
+            catch
             {
-                ViewBag.Admin = "Admin code is invalid, please check the code and try again";
-                return View(model);
+                
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -494,6 +526,15 @@ namespace Finance_Tracking.Controllers
                 institutionEmp.Emp_Email, institutionEmp.Organization_Name, institutionEmp.Password, institutionEmp.Admin_Code);
 
             return loginEmp;
+        }
+        public ActionResult About()
+        {
+            return RedirectToAction("About", "Home");
+        }
+
+        public ActionResult Contact()
+        {
+            return RedirectToAction("Contact", "Home");
         }
     }
 }

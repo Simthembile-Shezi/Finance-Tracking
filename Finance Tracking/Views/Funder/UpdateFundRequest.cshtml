@@ -21,7 +21,7 @@
                 @Html.DropDownListFor(model => model.Update_Fund_Request, new List<SelectListItem>
                 {
                 new SelectListItem{ Text="Approve", Value = "Funds Approved" },
-                }, new { @class = "form-control", @id = "fund-request" })})
+                }, new { @class = "form-control", @id = "fund-request" })
                 @Html.ValidationMessageFor(model => model.Update_Fund_Request, "", new { @class = "text-danger" })
             </div>
         </div>

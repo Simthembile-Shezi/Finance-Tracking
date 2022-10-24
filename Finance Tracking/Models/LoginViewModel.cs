@@ -11,7 +11,7 @@ namespace Finance_Tracking.Models
         [Display(Name = "Select user type")]
         public string UserType { get; set; }
 
-        [Display(Name = "Remeber username")]
+        [Display(Name = "Remember username")]
         public bool Remember_username { get; set; }
 
         public string Username { get; set; }

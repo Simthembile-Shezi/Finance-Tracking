@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>View Bursar</h2>
+<h2>Bursar</h2>
 
 <div class="row col-md-8">
     @Html.HiddenFor(model => model.Application_ID)
@@ -80,6 +80,7 @@
         </dt>
 
         <dd>
+            <span>R</span>
             @Html.DisplayFor(model => model.Approved_Funds)
         </dd>
 

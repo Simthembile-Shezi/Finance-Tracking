@@ -23,6 +23,8 @@ namespace Finance_Tracking.Controllers
             {
                 Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
                 Session["Organization_Name"] = employee.Organization_Name;
+                Session["FunderEmployee"] = employee.Emp_UserID;
+
                 return View(employee);
             }
             catch
@@ -50,7 +52,7 @@ namespace Finance_Tracking.Controllers
         public ActionResult RegisterFunder(Funder model)
         {
             model.Funder_Physical_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
-            if (model.Funder_Postal_Address == null)
+            if (model.Postal_box == null || model.Town == null || model.City_Post == null || model.Province_Post == null || model.Postal_Code == null)
                 model.Funder_Postal_Address = model.Street_Name + ";" + model.Sub_Town + ";" + model.City + ";" + model.Province + ";" + model.Zip_Code;
             else
                 model.Funder_Postal_Address = model.Postal_box + ";" + model.Town + ";" + model.City_Post + ";" + model.Province_Post + ";" + model.Postal_Code;
@@ -109,6 +111,11 @@ namespace Finance_Tracking.Controllers
                         employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
                         employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
                         AddFunderAdminEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, funder.Funder_Employee.Password, funder.Funder_Employee.Code);
+                        string name = employee.Emp_FName + ", " + employee.Emp_LName;
+                        string sub = "Successful Registration";
+                        string body = $"Dear {name}\n\nWelcome to Finance Tracking" +
+                            $"\n\nThank you for joining our community of opportunities where you will have constant communication with both your funder(s) and bursary administrator(s)";
+                        SendEmail(employee.Emp_Email, name, sub, body);
                     }
                     catch
                     {
@@ -686,43 +693,72 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult VerifyAdmin(Funder_Employee model)
         {
-            Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
-            if (employee.Admin_Code == null)
+            try
             {
-                ViewBag.Admin = "Admin code not found, please contact your organization admin";
-                return View(model);
+                Funder_Employee employee = GetFunder_Employee(Session["FunderEmployee"].ToString());
+                if (employee.Admin_Code == null)
+                {
+                    ViewBag.Admin = "Admin code not found, please contact your organization admin";
+                    return View(model);
+                }
+                if ((employee.Admin_Code).Equals(model.Admin_Code))
+                    return RedirectToAction("FunderDetails");
+                else
+                {
+                    ViewBag.Admin = "Admin code is invalid, please check the code and try again";
+                    return View(model);
+                }
             }
-            if ((employee.Admin_Code).Equals(model.Admin_Code))
-                return RedirectToAction("FunderDetails");
-            else
+            catch
             {
-                ViewBag.Admin = "Admin code is invalid, please check the code and try again";
-                return View(model);
+                return RedirectToAction("Error", "Home");
             }
         }
         public ActionResult ViewEmployees()
         {
-            Funder funder = new Funder();
-            var list = GetFundersEmployees(Session["Organization_Name"].ToString());
-            foreach (var item in list)
+           
+            try
             {
-                Funder_Employee result = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-                funder.Funder_Employees.Add(result);
+                Funder funder = new Funder();
+                var list = GetFundersEmployees(Session["Organization_Name"].ToString());
+                foreach (var item in list)
+                {
+                    Funder_Employee result = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                    funder.Funder_Employees.Add(result);
+                }
+                return View(funder);
             }
-            return View(funder);
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
         public ActionResult EmployeeDetails(string id)
         {
-            var item = GetFunderEmpID(id);
-            Funder_Employee employee = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-            return View(employee);
+            try
+            {
+                var item = GetFunderEmpID(id);
+                Funder_Employee employee = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                return View(employee);
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         public ActionResult DeleteEmployee(string id)
         {
-            var item = GetFunderEmpID(id);
-            Funder_Employee funder = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
-            return View(funder);
+            try
+            {
+                var item = GetFunderEmpID(id);
+                Funder_Employee funder = new Funder_Employee(item.Emp_UserID, item.Emp_FName, item.Emp_LName, item.Emp_Telephone_Number, item.Emp_Email, item.Organization_Name, item.Password, item.Admin_Code);
+                return View(funder);
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         // POST: Funder/Delete/5
@@ -730,18 +766,32 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteEmployee(Funder_Employee employee)
         {
-            int result = DeleteFunderEmp(employee.Emp_Email);
-            if (result == 0)
+            try
             {
-                return View(employee);
+                int result = DeleteFunderEmp(employee.Emp_Email);
+                if (result == 0)
+                {
+                    return View(employee);
+                }
+                return RedirectToAction("ViewEmployees");
             }
-            return RedirectToAction("ViewEmployees");
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
         public ActionResult AddEmployee()
         {
-            Funder_Employee model = new Funder_Employee();
-            model.Organization_Name = Session["Organization_Name"].ToString();
-            return View(model);
+            try
+            {
+                Funder_Employee model = new Funder_Employee();
+                model.Organization_Name = Session["Organization_Name"].ToString();
+                return View(model);
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         // POST: Funder/Delete/5
@@ -749,15 +799,22 @@ namespace Finance_Tracking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddEmployee(Funder_Employee employee)
         {
-            employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
-            employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
-            int result = AddFunderEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
-            if (result == 0)
+            try
             {
-                ViewBag.NotAdded = "Employee profile was not succefully created";
-                return View(employee);
+                employee.Emp_UserID = employee.Emp_Email.Replace('@', '0');
+                employee.Emp_UserID = employee.Emp_UserID.Replace('.', '0');
+                int result = AddFunderEmp(employee.Emp_UserID, employee.Emp_FName, employee.Emp_LName, employee.Emp_Telephone_Number, employee.Emp_Email, employee.Organization_Name, employee.Password);
+                if (result == 0)
+                {
+                    ViewBag.NotAdded = "Employee profile was not succefully created";
+                    return View(employee);
+                }
+                return RedirectToAction("ViewEmployees");
             }
-            return RedirectToAction("ViewEmployees");
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
         #endregion
         private Funder GetFunderByName(string name)
@@ -791,6 +848,15 @@ namespace Finance_Tracking.Controllers
             Funder_Employee loginEmp = new Funder_Employee(funderEmp.Emp_UserID, funderEmp.Emp_FName, funderEmp.Emp_LName, funderEmp.Emp_Telephone_Number,
                 funderEmp.Emp_Email, funderEmp.Organization_Name, funderEmp.Password, funderEmp.Admin_Code);
             return loginEmp;
+        }
+        public ActionResult About()
+        {
+            return RedirectToAction("About", "Home");
+        }
+
+        public ActionResult Contact()
+        {
+            return RedirectToAction("Contact", "Home");
         }
     }
 }

@@ -10,9 +10,6 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <div class="form-group">
-            <span class="text-danger">@ViewBag.UploadStatus</span>
-        </div>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -22,6 +19,7 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Identity_Document, "", new { @type = "file", @multiple = "multiple" })
                     @Html.ValidationMessageFor(model => model.Identity_Document, "", new { @class = "text-danger" })
+                    <span class="text-danger">@ViewBag.UploadStatusID</span>
                 </div>
             </div>
         </fieldset>
@@ -31,6 +29,7 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Residential_Document, "", new { @type = "file", @multiple = "multiple" })
                     @Html.ValidationMessageFor(model => model.Identity_Document, "", new { @class = "text-danger" })
+                    <span class="text-danger">@ViewBag.UploadStatusRes</span>
                 </div>
             </div>
         </fieldset>

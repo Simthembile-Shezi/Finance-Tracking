@@ -16,9 +16,6 @@
             @Html.DisplayNameFor(model => model.Finacial_Record.Balance_Amount)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Finacial_Record.Funding_Status)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Finacial_Record.Request_Funds)
         </th>
         <th></th>
@@ -35,19 +32,16 @@
                 @Html.DisplayFor(modelItem => item.Balance_Amount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Funding_Status)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Request_Funds)
             </td>
             <td>
-                @if (item.Upload_Finacial_Statement == null)
+                @if (item.Upload_Statement == null)
                 {
-                    <span class="text-danger">@ViewBag.NoFinacial</span>
+                <span class="text-danger">Not available</span>
                 }
                 else
                 {
-                    @Html.ActionLink("Download Finacial Statement", "DownloadFinacialStatement", new { id = item.Academic_Year })
+                    @Html.ActionLink("Download Financial Statement", "DownloadFinacialStatement", new { id = item.Academic_Year })
                 }
             </td>
         </tr>
